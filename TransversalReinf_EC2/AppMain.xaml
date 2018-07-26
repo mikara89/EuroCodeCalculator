@@ -1,0 +1,108 @@
+﻿<Page
+    x:Class="TransversalReinf_EC2.AppMain"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TransversalReinf_EC2"
+    xmlns:pages="using:TransversalReinf_EC2.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <DataTemplate x:Key="HamburgerMenuItem">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="48" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <FontIcon Grid.Column="0" 
+                      FontSize="16"
+                      FontFamily="Segoe MDL2 Assets" 
+                      Glyph="{Binding Glyph}" 
+                      Foreground="Black" />
+                <TextBlock Grid.Column="1" 
+                       Text="{Binding Label}" 
+                       Foreground="Black" 
+                       FontSize="16" 
+                       VerticalAlignment="Center" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="HamburgerMenuImageItem">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="48" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <FontIcon Grid.Column="0" 
+                      FontSize="16"
+                      FontFamily="Segoe MDL2 Assets" 
+                      Glyph="{Binding Glyph}" 
+                      Foreground="Black" />
+                <!--<Image Source="{Binding Thumbnail}" Stretch="UniformToFill" Margin="16,12" />-->
+                <TextBlock Grid.Column="1" 
+                       Text="{Binding Label}" 
+                       Foreground="Black" 
+                       FontSize="16" 
+                       VerticalAlignment="Center" />
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" BorderThickness="1" BorderBrush="Transparent">
+        <Grid>
+            <Grid.Background>
+                <ImageBrush Stretch="UniformToFill" ImageSource="Assets/Image/concrete_floor_20131007_1557821133.jpg"/>
+            </Grid.Background>
+            <controls:HamburgerMenu x:Name="HamburgerMenu"
+                                    PaneBackground="Gray"
+                                    PaneForeground="Black"
+                                    SelectedIndex="0"
+                                    ItemTemplate="{StaticResource HamburgerMenuImageItem}"
+                                    OptionsItemTemplate="{StaticResource HamburgerMenuItem}"
+                                    OpenPaneLength="240"
+                                    DisplayMode="CompactInline"
+                                    CompactPaneLength="48"
+                                    HamburgerHeight="48"
+                                    HamburgerVisibility="Visible"
+                                    IsPaneOpen="False"  
+                                    
+                                    Opacity="0.8"
+                                    UseNavigationViewWhenPossible="True">
+                <!--  Items  -->
+                <controls:HamburgerMenu.ItemsSource>
+                    <controls:HamburgerMenuItemCollection>
+                        <controls:HamburgerMenuGlyphItem
+                            Glyph="&#59563;"                     
+                            Label="Transverzalne sile" />
+                        <controls:HamburgerMenuGlyphItem
+                            Glyph="&#59563;"                     
+                            Label="Vitkost" />
+                    </controls:HamburgerMenuItemCollection>
+                </controls:HamburgerMenu.ItemsSource>
+
+                  <!--Options-->  
+                <controls:HamburgerMenu.OptionsItemsSource>
+                    <controls:HamburgerMenuItemCollection>
+                        <controls:HamburgerMenuGlyphItem Glyph="&#57627;" TargetPageType="pages:AboutView"
+                                                     Label="About" />
+                    </controls:HamburgerMenuItemCollection>
+                </controls:HamburgerMenu.OptionsItemsSource>
+
+                <!--  Content  -->
+                <Grid x:Name="ContentGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border Background="LightGray" Grid.Row="0">
+                        <TextBlock Padding="30,0,0,0" TextWrapping="NoWrap" FontWeight="Bold" Foreground="Black" FontSize="30" Text="VGGŠ EC Kalkulator" Style="{StaticResource HeaderTextBlockStyle}"/>
+                    </Border>
+
+                    <Frame x:Name="frameT" Grid.Row="1" Padding="10"/>
+                </Grid>
+            </controls:HamburgerMenu>
+        </Grid>
+    </Grid>
+</Page>

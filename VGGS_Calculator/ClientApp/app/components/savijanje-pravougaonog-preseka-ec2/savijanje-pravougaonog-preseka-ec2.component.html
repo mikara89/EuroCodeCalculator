@@ -1,0 +1,339 @@
+﻿<h1>
+    Savijanje pravougaonog preseka EC2
+    <i class="fa fa-check-circle-o" aria-hidden="true" *ngIf="validCalc && izracunaj.result!=null" title="Valid!"></i>
+    <i class="fa fa-times-circle-o" aria-hidden="true" *ngIf="!validCalc && izracunaj.result!=null" title="Not Valid!"></i>
+    <i class="fa fa-question-circle-o" aria-hidden="true" *ngIf="izracunaj.result==null" title="Not Calculated!"></i>
+</h1>
+<loader-rotating-dots *ngIf="!IsPageReady"></loader-rotating-dots>
+<div *ngIf="IsPageReady">
+    
+    <!--{{izracunaj | json}}-->
+    <form class="col-xl-3 col-lg-4 col-md-5 col-sm-5 col-xs-12" #f="ngForm">
+        <div class="row">
+            <div action="">
+                <input type="radio" name="gender" [attr.checked]="!IsMsd" (click)="Toggled(false)"> Mg i Mq
+                <input type="radio" name="gender" [attr.checked]="IsMsd" (click)="Toggled(true)"> Msd
+            </div>
+        </div>
+        <div *ngIf="IsMsd">
+            <div class="row">
+                <div class="input-group">
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        Msd=
+                    </span>
+                    <input (keyup)="izracunaj.result=null"
+                           type="number"
+                           [(ngModel)]="izracunaj.msd"
+                           class="form-control"
+                           placeholder="exp. 25"
+                           required
+                           name="Msd"
+                           #Msd="ngModel"
+                           id="Msd">
+                    <span class="input-group-addon test-active"
+                          *ngIf="Msd.touched && !Msd.valid"
+                          id="basic-addon2">
+                        <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                    </span>
+                    <span class="input-group-addon"
+                          id="basic-addon2">
+                        [kNm]
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        Nsd=
+                    </span>
+                    <input (keyup)="izracunaj.result=null"
+                           type="number"
+                           [(ngModel)]="izracunaj.nsd"
+                           class="form-control"
+                           placeholder="exp. 25"
+                           required
+                           name="Nsd"
+                           #Nsd="ngModel"
+                           id="Nsd">
+                    <span class="input-group-addon test-active"
+                          *ngIf="Nsd.touched && !Nsd.valid"
+                          id="basic-addon2">
+                        <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                    </span>
+                    <span class="input-group-addon"
+                          id="basic-addon2">
+                        [kNm]
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!IsMsd">
+            <div class="row">
+                <div class="input-group">
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        Mg=
+                    </span>
+                    <input (keyup)="izracunaj.result=null"
+                           type="number"
+                           [(ngModel)]="izracunaj.mg"
+                           class="form-control"
+                           placeholder="exp. 25"
+                           required
+                           #Mg="ngModel"
+                           name="Mg"
+                           id="Mg">
+                    <span class="input-group-addon test-active"
+                          *ngIf="Mg.touched && !Mg.valid"
+                          id="basic-addon2">
+                        <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                    </span>
+                    <span class="input-group-addon"
+                          id="basic-addon2">
+                        [kNm]
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <span class="input-group-addon test-active"
+                            id="basic-addon2">
+                        Mq=
+                    </span>
+                    <input (keyup)="izracunaj.result=null"
+                            type="number"
+                            [(ngModel)]="izracunaj.mq"
+                            class="form-control"
+                            placeholder="exp. 25"
+                            required
+                            name="Mq"
+                            #Mq="ngModel"
+                            id="Mq">
+                    <span class="input-group-addon test-active"
+                            *ngIf="Mq.touched && !Mq.valid"
+                            id="basic-addon2">
+                        <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                    </span>
+                    <span class="input-group-addon"
+                            id="basic-addon2">
+                        [kNm]
+                    </span>
+                </div>
+            </div>
+
+            <div class="row">
+                    <div class="input-group">
+                        <span class="input-group-addon test-active"
+                              id="basic-addon2">
+                            Ng=
+                        </span>
+                        <input (keyup)="izracunaj.result=null"
+                               type="number"
+                               [(ngModel)]="izracunaj.ng"
+                               class="form-control"
+                               placeholder="exp. 25"
+                               required
+                               name="Ng"
+                               #Ng="ngModel"
+                               id="Ng">
+                        <span class="input-group-addon test-active"
+                              *ngIf="Ng.touched && !Ng.valid"
+                              id="basic-addon2">
+                            <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                        </span>
+                        <span class="input-group-addon"
+                              id="basic-addon2">
+                            [kN]
+                        </span>
+                    </div>
+                </div>
+            <div class="row">
+                    <div class="input-group">
+                        <span class="input-group-addon test-active"
+                              id="basic-addon2">
+                            Nq=
+                        </span>
+                        <input (keyup)="izracunaj.result=null"
+                               type="number"
+                               [(ngModel)]="izracunaj.nq"
+                               class="form-control"
+                               placeholder="exp. 25"
+                               required
+                               name="Nq"
+                               #Nq="ngModel"
+                               id="Nq">
+                        <span class="input-group-addon test-active"
+                              *ngIf="Nq.touched && !Nq.valid"
+                              id="basic-addon2">
+                            <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                        </span>
+                        <span class="input-group-addon"
+                              id="basic-addon2">
+                            [kN]
+                        </span>
+                    </div>
+                </div>
+        </div>
+            <div class="row">
+                <div class="input-group">
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        b=
+                    </span>
+                    <input (keyup)="izracunaj.result=null"
+                           type="number"
+                           [(ngModel)]="izracunaj.b"
+                           class="form-control"
+                           placeholder="exp. 25"
+                           required
+                           name="b"
+                           #b="ngModel"
+                           id="b">
+                    <span class="input-group-addon test-active"
+                          *ngIf="b.touched && !b.valid  || b.touched && b.value<=0"
+                          id="basic-addon2">
+                        <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                    </span>
+                    <span class="input-group-addon"
+                          id="basic-addon2">
+                        [cm]
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        h=
+                    </span>
+                    <input type="text" (keyup)="izracunaj.h!=0?izracunaj.mu=0:izracunaj.mu=0.164;izracunaj.result=null"
+                           [(ngModel)]="izracunaj.h"
+                           class="form-control"
+                           placeholder="exp. 40"
+                           required
+                           name="h"
+                           #h="ngModel"
+                           id="h">
+                    <span class="input-group-addon test-active"
+                          *ngIf="h.touched && !h.valid || h.touched && h.value<0"
+                          id="basic-addon2">
+                        <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                    </span>
+                    <span class="input-group-addon"
+                          id="basic-addon2">
+                        [cm]
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        d1=
+                    </span>
+                    <input (keyup)="izracunaj.result=null"
+                           type="number"
+                           [(ngModel)]="izracunaj.d1"
+                           class="form-control"
+                           placeholder="exp. 4"
+                           required
+                           name="d1"
+                           #d1="ngModel"
+                           id="d1">
+                    <span class="input-group-addon test-active"
+                          *ngIf="d1.touched && !d1.valid || d1.touched && d1.value<=0"
+                          id="basic-addon2">
+                        <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                    </span>
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        d2=
+                    </span>
+                    <input (keyup)="izracunaj.result=null"
+                           type="number"
+                           [(ngModel)]="izracunaj.d2"
+                           class="form-control"
+                           placeholder="exp. 4"
+                           required
+                           name="d2"
+                           #d2="ngModel"
+                           id="d2">
+                    <span class="input-group-addon test-active"
+                          *ngIf="d2.touched && !d2.valid || d2.touched && d2.value<=0"
+                          id="basic-addon2">
+                        <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                    </span>
+                    <span class="input-group-addon"
+                          id="basic-addon2">
+                        [cm]
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        Beton
+                    </span>
+                    <select (change)="izracunaj.result=null"
+                            class="form-control" name="beton"
+                            [(ngModel)]="izracunaj.betonClass">
+                        <option *ngFor="let beton of betonclassList"
+                                [value]="beton.name">
+                            {{beton.name}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        Armatura
+                    </span>
+                    <select (change)="izracunaj.result=null"
+                            class="form-control" name="armatura"
+                            [(ngModel)]="izracunaj.armtype">
+                        <option *ngFor="let arm of armaturaTypeList"
+                                [ngValue]="arm.name">
+                            {{arm.name}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" *ngIf="izracunaj.h==0">
+                <div class="input-group">
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        &mu;_sd
+                    </span>
+                    <select (change)="izracunaj.result=null"
+                            class="form-control" name="mu"
+                            [(ngModel)]="izracunaj.mu">
+                        <option *ngFor="let mu of muList"
+                                [ngValue]="mu['&mu;Rd']">
+                            &epsilon;c/&epsilon;s1= {{mu['&epsilon;c']}}/{{mu['&epsilon;s1']}}; &mu;Rd={{mu['&mu;Rd']}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <!---->
+                <button (click)="Izracunaj()"
+                        [attr.disabled]="(izracunaj.result!=null || f.invalid==true || h.value<0|| b.value<=0|| d1.value<=0 || d2.value<=0)==false?null:true"
+                        class="btn-primary btn " type="submit">
+                    <i class="fa fa fa-spinner fa-spin" *ngIf="IsCalcuating"></i>
+                    <span *ngIf="IsCalcuating"> Racunam...</span>
+                    <span *ngIf="!IsCalcuating"> Izracunaj</span>
+                </button>
+            </div>
+
+        </form>
+        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12 form-group " *ngIf="izracunaj.result">
+            <label for="comment">Rezultat:</label>
+            <textarea class="form-control" disabled rows="15" id="comment">{{izracunaj.result.result}}</textarea>
+        </div>
+    </div>
+

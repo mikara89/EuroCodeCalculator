@@ -1,0 +1,475 @@
+<h1>
+    Transverzalne Sile EC2
+    <i class="fa fa-check-circle-o" aria-hidden="true" *ngIf="validCalc && result" title="Valid!"></i>
+    <i class="fa fa-times-circle-o" aria-hidden="true" *ngIf="!validCalc && result" title="Not Valid!"></i>
+    <i class="fa fa-question-circle-o" aria-hidden="true" *ngIf="!result" title="Not Calculated!"></i>
+</h1>
+<loader-rotating-dots *ngIf="!IsPageReady"></loader-rotating-dots>
+<div *ngIf="IsPageReady">
+
+    <!--{{izracunaj | json}}-->
+    <form class="col-xl-3 col-lg-4 col-md-5 col-sm-5 col-xs-12" #f="ngForm">
+        <div class="row">
+            <div action="">
+                <input type="radio" name="gender" [attr.checked]="!IsVed" (click)="Toggled(false)"> Vg i Vq
+                <input type="radio" name="gender" [attr.checked]="IsVed" (click)="Toggled(true)"> Ved
+            </div>
+        </div>
+        <div class="row" *ngIf="IsVed">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    Ved=
+                </span>
+                <input (change)="reset()"
+                       type="number"
+                       [(ngModel)]="izracunaj.Ved"
+                       class="form-control"
+                       placeholder="exp. 25"
+                       required
+                       name="Ved"
+                       #Ved="ngModel"
+                       id="Ved">
+                <span class="input-group-addon test-active"
+                      *ngIf="Ved.touched && !Ved.valid"
+                      id="basic-addon2">
+                    <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                </span>
+                <span class="input-group-addon"
+                      id="basic-addon2">
+                    [kN]
+                </span>
+            </div>
+        </div>
+        <div class="row" *ngIf="!IsVed">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    Vg=
+                </span>
+                <input (change)="reset()"
+                       type="number"
+                       [(ngModel)]="izracunaj.Vg"
+                       class="form-control"
+                       placeholder="exp. 25"
+                       required
+                       name="Vg"
+                       #Vg="ngModel"
+                       id="Vg">
+                <span class="input-group-addon test-active"
+                      *ngIf="Vg.touched && !Vg.valid"
+                      id="basic-addon2">
+                    <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                </span>
+                <span class="input-group-addon"
+                      id="basic-addon2">
+                    [kN]
+                </span>
+            </div>
+        </div>
+        <div class="row" *ngIf="!IsVed">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    Vq=
+                </span>
+                <input (change)="reset()"
+                       type="number"
+                       [(ngModel)]="izracunaj.Vq"
+                       class="form-control"
+                       placeholder="exp. 25"
+                       required
+                       name="Vq"
+                       #Vq="ngModel"
+                       id="Vq">
+                <span class="input-group-addon test-active"
+                      *ngIf="Vq.touched && !Vq.valid"
+                      id="basic-addon2">
+                    <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                </span>
+                <span class="input-group-addon"
+                      id="basic-addon2">
+                    [kN]
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    b=
+                </span>
+                <input (change)="reset()"
+                       type="number"
+                       [(ngModel)]="izracunaj.b"
+                       class="form-control"
+                       placeholder="exp. 25"
+                       required
+                       name="b"
+                       #b="ngModel"
+                       id="b">
+                <span class="input-group-addon test-active"
+                      *ngIf="b.touched && !b.valid  || b.touched && b.value<=0"
+                      id="basic-addon2">
+                    <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                </span>
+                <span class="input-group-addon"
+                      id="basic-addon2">
+                    [cm]
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    h=
+                </span>
+                <input (change)="reset()"
+                       type="number"
+                       [(ngModel)]="izracunaj.h"
+                       class="form-control"
+                       placeholder="exp. 40"
+                       required
+                       name="h"
+                       #h="ngModel"
+                       id="h">
+                <span class="input-group-addon test-active"
+                      *ngIf="h.touched && !h.valid || h.touched && h.value<=0"
+                      id="basic-addon2">
+                    <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                </span>
+                <span class="input-group-addon"
+                      id="basic-addon2">
+                    [cm]
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    d1=
+                </span>
+                <input (change)="reset()"
+                       type="number"
+                       [(ngModel)]="izracunaj.d1"
+                       class="form-control"
+                       placeholder="exp. 4"
+                       required
+                       name="d1"
+                       #d1="ngModel"
+                       id="d1">
+                <span class="input-group-addon test-active"
+                      *ngIf="d1.touched && !d1.valid || d1.touched && d1.value<=0"
+                      id="basic-addon2">
+                    <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                </span>
+                <span class="input-group-addon"
+                      id="basic-addon2">
+                    [cm]
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    kom
+                </span>
+                <select (change)="reset()"
+                        class="form-control"
+                        name="kom"
+                        [(ngModel)]="izracunaj.armLongitudinal.kom"
+                        *ngIf="armaturaList">
+                    <option *ngFor="let arm of armaturaList.listOfNum"
+                            [value]="arm">
+                        {{arm}}
+                    </option>
+                </select>
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    &empty;
+                </span>
+                <select (change)="reset()"
+                        class="form-control"
+                        name="diametar"
+                        [(ngModel)]="izracunaj.armLongitudinal.diametar"
+                        *ngIf="armaturaList">
+                    <option *ngFor="let arm of armaturaList.listOfArmatura"
+                            [value]="arm.diameter">
+                        {{armaturaList.symbol}}&empty;{{arm.diameter}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    Beton
+                </span>
+                <select (change)="reset()"
+                        class="form-control"
+                        name="beton"
+                        [(ngModel)]="izracunaj.betonClass">
+                    <option *ngFor="let beton of betonclassList"
+                            [value]="beton.name">
+                        {{beton.name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    Armatura
+                </span>
+                <select (change)="reset(); "  (click)="log(f)"
+                        class="form-control"
+                        name="armatura"
+                        [(ngModel)]="izracunaj.armtype">
+                    <option *ngFor="let arm of armaturaTypeList"
+                            [ngValue]="arm.name">
+                        {{arm.name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <button [attr.disabled]="(result!=null || f.invalid==true || h.value<=0|| b.value<=0|| d1.value<=0)==false?null:true"
+                    (click)="Izracunaj();"
+                    class="btn-primary btn ">
+                <i class="fa fa fa-spinner fa-spin" *ngIf="IsCalcuating"></i>
+                <span *ngIf="IsCalcuating"> Racunam...</span>
+                <span *ngIf="!IsCalcuating"> Izracunaj</span>
+            </button>
+        </div>
+        <!--{{result | json}}
+    {{armaturaList | json}}-->
+    </form>
+    <div class="col-xl-3 col-lg-5 col-md-7 col-sm-7 col-xs-12" *ngIf="validCalc && result">
+        <div class="not-minimum" *ngIf="result.minArm_pot==0">
+            <strong> Uzengije:</strong>
+            <div class="row">
+                <div class="input-group">
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        &empty;
+                    </span>
+                    <select (change)="Izracunaj()"
+                            class="form-control"
+                            [(ngModel)]="izracunaj.u_diametar"
+                            *ngIf="armaturaList">
+                        <option *ngFor="let arm of armaturaList.listOfArmatura"
+                                [value]="arm.diameter">
+                            {{armaturaList.symbol}}&empty;{{arm.diameter}}
+                        </option>
+                    </select>
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        s
+                    </span>
+                    <select (change)="Izracunaj()"
+                            class="form-control"
+                            [(ngModel)]="izracunaj.s"
+                            *ngIf="armaturaList">
+                        <option *ngFor="let s of result.listS"
+                                [value]="s">
+                            {{s}}cm
+                        </option>
+                    </select>
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        m
+                    </span>
+                    <select (change)="Izracunaj()"
+                            class="form-control"
+                            [(ngModel)]="izracunaj.m"
+                            *ngIf="armaturaList">
+                        <option *ngFor="let m of result.listM"
+                                [value]="m">
+                            {{m}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        Iskoriscenost Armature:
+                    </span>
+                    <div class="form-control">
+                        <div class="progress-bar progress-bar-striped"
+                             role="progressbar"
+                             [style.width.%]="(result.iskorArm*100)<100?(result.iskorArm*100):100"
+                             [class.progress-bar-danger]="(result.iskorArm*100)>100"
+                             attr.aria-valuenow="{{result.iskorArm*100}}"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                            {{result.iskorArm * 100}}%
+                        </div>
+                    </div>
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        <i class="fa fa-check-circle-o" aria-hidden="true" *ngIf="result.iskorArm<=1 && result.iskorArm!=0" title="Valid!"></i>
+                        <i class="fa fa-times-circle-o" aria-hidden="true" *ngIf="result.iskorArm>1" title="Not Valid!"></i>
+                        <i class="fa fa-question-circle-o" aria-hidden="true" *ngIf="result.iskorArm==0" title="Not Calculated!"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        Iskoriscenost Betona:
+                    </span>
+                    <div class="form-control">
+                        <div class="progress-bar progress-bar-striped"
+                             role="progressbar"
+                             [style.width.%]="(result.iskorBeton*100)<100?(result.iskorBeton*100):100"
+                             [class.progress-bar-danger]="(result.iskorBeton*100)>100"
+                             attr.aria-valuenow="{{result.iskorBeton*100}}"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                            {{result.iskorBeton * 100}}%
+                        </div>
+                    </div>
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+
+                        <i class="fa fa-check-circle-o" aria-hidden="true" *ngIf="result.iskorBeton<=1 && result.iskorBeton!=0" title="Valid!"></i>
+                        <i class="fa fa-times-circle-o" aria-hidden="true" *ngIf="result.iskorBeton>1" title="Not Valid!"></i>
+                        <i class="fa fa-question-circle-o" aria-hidden="true" *ngIf="result.iskorBeton==0" title="Not Calculated!"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="minimum" *ngIf="result.minArm_pot!=0">
+            <strong> Uzengije minimum:</strong>
+            <div class="row">
+                <div class="input-group">
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        &empty;
+                    </span>
+                    <select class="form-control" (change)="minUsvajanje()"
+                            [(ngModel)]="izracunaj.u_diametar"
+                            *ngIf="armaturaList">
+                        <option *ngFor="let arm of armaturaList.listOfArmatura"
+                                [value]="arm.diameter">
+                            {{armaturaList.symbol}}&empty;{{arm.diameter}}
+                        </option>
+                    </select>
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        s
+                    </span>
+                    <select class="form-control" disabled [(ngModel)]="result.s" (change)="minUsvajanje()"
+                            *ngIf="armaturaList">
+                        <option *ngFor="let s of result.listS"
+                                [value]="s">
+                            {{s}}cm
+                        </option>
+                    </select>
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        m
+                    </span>
+                    <select class="form-control" disabled [(ngModel)]="result.m" (change)="minUsvajanje()"
+                            *ngIf="armaturaList">
+                        <option *ngFor="let m of result.listM"
+                                [value]="m">
+                            {{m}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        potA_min:
+                    </span>
+                    <label class="form-control text-right">
+                        {{result.minArm_pot | number}}cm2
+                    </label>
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        usvA_min:
+                    </span>
+                    <label class="form-control text-right">
+                        {{result.minArm_usv | number}}cm2
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div for="comment" *ngIf="result.addArm_pot!=0">
+            <strong>Dodatna poduzna armatura:</strong>
+            <div class="row">
+                <div class="input-group">
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        kom
+                    </span>
+                    <select class="form-control" [(ngModel)]="izracunaj.addArm.kom" (change)="addUsvajanje()"
+                            *ngIf="armaturaList">
+                        <option *ngFor="let arm of armaturaList.listOfNum"
+                                [value]="arm">
+                            {{arm}}
+                        </option>
+                    </select>
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        &empty;
+                    </span>
+                    <select class="form-control" (change)="addUsvajanje()"
+                            [(ngModel)]="izracunaj.addArm.diametar"
+                            *ngIf="armaturaList">
+                        <option *ngFor="let arm of armaturaList.listOfArmatura"
+                                [value]="arm.diameter">
+                            {{armaturaList.symbol}}&empty;{{arm.diameter}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        potA_add:
+                    </span>
+                    <label class="form-control text-right">
+                        {{result.addArm_pot | number}}cm2
+                    </label>
+                    <span class="input-group-addon test-active"
+                          id="basic-addon2">
+                        usvA_add:
+                    </span>
+                    <label class="form-control text-right">
+                        {{result.addArm_usv | number}}cm2
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12 form-group " *ngIf="result">
+        <label for="comment">Rezultat:</label>
+        <textarea class="form-control" disabled rows="15" id="comment">{{result.result}}</textarea>
+    </div>
+    <div class="form-group col-xl-3 col-md-4 col-sm-4 col-lg-3 col-xs-12" *ngIf="!validCalc && result">
+        <label for="comment">Greske:</label>
+        <ul class="list-group">
+            <div style="cursor: pointer;"
+                 *ngFor="let err of result.errors"
+                 (click)="displayMessage(err)"
+                 class="list-group-item alert alert-danger">
+                {{err.substring(0,22)+"..."}}
+            </div>
+        </ul>
+    </div>
+</div>
+
+

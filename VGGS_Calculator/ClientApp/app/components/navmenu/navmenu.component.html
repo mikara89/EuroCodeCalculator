@@ -1,0 +1,53 @@
+<div class='main-nav'>
+    <div class='navbar navbar-inverse'>
+        <div class='navbar-header'>
+            <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                <span class='sr-only'>Toggle navigation</span>
+                <span class='icon-bar'></span>
+                <span class='icon-bar'></span>
+                <span class='icon-bar'></span>
+            </button>
+
+            <a class='navbar-brand' [routerLink]="['/home']" >
+                <span>
+                    <img src="https://www.studentskizivot.com/wp-content/uploads/2011/12/VGGS-Logo180.gif" alt="Smiley face" height="35" width="35">
+                 </span> VGGS_Calculator
+            </a>
+        </div>
+        <div class='clearfix'></div>
+        <div class='navbar-collapse collapse'>
+            <ul class='nav navbar-nav'>
+                <li [routerLinkActive]="['link-active']"
+                    [attr.data-toggle]="newInnerWidth > 767?null:'collapse'"
+                    [attr.data-target]="newInnerWidth > 767?null:'.navbar-collapse'">
+                    <a [routerLink]="['/home']">
+                        <i class="fa fa-home" aria-hidden="true"></i>
+                        <span></span> Home
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']"
+                    [attr.data-toggle]="newInnerWidth > 767?null:'collapse'"
+                    [attr.data-target]="newInnerWidth > 767?null:'.navbar-collapse'">
+                    <a [routerLink]="['/transverzalnesileec']">
+                        <i class="fa fa-exchange" aria-hidden="true"></i>
+                        <span></span> Transverzalne Sile EC
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']"
+                    [attr.data-toggle]="newInnerWidth > 767?null:'collapse'"
+                    [attr.data-target]="newInnerWidth > 767?null:'.navbar-collapse'">
+                    <a [routerLink]="['/savijanjepravresec']">
+                        <span class='glyphicon glyphicon-th-list'></span> Savijanje pravougaonog preseka EC2
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']"
+                    [attr.data-toggle]="newInnerWidth > 767?null:'collapse'"
+                    [attr.data-target]="newInnerWidth > 767?null:'.navbar-collapse'">
+                    <a [routerLink]="['/vitkostec']">
+                        <span class='glyphicon glyphicon-th-list'></span> Vitkost EC2 <br /><i>(in Next version)</i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
