@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TabeleEC2;
-using static CalculatorEC2Logic.SymmetricalReinforsmentOfColumn;
+using static CalculatorEC2Logic.SymmetricalReinfByMaxAndMinPercentageReinf;
 
 namespace TestingCharts
 {

@@ -5,7 +5,7 @@ using System.Linq;
 using TabeleEC2.Model;
 using System.Diagnostics;
 using CalculatorEC2Logic.SavijanjePreseka.EC2;
-using static CalculatorEC2Logic.SymmetricalReinforsmentOfColumn;
+using static CalculatorEC2Logic.SymmetricalReinfByMaxAndMinPercentageReinf;
 
 namespace EuroCodeCalculator
 {
@@ -368,7 +368,7 @@ namespace EuroCodeCalculator
                 beton = TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == "C30/37"),
                 armatura = ReinforcementType.GetArmatura().First(n => n.name == "B500B"),
             };
-            var s = new SymmetricalReinforsmentOfColumn(m);
+            var s = new SymmetricalReinfByMaxAndMinPercentageReinf(m);
 
             var r= s.Get_ρ(457.5, 67.83,40,30);
             

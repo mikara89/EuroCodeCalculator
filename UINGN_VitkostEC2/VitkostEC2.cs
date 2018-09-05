@@ -278,7 +278,7 @@ namespace CalculatorEC2Logic
 
             var Kof = KofZaProracunPravougaonogPresekaEC.Get_Kof_From_μ(KofZaProracunPravougaonogPresekaEC.GetμSd(Msd_, ElementGeometry.b, (ElementGeometry.h - ElementGeometry.d1), Material.beton.fcd / 10));
 
-            var sym = new SymmetricalReinforsmentOfColumn(Material);
+            var sym = new SymmetricalReinfByMaxAndMinPercentageReinf(Material);
             var ρ = sym.Get_ρ(Msd_, Forces.N, ElementGeometry.b, ElementGeometry.h);
 
             var Asd = ElementGeometry.b * ElementGeometry.h * ρ;
@@ -307,12 +307,9 @@ namespace CalculatorEC2Logic
 
 
 
-    public interface IElementGeometrySlenderness
+    public interface IElementGeometrySlenderness: IElementGeometry
     {
-        double b { get; set; }
-        double h { get; set; }
         Izvijanja izvijanje { get; set; }
-        double d1 { get; set; }
         double L { get; set; }
         double li { get; }
         double λ { get; }
@@ -320,9 +317,21 @@ namespace CalculatorEC2Logic
         double Ac { get; }
         double ic { get; }
     }
+    public interface IElementGeometry
+    {
+        double b { get; set; }
+        double h { get; set; }
+        double d1 { get; set; }
+    }
+    public class ElementGeomety : IElementGeometry
+    {
+        public double b { get; set; }
+        public double h { get; set; }
+        public double d1 { get; set; }
+        public double d { get => h - d1; }
+    }
     public class ElementGeometySlenderness : IElementGeometrySlenderness
     {
-
         public double b { get; set; }
         public double h { get; set; }
         public Izvijanja izvijanje { get; set; }

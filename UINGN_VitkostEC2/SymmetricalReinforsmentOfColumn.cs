@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TabeleEC2;
 
 namespace CalculatorEC2Logic
 {
-    public class SymmetricalReinforsmentOfColumn
+    public class SymmetricalReinfByMaxAndMinPercentageReinf
     {
         private IMaterial _material;
 
@@ -45,7 +46,7 @@ namespace CalculatorEC2Logic
         private Generate_ρ_LineForDiagram maxOf_ρ;
         private Generate_ρ_LineForDiagram searchingOf_ρ;
 
-        public SymmetricalReinforsmentOfColumn(IMaterial material)
+        public SymmetricalReinfByMaxAndMinPercentageReinf(IMaterial material)
         {
             _material = material;
             SetMinimumOf_ρ_and_Max();
