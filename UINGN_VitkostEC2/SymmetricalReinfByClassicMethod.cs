@@ -19,7 +19,7 @@ namespace CalculatorEC2Logic
 
         private Generate_ω_LineForDiagram minOf_ω;
         private Generate_ω_LineForDiagram maxOf_ω;
-        private Generate_ω_LineForDiagram searchingOf_ω; 
+        public Generate_ω_LineForDiagram searchingOf_ω { get; internal set; }
          
         public SymmetricalReinfByClassicMethod(IMaterial material, IElementGeometry geometry) 
         {
@@ -31,7 +31,6 @@ namespace CalculatorEC2Logic
         private void SetMinimumOf_ρ_and_Max()
         {
             minOf_ω = new Generate_ω_LineForDiagram(_material, _geometry,0.05);
-            maxOf_ω = new Generate_ω_LineForDiagram(_material, _geometry, 1);
             maxOf_ω = new Generate_ω_LineForDiagram(_material, _geometry, 1);
         }
         public double Get_ω(double μRd, double νRd) 
@@ -66,7 +65,7 @@ namespace CalculatorEC2Logic
         private int CheckDiagram(Generate_ω_LineForDiagram toCheck, double μRd, double νRd)
         {
             var test = toCheck.ListOfDotsInLineOfDiagram;
-
+            var l= test.Where(m => m.μSd == test.Max(n => n.μSd)).ToList();
             var νSdmax = test.Single(m => m.μSd == test.Max(n => n.μSd)).νSd;
             if (νRd >= νSdmax)
             {
@@ -110,7 +109,7 @@ namespace CalculatorEC2Logic
             private readonly IElementGeometry _geometry;
             public double ω { get; internal set; }
 
-            public List<μSd_And_νSd> ListOfDotsInLineOfDiagram { get; set; } 
+            public μSd_And_νSdCollection ListOfDotsInLineOfDiagram { get; set; } 
             /// <summary>
             /// 0.85 by defoult
             /// </summary>
@@ -140,15 +139,23 @@ namespace CalculatorEC2Logic
                     throw new ArgumentNullException(nameof(material));
                 }
 
-                var item = new μSd_And_νSd( geometry,  material);
-                for (double i = -3.5; i < 0; i+=0.1)
+                
+                for (double i = -3.5; i <= -0.1; i+=0.1)
                 {
+                    var item = new μSd_And_νSd(geometry, material);
                     Add(item.GetFromKof(new KofZaProracunPravougaonogPresekaModelEC(i, 20), ω));
                 }
-                for (double i = 19.9; i < -1.5; i -= 0.1)
+                for (double i = 19.9; i > -1.5; i -= 0.1)
                 {
+                    var item = new μSd_And_νSd(geometry, material);
                     Add(item.GetFromKof(new KofZaProracunPravougaonogPresekaModelEC(-3.5, i), ω));
                 }
+
+                var t = this;
+            }
+            public μSd_And_νSdCollection()
+            {
+
             }
         }
         public class μSd_And_νSd
@@ -171,18 +178,38 @@ namespace CalculatorEC2Logic
             public μSd_And_νSd GetFromKof(KofZaProracunPravougaonogPresekaModelEC kof,double ω) 
             {
                 this.kof = kof ?? throw new ArgumentNullException(nameof(kof));
-                x = (geometry as ElementGeomety).d * kof.ξ;
-                εs2 = kof.εc / x * (x - geometry.d1);
-                var sigma = kof.εs1 * material.armatura.Es;
-                σs1 = sigma > material.armatura.fyd ? material.armatura.fyd : sigma;
-                sigma = Math.Abs(εs2) * material.armatura.Es;
-                σs2 = sigma > material.armatura.fyd ? material.armatura.fyd : sigma;
+                var fyd = material.armatura.fyd * 10;
 
-                νSd = 0.85 * kof.αv * kof.ξ + ω * ((σs2 / material.armatura.fyd) - (σs1 / material.armatura.fyd));
-                μSd = 0.85 * kof.αv * kof.ξ * (geometry.h / (geometry as ElementGeomety).d * 0.5 - kof.ka * kof.ξ) + ω * (geometry.h / (geometry as ElementGeomety).d * 0.5 - geometry.d1 / (geometry as ElementGeomety).d) * Math.Abs((σs2 / material.armatura.fyd) + (σs1 / material.armatura.fyd));
+                x = (geometry as ElementGeomety).d * kof.ξ;
+
+                εs2 = kof.εc / x * (x - geometry.d1);
+
+                var sigma = kof.εs1 * material.armatura.Es;
+                σs1 = sigma > fyd ? fyd : sigma;
+
+                sigma = Math.Abs(εs2) * material.armatura.Es;
+                σs2 = sigma > fyd ? fyd : sigma;
+                
+                νSd = 0.85 * kof.αv * kof.ξ + ω * ((σs2 / fyd) - (σs1 / fyd));
+                μSd = 0.85 * kof.αv * kof.ξ * (geometry.h / (geometry as ElementGeomety).d * 0.5 - kof.ka * kof.ξ) + ω * (geometry.h / (geometry as ElementGeomety).d * 0.5 - geometry.d1 / (geometry as ElementGeomety).d) * Math.Abs((σs2 / fyd) + (σs1 / fyd));
 
                 return this;
             }
+        }
+
+
+        public List<μSd_And_νSdCollection> GetAllLines()
+        {
+            var result = new List<μSd_And_νSdCollection>();
+            var r = new Generate_ω_LineForDiagram(_material, _geometry, 0.05);
+            result.Add(r.ListOfDotsInLineOfDiagram);
+            for (double i = 0.1; i <= 1; i+=0.1)
+            {
+                r = new Generate_ω_LineForDiagram(_material, _geometry, i);
+                result.Add(r.ListOfDotsInLineOfDiagram);
+            }
+
+            return result;
         }
     }
 }

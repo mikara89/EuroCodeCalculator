@@ -32,21 +32,50 @@ namespace TestingCharts
 
         private void testqq()
         {
-            var m = new Material()
+            var material = new Material()
             {
-                beton = TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == "C30/37"),
+                beton = TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == "C25/30"),
                 armatura = ReinforcementType.GetArmatura().First(n => n.name == "B500B"),
             };
-            var s = new Generate_ρ_LineForDiagram(m);
-            s.GetLineForDiagram();
-            var r = s.ListOfDotsInLineOfDiagram;
-            var points = r.Select(n =>new Point( n.Mbh, n.NbhPower2)).AsEnumerable();
+            var geometry = new ElementGeomety()
+            {
+                b = 20,
+                d1 = 4,
+                h = 40,
+            };
+            var sym = new SymmetricalReinfByClassicMethod(material, geometry);
 
-            var l= new List<IEnumerable<Point>>();
-            l.Add(points);
-            list.ItemsSource = l;
+            var x = new List<double>();
+            var y = new List<double>();
 
-         
+
+            //r.ForEach(n => points.Add(new Point( n.Mbh, n.NbhPower2)));
+
+            //var l= new List<List<Point>>();
+            //l.Add(points);
+            //list.ItemsSource = l;
+            Grid g = new Grid();
+            var l = new List<List<Point>>();
+            for (int i = 0; i < sym.GetAllLines().Count; i++)
+            {
+                l.Add(new List<Point>());
+                var r = sym.GetAllLines()[i];
+                var toRemove = new SymmetricalReinfByClassicMethod.μSd_And_νSdCollection();
+                r.ForEach(z => { if (z.μSd < 0 || z.νSd < 0) toRemove.Add(z); });
+                toRemove.ForEach(z => r.Remove(z));
+
+                r.ForEach(n => x.Add(n.μSd));
+                r.ForEach(n => y.Add(n.νSd));
+                r.ForEach(n => l[i].Add( new Point(n.μSd, n.νSd)));
+                LineGraph lineGraph = new LineGraph();
+                lineGraph.Plot(x, y);
+                var a = r.First(t => t.νSd == r.Max(n=>n.νSd) );
+                //g.Children.Add(lineGraph);
+            }
+            // Char.Content = g;
+            //var c = new Chart();
+            
+            list.DataContext = l;
         }
     }
 }

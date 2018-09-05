@@ -9,10 +9,10 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <d3:Chart BottomTitle="Argument" LeftTitle="Function" x:Name="Char">
-            <ListView Background="Transparent" x:Name="list">
+            <ListView Background="Transparent" x:Name="list" ItemsSource="{Binding}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <d3:LineGraph x:Name="linegraph" d3:Plot.Points="{Binding}" Description="Simple linegraph" Stroke="Blue" StrokeThickness="3"/>
+                        <d3:LineGraph x:Name="linegraph"  Description="Simple linegraph" Stroke="Blue" StrokeThickness="3"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>"
                 

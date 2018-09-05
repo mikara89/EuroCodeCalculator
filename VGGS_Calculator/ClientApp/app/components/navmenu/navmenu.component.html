@@ -47,6 +47,13 @@
                         <span class='glyphicon glyphicon-th-list'></span> Vitkost EC2 <br /><i>(in Next version)</i>
                     </a>
                 </li>
+                <li [routerLinkActive]="['link-active']"
+                    [attr.data-toggle]="newInnerWidth > 767?null:'collapse'"
+                    [attr.data-target]="newInnerWidth > 767?null:'.navbar-collapse'">
+                    <a [routerLink]="['/symmReinf']">
+                        <span class='glyphicon glyphicon-th-list'></span> Simetricno armiranje po klasicnoj metodi <br /><i>(in Next version)</i>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

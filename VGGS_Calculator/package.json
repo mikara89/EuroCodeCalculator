@@ -62,7 +62,11 @@
     "zone.js": "0.8.12"
   },
   "dependencies": {
+    "@swimlane/ngx-charts": "^5.3.1",
+    "angular4-fusioncharts": "^1.0.0",
     "bootstrap-toggle": "^2.2.2",
-    "font-awesome": "^4.7.0"
+    "d3": "^4.9.1",
+    "font-awesome": "^4.7.0",
+    "fusioncharts": "^3.13.1-sr.1"
   }
 }
