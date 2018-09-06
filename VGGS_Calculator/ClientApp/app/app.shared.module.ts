@@ -20,12 +20,7 @@ import { SavPravPresekaEc2Service } from './services/sav-prav-preseka-ec2.servic
 import { LoaderRotatingDotsComponent } from './components/loader-rotating-dots/loader-rotating-dots.component';
 import { SymmReinfComponent } from './components/symm-reinf/symm-reinf.component';
 import { SymmReinfService } from './services/symm-reinf.service';
-import * as FusionCharts from 'fusioncharts';
-import * as Charts from 'fusioncharts/fusioncharts.charts';
-import * as FintTheme from 'fusioncharts/themes/fusioncharts.theme.fint';
-import { FusionChartsModule } from 'angular4-fusioncharts';
 
-FusionChartsModule.fcRoot(FusionCharts, Charts, FintTheme);
 @NgModule({
     declarations: [
         AppComponent,
@@ -43,7 +38,6 @@ FusionChartsModule.fcRoot(FusionCharts, Charts, FintTheme);
         CommonModule,
         HttpModule,
         FormsModule,
-        FusionChartsModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },

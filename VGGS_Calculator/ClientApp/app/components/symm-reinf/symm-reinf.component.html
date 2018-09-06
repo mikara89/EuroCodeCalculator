@@ -1,9 +1,19 @@
-<!--<h1>
-    {{title}}
-</h1>
-<fusioncharts [id]="id"
-              [width]="width"
-              [height]="height"
-              [type]="type"
-              [dataFormat]="dataFormat"
-              [dataSource]="dataSource"></fusioncharts>-->
+﻿
+<div class="row">
+    <div class="col-lg-6">
+        <div class="input-group">
+            <span class="input-group-addon" id="sizing-addon1">μSd</span>
+            <input type="number" class="form-control" placeholder="enter μSd...">
+            <span class="input-group-addon" id="sizing-addon1">νSd</span>
+            <input type="number" class="form-control" placeholder="enter νSd...">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button" >Go!</button>
+            </span>
+        </div><!-- /input-group -->
+    </div><!-- /.col-lg-6 -->
+</div><!-- /.row -->
+<div *ngIf="chart">
+    <canvas id="canvas">{{chart}}</canvas>
+</div>
+
+
