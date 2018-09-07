@@ -2,6 +2,8 @@
 import { SymmReinfService } from '../../services/symm-reinf.service';
 import * as Chart from 'chart.js';
 import { ChartDataSets, ChartPoint } from 'chart.js';
+import { BetonClassService } from '../../services/beton-class.service';
+import { ArmaturaTypeService } from '../../services/armatura-type.service';
 
 @Component({
   selector: 'app-symm-reinf',
@@ -9,141 +11,190 @@ import { ChartDataSets, ChartPoint } from 'chart.js';
   styleUrls: ['./symm-reinf.component.css']
 })
 export class SymmReinfComponent implements OnInit {
-    List: Array<Array<SymmReinfModel>>=[];
+    isReady: boolean=true;
+    List: Array<Array<SymmReinfModel>> = [];
+    private color:any;
     l: any = [];
     chart: any=[];
     x: any = [];
     y: any = [];
- dataset: ChartDataSets = { 
-        label: '0.3%', fill: false,
-        backgroundColor: '#003300', borderColor: '#003300',
-     pointRadius: 0,
-        borderWidth:0.5,
+    betonclassList: any;
+    armaturaTypeList: any;
+
+    izracunaj: any = {
+        mi: 0.5,
+        ni: 0.6,
+        geometry: {
+            b: 25,
+            h: 40,
+            d1: 4,
+        },
+        material: {
+            armtype: "B500B",
+            betonClass: "C25/30",
+        }
+    }
+     dataset1: ChartDataSets = { 
+            label: '0/-0.35%', fill: false,
+         backgroundColor: '#000000', borderColor: '#000000',
+         pointRadius: 0, hideInLegendAndTooltip:true,
+         borderWidth: 1,
+            borderDash:[10,5],
+            pointHitRadius: 0,
+            pointHoverRadius: 0,
+         data: [
+             { x: -0.126171584531692, y: 0.188095241435375 },
+             { x: 0.629384005779419, y: 1.88809516323537 }
+         ],
+     }
+    dataset2: ChartDataSets = {
+        label: '0.3/-0.35%', fill: false,
+        backgroundColor: '#000000', borderColor: '#000000',
+        pointRadius: 0, hideInLegendAndTooltip: true,
+        borderWidth: 1,
+        borderDash: [10, 5],
         pointHitRadius: 0,
         pointHoverRadius: 0,
-        data: [{ x: -0.321789022102072, y: 0.368701488056952 }, { x: 1.18932208900904, y: 0.368701488056952 }],
+        data: [
+            { x: -0.321789022102072, y: 0.368701488056952 },
+            { x: 1.18932208900904, y: 0.368701488056952 }
+        ],
     }
-    constructor(private symServices: SymmReinfService) { }
+
+    constructor(private symServices: SymmReinfService,
+        private betonClasService: BetonClassService,
+        private armaturaTypeService: ArmaturaTypeService,
+    ) { }
 
     ngOnInit() {
-        this.symServices.getListOfAllLines().subscribe(list => {
+        this.betonClasService.getBetonClass().subscribe(beton => {
+            this.betonclassList = beton;
+            this.armaturaTypeService.getArmaturaType().subscribe(arm => {
+                this.armaturaTypeList = arm;
+            });
+        });
+        this.creatNewChart();
+    }
+    creatNewChart() {
+        this.symServices.getListOfAllLines(this.izracunaj).subscribe(list => {
+            delete this.List;
             this.List = list;
             this.sortData(this.List);
-
+            delete this.chart;
             this.chart = new Chart('canvas', {
                 type: 'line',
                 data: {
                     datasets: [{
                         label: '0.05', fill: false,
-                        backgroundColor: '#ff6666', borderColor: '#ff6666',
+                        backgroundColor: this.RandomColor(true), borderColor: this.RandomColor(),
                         pointRadius: 0,
-                        pointHitRadius: 0,
-                        pointHoverRadius: 0, 
+                        pointHitRadius: 0, borderWidth: 2,
+                        pointHoverRadius: 0,
                         data: this.l[0]['points'],
 
                     }, {
                         label: '0.1', fill: false,
-                            backgroundColor: '#ff6666', borderColor: '#ff6666',
-                            pointRadius: 0,
-                            pointHitRadius: 0,
-                            pointHoverRadius: 0, 
+                        backgroundColor: this.RandomColor(true), borderColor: this.RandomColor(),
+                        pointRadius: 0,
+                        pointHitRadius: 0, borderWidth: 2,
+                        pointHoverRadius: 0,
                         data: this.l[1]['points'],
 
                     }, {
                         label: '0.2', fill: false,
-                            backgroundColor: '#ff668c', borderColor: '#ff668c',
-                            pointRadius: 0,
-                            pointHitRadius: 0,
-                            pointHoverRadius: 0, 
+                        backgroundColor: this.RandomColor(true), borderColor: this.RandomColor(),
+                        pointRadius: 0,
+                        pointHitRadius: 0, borderWidth: 2,
+                        pointHoverRadius: 0,
                         data: this.l[2]['points'],
 
                     }, {
                         label: '0.3', fill: false,
-                            pointRadius: 0,
-                            pointHitRadius: 0,
-                            pointHoverRadius: 0, 
-                            backgroundColor: '#ffd966', borderColor: '#ffd966',
+                        pointRadius: 0,
+                        pointHitRadius: 0, borderWidth: 2,
+                        pointHoverRadius: 0,
+                        backgroundColor: this.RandomColor(true), borderColor: this.RandomColor(),
                         data: this.l[3]['points'],
 
                     }, {
                         label: '0.4', fill: false,
-                            pointRadius: 0,
-                            pointHitRadius: 0,
-                            pointHoverRadius: 0, 
-                            backgroundColor: '#d9ff66', borderColor: '#d9ff66',
-                            data: this.l[4]['points'],
-                        }, {
-                            label: '0.5', fill: false,
-                            pointRadius: 0,
-                            pointHitRadius: 0,
-                            pointHoverRadius: 0,
-                            backgroundColor: '#8cff66', borderColor: '#8cff66',
-                            data: this.l[5]['points'],
+                        pointRadius: 0,
+                        pointHitRadius: 0, borderWidth: 2,
+                        pointHoverRadius: 0,
+                        backgroundColor: this.RandomColor(true), borderColor: this.RandomColor(),
+                        data: this.l[4]['points'],
+                    }, {
+                        label: '0.5', fill: false,
+                        pointRadius: 0,
+                        pointHitRadius: 0, borderWidth: 2,
+                        pointHoverRadius: 0,
+                        backgroundColor: this.RandomColor(true), borderColor: this.RandomColor(),
+                        data: this.l[5]['points'],
 
 
-                        }, {
-                            label: '0.6', fill: false,
-                            pointRadius: 0,
-                            pointHitRadius: 0,
-                            pointHoverRadius: 0,
-                            backgroundColor: '#66ff8c', borderColor: '#66ff8c',
-                            data: this.l[6]['points'],
+                    }, {
+                        label: '0.6', fill: false,
+                        pointRadius: 0,
+                        pointHitRadius: 0, borderWidth: 2,
+                        pointHoverRadius: 0,
+                        backgroundColor: this.RandomColor(true), borderColor: this.RandomColor(),
+                        data: this.l[6]['points'],
 
 
-                        }, {
-                            label: '0.7', fill: false,
-                            pointRadius: 0,
-                            pointHitRadius: 0,
-                            pointHoverRadius: 0,
-                            backgroundColor: '#66ffd9', borderColor: '#66ffd9',
-                            data: this.l[7]['points'],
+                    }, {
+                        label: '0.7', fill: false,
+                        pointRadius: 0,
+                        pointHitRadius: 0, borderWidth: 2,
+                        pointHoverRadius: 0,
+                        backgroundColor: this.RandomColor(true), borderColor: this.RandomColor(),
+                        data: this.l[7]['points'],
 
 
-                        }, {
-                            label: '0.8', fill: false,
-                            pointRadius: 0,
-                            pointHitRadius: 0,
-                            pointHoverRadius: 0,
-                            backgroundColor: '#66d9ff', borderColor: '#66d9ff',
-                            data: this.l[8]['points'],
+                    }, {
+                        label: '0.8', fill: false,
+                        pointRadius: 0,
+                        pointHitRadius: 0, borderWidth: 2,
+                        pointHoverRadius: 0,
+                        backgroundColor: this.RandomColor(true), borderColor: this.RandomColor(),
+                        data: this.l[8]['points'],
 
 
-                        }, {
-                            label: '0.9', fill: false,
-                            pointRadius: 0,
-                            pointHitRadius: 0,
-                            pointHoverRadius: 0,
-                            backgroundColor: '#66b3ff', borderColor: '#66b3ff',
-                            data: this.l[9]['points'],
+                    }, {
+                        label: '0.9', fill: false,
+                        pointRadius: 0,
+                        pointHitRadius: 0, borderWidth: 2,
+                        pointHoverRadius: 0,
+                        backgroundColor: this.RandomColor(true), borderColor: this.RandomColor(),
+                        data: this.l[9]['points'],
 
 
-                        }, {
-                            label: '1.0', fill: false,
-                            pointRadius: 0,
-                            pointHitRadius: 0,
-                            pointHoverRadius: 0,
-                            backgroundColor: '#6666ff', borderColor: '#6666ff',
-                            data: this.l[10]['points'],
+                    }, {
+                        label: '1.0', fill: false,
+                        pointRadius: 0,
+                        pointHitRadius: 0, borderWidth: 2,
+                        pointHoverRadius: 0,
+                        backgroundColor: this.RandomColor(true), borderColor: this.RandomColor(),
+                        data: this.l[10]['points'],
 
 
-                        }, this.dataset
+                    }, this.dataset1, this.dataset2
                     ],
 
                 },
                 options: {
-                    
+
                     scales: {
                         xAxes: [{
                             type: 'linear',
                             display: true,
                             ticks: {
                                 beginAtZero: true,
-                                min:0,
+                                min: 0,
                                 max: 1.2,
                             },
                             position: 'bottom'
                         }],
-                        yAxes: [{ 
+                        yAxes: [{
                             type: 'linear',
                             display: true,
                             ticks: {
@@ -151,28 +202,28 @@ export class SymmReinfComponent implements OnInit {
                                 min: 0,
                                 max: 3.0,
                                 autoSkip: false,
-                                //callback: function(label, index, labels) {
-                                //    if (index === 0) {
-                                //        return label; 
-                                //    }
-                                //},
                             },
-                            
+
                         }]
                     }
                 }
             });
-            //this.addData(this.chart, this.dataset);
-
         });
     }
-    addData(chart: any, dataset: ChartDataSets) {
+    addData(chart: any, dataset: any) {
         (chart.data.datasets as ChartDataSets[]).push(dataset);
         chart.update();
 }
-
+    RandomColor(clean: boolean = false) {
+        if (clean || this.color==null)
+            this.color = "rgb(" + Math.floor(Math.random() * 255)
+                + "," + Math.floor(Math.random() * 255)
+                + "," + Math.floor(Math.random() * 255) + ")";
+        return this.color;
+    }
     sortData(list: Array<Array<SymmReinfModel>>) {
         {
+            this.l=[];
             list.forEach(x => {
                 let item = {
                     ω: 0.05,
@@ -186,11 +237,55 @@ export class SymmReinfComponent implements OnInit {
                 this.l.push(item);
                 
             });
-           
-            console.log(this.l[0]['points']); 
         }
     }
 
+    SearchForLine() {
+        
+        this.symServices.getLinesFromInput(this.izracunaj)
+            .subscribe((line : any) => {
+                let data = this.sortDataFromSearch(line);
+                let dataset = this.createDataSet('#000000',Math.round(line.w), data.points);
+                console.log(dataset);
+                this.addData(this.chart, dataset);
+            },
+            async (error: Response) => {
+                var mess = (await error.json()).error;
+                alert(mess);
+                console.log(mess);
+            }, () => { }
+            );
+    }
+
+    sortDataFromSearch(list: any) {
+        {
+            let w = list.w;
+            let item: DataForChart = { w: 0, points: [{ x: 0,y: 0 }] };
+
+            list.list.forEach((y: SymmReinfModel) => {
+                item.points.push({ x: y.μSd, y: y.νSd });
+            });
+
+            item.points.splice(0, 1);
+            return item;
+        }
+    }
+    createDataSet(color: any,lable:any,points:any[]) {
+        {
+           let dataset: ChartDataSets = {
+               label: lable, fill: false,
+               backgroundColor: color, borderColor: color,
+                pointRadius: 0,
+                borderWidth: 1,
+                borderDash: [10, 5],
+                pointHitRadius: 0,
+                pointHoverRadius: 0,
+               data: points,
+            }
+
+            return dataset;
+        }
+    }
 }
 
 interface SymmReinfModel {
@@ -200,4 +295,11 @@ interface SymmReinfModel {
     'σs1': number;
     'σs2': number;
     x: number;
+}
+interface DataForChart {
+    w: number;
+    points: [{
+        x: number;
+        y: number;
+    }]
 }

@@ -23,52 +23,86 @@ namespace VGGS_Calculator.Controllers
     }
     public class SymmetricalReinfByClassicMethodController : Controller 
     {
-        [HttpGet("/api/Symclassic")]
-        public async Task<List<SymmetricalReinfByClassicMethod.μSd_And_νSdCollection>> GetListOfAllLines() 
-        {
-
-            var material = new Material()
-            {
-                beton = TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == "C25/30"),
-                armatura = ReinforcementType.GetArmatura().First(n => n.name == "B500B"),
-            };
-            var geometry = new ElementGeomety()
-            {
-                b = 20,
-                d1 = 4,
-                h = 40,
-            };
-            return new SymmetricalReinfByClassicMethod(material, geometry).GetAllLines();
-        }
-
-        [HttpPost("/api/Symclassic/search")]
-        public async Task<object> SearchForLine([FromBody] MiNi model) 
+        [HttpPost("/api/Symclassic")]
+        public IActionResult GetListOfAllLines([FromBody] MiNi model)
         {
             if (model == null)
             {
                 throw new System.ArgumentNullException(nameof(model));
             }
+            try
+            {
+                var material = new Material()
+                {
+                    beton = TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == model.material.betonClass),
+                    armatura = ReinforcementType.GetArmatura().First(n => n.name == model.material.armtype),
+                };
+                var geometry = new ElementGeomety()
+                {
+                    b = model.geometry.b,
+                    d1 = model.geometry.d1,
+                    h = model.geometry.h,
+                };
+                return Ok(new SymmetricalReinfByClassicMethod(material, geometry).GetAllLines());
+            }
+            catch (System.Exception ex)
+            {
 
-            var material = new Material()
+               return BadRequest(new { error = ex.Message });
+            }
+
+        }
+
+        [HttpPost("/api/Symclassic/search")]
+        public IActionResult SearchForLine([FromBody] MiNi model) 
+        {
+            if (model == null)
             {
-                beton = TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == "C25/30"),
-                armatura = ReinforcementType.GetArmatura().First(n => n.name == "B500B"),
-            };
-            var geometry = new ElementGeomety()
+                throw new System.ArgumentNullException(nameof(model));
+            }
+            try
             {
-                b = 20,
-                d1 = 4,
-                h = 40,
-            };
-            var w = new SymmetricalReinfByClassicMethod(material, geometry);
-            w.Get_ω(model.mi, model.ni);
-            return new { w =w.searchingOf_ω.ω, List= w.searchingOf_ω.ListOfDotsInLineOfDiagram }; 
+                var material = new Material()
+                {
+                    beton = TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == model.material.betonClass),
+                    armatura = ReinforcementType.GetArmatura().First(n => n.name == model.material.armtype),
+                };
+                var geometry = new ElementGeomety()
+                {
+                    b = model.geometry.b,
+                    d1 = model.geometry.d1,
+                    h = model.geometry.h,
+                };
+                var w = new SymmetricalReinfByClassicMethod(material, geometry);
+                w.Get_ω(model.mi, model.ni);
+                return Ok( new { w =w.searchingOf_ω.ω, List= w.searchingOf_ω.ListOfDotsInLineOfDiagram });
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
         public class MiNi
         {
             public double mi { get; set; }
             public double ni { get; set; }
+            public Geometry geometry { get; set; }
+            public Material material { get; set; } 
+
+
+            public class Geometry
+            {
+                public double b { get; set; }
+                public double d1 { get; set; }
+                public double h { get; set; }
+            }
+            public class Material 
+            {
+                public string betonClass { get; set; } 
+                public string armtype { get; set; }
+            }
         }
     }
 
+   
 }

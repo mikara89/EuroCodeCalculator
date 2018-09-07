@@ -5,9 +5,9 @@ import { Http } from '@angular/http';
 export class SymmReinfService {
     constructor(private http: Http) { }
 
-    getListOfAllLines() {
+    getListOfAllLines(mi_ni: any) {
 
-        return this.http.get('/api/Symclassic')
+        return this.http.post('/api/Symclassic', mi_ni)
             .map(res => res.json());
     }
     getLinesFromInput(mi_ni:any) {

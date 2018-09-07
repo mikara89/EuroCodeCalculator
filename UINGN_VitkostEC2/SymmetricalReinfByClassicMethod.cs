@@ -64,8 +64,7 @@ namespace CalculatorEC2Logic
 
         private int CheckDiagram(Generate_ω_LineForDiagram toCheck, double μRd, double νRd)
         {
-            var test = toCheck.ListOfDotsInLineOfDiagram;
-            var l= test.Where(m => m.μSd == test.Max(n => n.μSd)).ToList();
+            var test =new List<μSd_And_νSd>(toCheck.ListOfDotsInLineOfDiagram);
             var νSdmax = test.Single(m => m.μSd == test.Max(n => n.μSd)).νSd;
             if (νRd >= νSdmax)
             {

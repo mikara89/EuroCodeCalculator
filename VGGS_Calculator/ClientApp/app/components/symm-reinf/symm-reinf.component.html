@@ -1,19 +1,155 @@
-﻿
-<div class="row">
-    <div class="col-lg-6">
+﻿<form class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12" #f="ngForm">
+    <div class="row">
+        <div class="input-group">
+            <span class="input-group-addon test-active"
+                  id="basic-addon2">
+                b=
+            </span>
+            <input type="number" (keyup)="creatNewChart()"
+                   [(ngModel)]="izracunaj.geometry.b"
+                   class="form-control"
+                   placeholder="exp. 25"
+                   required
+                   name="b"
+                   #b="ngModel"
+                   id="b">
+            <span class="input-group-addon test-active"
+                  *ngIf="b.touched && !b.valid  || b.touched && b.value<=0"
+                  id="basic-addon2">
+                <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+            </span>
+            <span class="input-group-addon"
+                  id="basic-addon2">
+                [cm]
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-group">
+            <span class="input-group-addon test-active"
+                  id="basic-addon2">
+                h=
+            </span>
+            <input type="text" (keyup)="creatNewChart()"
+                   [(ngModel)]="izracunaj.geometry.h"
+                   class="form-control"
+                   placeholder="exp. 40"
+                   required
+                   name="h"
+                   #h="ngModel"
+                   id="h">
+            <span class="input-group-addon test-active"
+                  *ngIf="h.touched && !h.valid || h.touched && h.value<0"
+                  id="basic-addon2">
+                <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+            </span>
+            <span class="input-group-addon"
+                  id="basic-addon2">
+                [cm]
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-group">
+            <span class="input-group-addon test-active"
+                  id="basic-addon2">
+                h=
+            </span>
+            <input type="text" (keyup)="creatNewChart()"
+                   [(ngModel)]="izracunaj.geometry.d1"
+                   class="form-control"
+                   placeholder="exp. 4"
+                   required
+                   name="d1"
+                   #d1="ngModel"
+                   id="d1">
+            <span class="input-group-addon test-active"
+                  *ngIf="d1.touched && !d1.valid || d1.touched && d1.value<0"
+                  id="basic-addon2">
+                <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+            </span>
+            <span class="input-group-addon"
+                  id="basic-addon2">
+                [cm]
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-group">
+            <span class="input-group-addon test-active"
+                  id="basic-addon2">
+                Beton
+            </span>
+            <select class="form-control" name="betonClass" (change)="creatNewChart()"
+                    [(ngModel)]="izracunaj.material.betonClass">
+                <option *ngFor="let beton of betonclassList"
+                        [value]="beton.name">
+                    {{beton.name}}
+                </option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-group">
+            <span class="input-group-addon test-active"
+                  id="basic-addon2">
+                Armatura
+            </span>
+            <select class="form-control" name="armtype" (change)="creatNewChart()"
+                    [(ngModel)]="izracunaj.material.armtype">
+                <option *ngFor="let arm of armaturaTypeList"
+                        [ngValue]="arm.name">
+                    {{arm.name}}
+                </option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
         <div class="input-group">
             <span class="input-group-addon" id="sizing-addon1">μSd</span>
-            <input type="number" class="form-control" placeholder="enter μSd...">
-            <span class="input-group-addon" id="sizing-addon1">νSd</span>
-            <input type="number" class="form-control" placeholder="enter νSd...">
-            <span class="input-group-btn">
-                <button class="btn btn-default" type="button" >Go!</button>
+            <input type="number"
+                   [(ngModel)]="izracunaj.mi"
+                   class="form-control"
+                   placeholder="exp. 25"
+                   required
+                   name="mi"
+                   #mi="ngModel"
+                   id="mi">
+            <span class="input-group-addon test-active"
+                  *ngIf="mi.touched && !mi.valid  || mi.touched && mi.value<=0"
+                  id="basic-addon2">
+                <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
             </span>
         </div><!-- /input-group -->
-    </div><!-- /.col-lg-6 -->
-</div><!-- /.row -->
-<div *ngIf="chart">
-    <canvas id="canvas">{{chart}}</canvas>
-</div>
+    </div><!-- /.row -->
+    <div class="row">
+        <div class="input-group">
+            <span class="input-group-addon" id="sizing-addon1">νSd</span>
+            <input type="number"
+                   [(ngModel)]="izracunaj.ni"
+                   class="form-control"
+                   placeholder="exp. 25"
+                   required
+                   name="ni"
+                   #ni="ngModel"
+                   id="ni">
+            <span class="input-group-addon test-active"
+                  *ngIf="ni.touched && !mi.valid  || ni.touched && ni.value<=0"
+                  id="basic-addon2">
+                <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+            </span>
+        </div><!-- /input-group -->
+    </div><!-- /.row -->
+    <div class="row">
+        <button class="btn btn-primary mybtn"
+                (click)="SearchForLine()"
+                type="button">
+            Find mehaniche percentage
+        </button>
+    </div>
+</form>
+    <div *ngIf="chart" class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-xs-12">
+        <canvas *ngIf="isReady" id="canvas">{{chart}}</canvas>
+    </div>
 
 
