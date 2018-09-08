@@ -38,7 +38,7 @@ export class SymmReinfComponent implements OnInit {
             label: '0/-0.35%', fill: false,
          backgroundColor: '#000000', borderColor: '#000000',
          pointRadius: 0, hideInLegendAndTooltip:true,
-         borderWidth: 1,
+         borderWidth: 0.8,
             borderDash:[10,5],
             pointHitRadius: 0,
             pointHoverRadius: 0,
@@ -51,7 +51,7 @@ export class SymmReinfComponent implements OnInit {
         label: '0.3/-0.35%', fill: false,
         backgroundColor: '#000000', borderColor: '#000000',
         pointRadius: 0, hideInLegendAndTooltip: true,
-        borderWidth: 1,
+        borderWidth: 0.8,
         borderDash: [10, 5],
         pointHitRadius: 0,
         pointHoverRadius: 0,
@@ -177,12 +177,11 @@ export class SymmReinfComponent implements OnInit {
                         data: this.l[10]['points'],
 
 
-                    }, this.dataset1, this.dataset2
+                    }//, this.dataset1, this.dataset2
                     ],
 
                 },
                 options: {
-
                     scales: {
                         xAxes: [{
                             type: 'linear',
@@ -191,6 +190,9 @@ export class SymmReinfComponent implements OnInit {
                                 beginAtZero: true,
                                 min: 0,
                                 max: 1.2,
+                            }, scaleLabel: {
+                                display: true,
+                                labelString: 'μRd=MRd/(b*d^2*fcd)'
                             },
                             position: 'bottom'
                         }],
@@ -202,6 +204,9 @@ export class SymmReinfComponent implements OnInit {
                                 min: 0,
                                 max: 3.0,
                                 autoSkip: false,
+                            }, scaleLabel: {
+                                display: true,
+                                labelString: 'vRd=NRd/(b*d*fcd)'
                             },
 
                         }]
@@ -241,13 +246,17 @@ export class SymmReinfComponent implements OnInit {
     }
 
     SearchForLine() {
-        
+       
         this.symServices.getLinesFromInput(this.izracunaj)
             .subscribe((line : any) => {
                 let data = this.sortDataFromSearch(line);
-                let dataset = this.createDataSet('#000000',Math.round(line.w), data.points);
+                let dataset = this.createDataSet('#000000',Math.round(line.w*100)/100, data.points);
                 console.log(dataset);
                 this.addData(this.chart, dataset);
+                /// ni to zero anmi to zero lines
+                this.addData(this.chart, this.createDataSet('#000000', '0 to μSd', [{ x: this.izracunaj.mi, y: 0 }, { x: this.izracunaj.mi, y: this.izracunaj.ni }]));
+                this.addData(this.chart, this.createDataSet('#000000', '0 to νSd', [{ x: 0, y: this.izracunaj.ni }, { x: this.izracunaj.mi, y: this.izracunaj.ni }]));
+                this.addData(this.chart, this.createDataSet('#000000', 'w= ' + Math.round(line.w * 100) / 100, [{ x: this.izracunaj.mi, y: this.izracunaj.ni }], 2));
             },
             async (error: Response) => {
                 var mess = (await error.json()).error;
@@ -270,12 +279,12 @@ export class SymmReinfComponent implements OnInit {
             return item;
         }
     }
-    createDataSet(color: any,lable:any,points:any[]) {
+    createDataSet(color: any,lable:any,points:any[],pointRadius:number=0) {
         {
            let dataset: ChartDataSets = {
                label: lable, fill: false,
                backgroundColor: color, borderColor: color,
-                pointRadius: 0,
+               pointRadius: pointRadius,
                 borderWidth: 1,
                 borderDash: [10, 5],
                 pointHitRadius: 0,
