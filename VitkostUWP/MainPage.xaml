@@ -30,9 +30,9 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock x:Name="lblNg"  Text="Ng=" HorizontalAlignment="Right" Grid.Column="0" Padding="0,0,10,0"   TextWrapping="Wrap" VerticalAlignment="Center"/>
-                    <TextBox x:Name="txtNg" Text=""  HorizontalAlignment="Center" Grid.Column="1"   VerticalAlignment="Center"/>
-                    <TextBlock x:Name="lblNg_Copy"  Text="[kN]" HorizontalAlignment="Left" Grid.Column="2" Padding="10,0,0,0"    TextWrapping="Wrap" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="lblNg"  Text="N=" HorizontalAlignment="Right" Grid.Column="0" Padding="0,0,10,0"   TextWrapping="Wrap" VerticalAlignment="Center"/>
+                    <TextBox x:Name="txtN" Text=""  HorizontalAlignment="Center" Grid.Column="1"   VerticalAlignment="Center"/>
+                    <TextBlock x:Name="lblN_Copy"  Text="[kN]" HorizontalAlignment="Left" Grid.Column="2" Padding="10,0,0,0"    TextWrapping="Wrap" VerticalAlignment="Center"/>
                 </Grid>
                 <Grid Padding="0,10,0,0" HorizontalAlignment="Stretch" >
                     <Grid.ColumnDefinitions>
@@ -40,9 +40,19 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock x:Name="lblNq" Text="Nq=" HorizontalAlignment="Right" Grid.Column="0" Padding="0,0,10,0"   TextWrapping="Wrap" VerticalAlignment="Center"/>
-                    <TextBox x:Name="txtNq" Text="" HorizontalAlignment="Center" Grid.Column="1" VerticalAlignment="Center"/>
-                    <TextBlock x:Name="lblNg_Copy1" Text="[kN]"  HorizontalAlignment="Left" Grid.Column="2" Padding="10,0,0,0"    TextWrapping="Wrap" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="lblMt" Text="M_top=" HorizontalAlignment="Right" Grid.Column="0" Padding="0,0,10,0"   TextWrapping="Wrap" VerticalAlignment="Center"/>
+                    <TextBox x:Name="txtMt" Text="" HorizontalAlignment="Center" Grid.Column="1" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="lblMt_Copy1" Text="[kNm]"  HorizontalAlignment="Left" Grid.Column="2" Padding="10,0,0,0"    TextWrapping="Wrap" VerticalAlignment="Center"/>
+                </Grid>
+                <Grid Padding="0,10,0,0" HorizontalAlignment="Stretch" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="lblMb" Text="M_bottom=" HorizontalAlignment="Right" Grid.Column="0" Padding="0,0,10,0"   TextWrapping="Wrap" VerticalAlignment="Center"/>
+                    <TextBox x:Name="txtMb" Text="" HorizontalAlignment="Center" Grid.Column="1" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="lblMb_Copy1" Text="[kNm]"  HorizontalAlignment="Left" Grid.Column="2" Padding="10,0,0,0"    TextWrapping="Wrap" VerticalAlignment="Center"/>
                 </Grid>
                 <Grid Padding="0,10,0,0" HorizontalAlignment="Stretch" >
                     <Grid.ColumnDefinitions>

@@ -64,7 +64,7 @@ namespace VGGS_Calculator.Controllers
             {
                 var material = new Material()
                 {
-                    beton = TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == model.material.betonClass),
+                    beton =TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == model.material.betonClass),
                     armatura = ReinforcementType.GetArmatura().First(n => n.name == model.material.armtype),
                 };
                 var geometry = new ElementGeomety()
@@ -75,7 +75,7 @@ namespace VGGS_Calculator.Controllers
                 };
                 var w = new SymmetricalReinfByClassicMethod(material, geometry);
                 w.Get_ω(model.mi, model.ni);
-                return Ok( new { w =w.searchingOf_ω.ω, List= w.searchingOf_ω.ListOfDotsInLineOfDiagram });
+                return Ok( new { w =w.searchingOf_ω.ω, List= w.searchingOf_ω.ListOfDotsInLineOfDiagram, textResulte=w.TextResult() });
             }
             catch (System.Exception ex)
             {

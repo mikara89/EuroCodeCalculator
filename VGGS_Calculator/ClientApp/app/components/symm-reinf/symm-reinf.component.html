@@ -148,8 +148,12 @@
         </button>
     </div>
 </form>
-    <div *ngIf="chart" class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-xs-12">
-        <canvas *ngIf="isReady" id="canvas">{{chart}}</canvas>
+<div *ngIf="chart" class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-xs-12">
+    <canvas *ngIf="isReady" id="canvas">{{chart}}</canvas>
+    <div class="form-group " *ngIf="textResult">
+        <label for="comment">Rezultat:</label>
+        <textarea class="form-control" disabled rows="15" id="comment">{{textResult}}</textarea>
     </div>
+</div>
 
 

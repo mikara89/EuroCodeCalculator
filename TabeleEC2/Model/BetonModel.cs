@@ -32,11 +32,64 @@ namespace TabeleEC2.Model
             get {
                 return 0.85 * fck / 1.5;
             } }
+        public override string ToString()
+        {
+            return$"{name}; fcd:{Math.Round(fcd,2)}MPa; fck:{fck}Mpa; Ecm:{Ecm}GPa";
+        }
     }
-
+    public enum BetonClassType
+    {
+         C12_16,
+         C16_20,
+         C20_25,
+         C25_30,
+        C30_37,
+        C35_45,
+        C40_50,
+        C45_55,
+        C55_60
+    }
     public class BetonModelEC_v2 : IBetonModel 
     {
-        public string name { get; set; }
+        private readonly double α;
+
+        private string GetStringFromType(BetonClassType betonClassType)
+        {
+            switch (betonClassType)
+            {
+                case BetonClassType.C12_16:
+                    return "C12/16";
+                case BetonClassType.C16_20:
+                    return "C16/20";
+                case BetonClassType.C20_25:
+                    return "C20/25";
+                case BetonClassType.C25_30:
+                    return "C25/30";
+                case BetonClassType.C30_37:
+                    return "C30/37";
+                case BetonClassType.C35_45:
+                    return "C35/45";
+                case BetonClassType.C40_50:
+                    return "C40/50";
+                case BetonClassType.C45_55:
+                    return "C45/55";
+                case BetonClassType.C55_60:
+                    return "C55/60";
+                default:
+                    throw new ArgumentOutOfRangeException($"{nameof(betonClassType)} doesn't exist");
+            }
+        }
+        public BetonModelEC_v2(double α = 0.85)
+        {
+
+        }
+        public BetonModelEC_v2(BetonClassType betonClassType,double α=0.85)
+        {
+            this.name = GetStringFromType(betonClassType);
+            this.α = α;
+        }
+
+        public string name { get;internal set; }
         public int fck { get
             {
                 int i;
@@ -132,8 +185,12 @@ namespace TabeleEC2.Model
         {
             get
             {
-                return 0.85 * fck / 1.5;
+                return α * fck / 1.5;
             }
+        }
+        public override string ToString()
+        {
+            return $"{name}; fcd:{Math.Round(fcd, 2)}MPa; fck:{fck}Mpa; Ecm:{Math.Round(Ecm,2)}GPa";
         }
     }
 

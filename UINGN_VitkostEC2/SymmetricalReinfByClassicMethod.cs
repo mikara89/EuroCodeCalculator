@@ -15,8 +15,8 @@ namespace CalculatorEC2Logic
         /// </summary>
         public double αcc { get; set; } = 0.85;
 
-     
-
+        private int iterations;
+        private μSd_And_νSd find;
         private Generate_ω_LineForDiagram minOf_ω;
         private Generate_ω_LineForDiagram maxOf_ω;
         public Generate_ω_LineForDiagram searchingOf_ω { get; internal set; }
@@ -25,14 +25,23 @@ namespace CalculatorEC2Logic
         {
             _material = material;
             _geometry = geometry;
-            SetMinimumOf_ρ_and_Max();
+            SetMinimumOf_ω_and_Max();
         }
 
-        private void SetMinimumOf_ρ_and_Max()
+        private void SetMinimumOf_ω_and_Max()
         {
             minOf_ω = new Generate_ω_LineForDiagram(_material, _geometry,0.05);
             maxOf_ω = new Generate_ω_LineForDiagram(_material, _geometry, 1);
         }
+
+        public double Get_ω2(double MRd, double NRd)
+        {
+            var geo = _geometry as ElementGeomety;
+            var mi = MRd/( Math.Pow(geo.d / 100, 2) * geo.b / 100 * _material.beton.fcd * 1000);
+            var ni = NRd/ (geo.d / 100 * geo.b / 100 * _material.beton.fcd * 1000);
+            return Get_ω(mi, ni);
+        }
+
         public double Get_ω(double μRd, double νRd) 
         {
             var ω = maxOf_ω.ω / 2;
@@ -55,7 +64,9 @@ namespace CalculatorEC2Logic
                         break;
                 }
                 addTo_ω = addTo_ω / 2;
+                iterations = i;
             }
+            
             if (ω > 1.0)
                 throw new Exception("the percentage of reinforcement has been exceeded, make cross-section bigger");
             if (ω < 0.05) return 0.05;
@@ -63,8 +74,8 @@ namespace CalculatorEC2Logic
         }
 
         private int CheckDiagram(Generate_ω_LineForDiagram toCheck, double μRd, double νRd)
-        {
-            var test =new List<μSd_And_νSd>(toCheck.ListOfDotsInLineOfDiagram);
+        { 
+            var test = new List<μSd_And_νSd>(toCheck.ListOfDotsInLineOfDiagram);
             var νSdmax = test.Single(m => m.μSd == test.Max(n => n.μSd)).νSd;
             if (νRd >= νSdmax)
             {
@@ -73,14 +84,15 @@ namespace CalculatorEC2Logic
                                  .Aggregate((x, y) => Math.Abs(x.μSd - μRd) < Math.Abs(y.μSd - μRd) ? x : y);
 
                 if (
-                    (μRd - 0.005 >= closestItemByM.μSd && closestItemByM.μSd <= μRd + 0.005)
+                    (Math.Round(μRd, 3) == Math.Round(closestItemByM.μSd, 3))
                     &&
-                    (νRd - 0.005 >= closestItemByM.νSd && closestItemByM.νSd >= νRd + 0.005))
+                    (Math.Round(νRd, 3) == Math.Round(closestItemByM.νSd, 3)))
                 {
+                    find = closestItemByM;
                     return 0;
                 }
-                else if (closestItemByM.νSd > νRd) return 1; 
-                else return 2;
+                else if (closestItemByM.νSd > νRd){ find = closestItemByM; return 1; }
+                else { find = closestItemByM; return 2; };
 
             }
             else
@@ -90,15 +102,38 @@ namespace CalculatorEC2Logic
                                  .Aggregate((x, y) => Math.Abs(x.μSd - μRd) < Math.Abs(y.μSd - μRd) ? x : y);
 
                 if (
-                    (μRd - 0.002 >= closestItemByM.μSd && closestItemByM.μSd <= μRd + 0.002)
+                    (Math.Round(μRd, 3) == Math.Round(closestItemByM.μSd, 3))
                     &&
-                    (νRd - 0.002 >= closestItemByM.νSd && closestItemByM.νSd >= νRd + 0.002))
+                    (Math.Round(νRd, 3) == Math.Round(closestItemByM.νSd, 3)))
                 {
+                    find = closestItemByM;
                     return 0;
                 }
-                else if (closestItemByM.νSd < νRd) return 1;
-                else return 2;
+                else if (closestItemByM.νSd < νRd) { find = closestItemByM; return 1; }
+                else { find = closestItemByM; return 2; };
             }
+
+        }
+
+        public string TextResult()
+        {
+            var geo = _geometry as ElementGeomety;
+            if (find == null) return "No result!";
+            return $@"///////Result////////{Environment.NewLine }" +
+                $"Material:{Environment.NewLine }" +
+                $"  beton: {_material.beton.ToString()}{Environment.NewLine }" +
+                $"  armatura: {_material.armatura.ToString()}{Environment.NewLine }" +
+                $"Geometrija:{Environment.NewLine }" +
+                $"  h: {geo.h}{geo.GetUnits()}{Environment.NewLine }" +
+                $"  b: {geo.b}{geo.GetUnits()}{Environment.NewLine }" +
+                $"  d1: {geo.d1}{geo.GetUnits()}{Environment.NewLine }" +
+                $"Sile{Environment.NewLine }" +
+                $"  μRd: {Math.Round(find.μSd, 2)}{Environment.NewLine }" +
+                $"  MRd: {Math.Round(find.μSd*Math.Pow(geo.d / 100, 2)*geo.b/100*_material.beton.fcd*1000, 2)} kNm{Environment.NewLine }" +
+                $"  νRd: {Math.Round(find.νSd, 2)}{Environment.NewLine }" +
+                $"  NRd: {Math.Round(find.νSd * geo.d / 100 * geo.b / 100 * _material.beton.fcd * 1000, 2)} kN{Environment.NewLine }" +
+                $"  Mehanički koficijent armiranja: {Math.Round(searchingOf_ω.ω,2)}{Environment.NewLine }" +
+                $"  Iteracije: {iterations}";
 
         }
 

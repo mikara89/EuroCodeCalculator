@@ -272,16 +272,24 @@ namespace CalculatorEC2Logic
         {
             var Msd_ = Msd_I == 0 ? Msd_II : Msd_I;
             var Vsd = Forces.N / (ElementGeometry.b * (ElementGeometry.h - ElementGeometry.d1) * Material.beton.fcd / 10);
+            var mIsd = Msd_  / (ElementGeometry.b * Math.Pow((ElementGeometry.h - ElementGeometry.d1),2) * Material.beton.fcd / 10);
             var minAs_for_section = 0.003 * ElementGeometry.b * ElementGeometry.h;
             var minAs_for_N = 0.15 * Forces.N / Material.armatura.fyd;
 
 
             var Kof = KofZaProracunPravougaonogPresekaEC.Get_Kof_From_μ(KofZaProracunPravougaonogPresekaEC.GetμSd(Msd_, ElementGeometry.b, (ElementGeometry.h - ElementGeometry.d1), Material.beton.fcd / 10));
 
-            var sym = new SymmetricalReinfByMaxAndMinPercentageReinf(Material);
-            var ρ = sym.Get_ρ(Msd_, Forces.N, ElementGeometry.b, ElementGeometry.h);
-
-            var Asd = ElementGeometry.b * ElementGeometry.h * ρ;
+            var sym = new SymmetricalReinfByClassicMethod(Material,new ElementGeomety()
+                                                                            {
+                                                                                b = ElementGeometry.b,
+                                                                                h = ElementGeometry.h,
+                                                                                d1 = ElementGeometry.d1,
+                                                                                unit = ElementGeometry.unit
+                                                                            } 
+            );
+            var w = sym.Get_ω2(Msd_, Forces.N); 
+            //var w = sym.Get_ω(mIsd, Vsd);
+            var Asd = ElementGeometry.b * (ElementGeometry.h- ElementGeometry.d1) * w * Material.beton.fcd/(Material.armatura.fyd*10);
 
             var A_list = new List<double>() { minAs_for_section, minAs_for_N, Asd };
             As = A_list.Max();
@@ -317,18 +325,41 @@ namespace CalculatorEC2Logic
         double Ac { get; }
         double ic { get; }
     }
+
+    public enum UnitDimesionType
+    {
+        cm,
+        m,
+        mm,
+    }
     public interface IElementGeometry
     {
+        UnitDimesionType unit { get; set; }
         double b { get; set; }
         double h { get; set; }
         double d1 { get; set; }
     }
     public class ElementGeomety : IElementGeometry
     {
+        public string GetUnits()
+        {
+            switch (unit)
+            {
+                case UnitDimesionType.cm:
+                    return nameof(UnitDimesionType.cm);
+                case UnitDimesionType.m:
+                    return nameof(UnitDimesionType.m);
+                case UnitDimesionType.mm:
+                    return nameof(UnitDimesionType.mm);
+                default:
+                    throw new ArgumentOutOfRangeException("Error in setting units");
+            }
+        }
         public double b { get; set; }
         public double h { get; set; }
         public double d1 { get; set; }
         public double d { get => h - d1; }
+        public UnitDimesionType unit { get; set; } = UnitDimesionType.cm;
     }
     public class ElementGeometySlenderness : IElementGeometrySlenderness
     {
@@ -342,6 +373,7 @@ namespace CalculatorEC2Logic
         public double ic { get { return Math.Sqrt(Ix / Ac); } }
         public double li => OjleroviSlucajeviIzvijanja.GetK(izvijanje) * L;
         public double λ { get { return li / ic; } }
+        public UnitDimesionType unit { get; set; } = UnitDimesionType.cm;
     }
     public interface IForcesSlenderness
     {
@@ -375,12 +407,12 @@ namespace CalculatorEC2Logic
     }
     public interface IMaterial
     {
-        BetonModelEC beton { get; set; }
-        ReinforcementTypeModelEC armatura { get; set; }
+        BetonModelEC beton { get; set; } 
+        ReinforcementTypeModelEC armatura { get; set; } 
     }
     public class Material : IMaterial
     {
         public BetonModelEC beton { get; set; }
-        public ReinforcementTypeModelEC armatura { get; set; }
+        public ReinforcementTypeModelEC armatura { get; set; } 
     }
 }

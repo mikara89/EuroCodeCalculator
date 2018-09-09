@@ -12,13 +12,13 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using UINGN_VitkostEC2;
 using Windows.UI.Xaml.Media.Imaging;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.UI.Popups;
 using TabeleEC2.Model;
+using CalculatorEC2Logic;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -68,8 +68,9 @@ namespace VitkostUWP
             cmbBeton.SelectedIndex = 3;           
             cmbArmatura.ItemsSource = TabeleEC2.ReinforcementType.GetArmatura();
             cmbArmatura.SelectedIndex = 0;
-            txtNg.Text = "" + 43.5;
-            txtNq.Text = "" + 18.0;
+            txtN.Text = "" + 43.5;
+            txtMt.Text = "" + 18.0;
+            txtMb.Text = "" + (-18.0);
             txtL.Text = "" + 400;
             txtb.Text = "" + 25;
             txth.Text = "" + 25;
@@ -90,8 +91,8 @@ namespace VitkostUWP
         {
             try
             {
-                if (txtNg.Text == "" ||
-                txtNq.Text == "" || txtL.Text == "" || txtb.Text == "" ||
+                if (txtN.Text == "" || txtMb.Text == "" ||
+                txtMt.Text == "" || txtL.Text == "" || txtb.Text == "" ||
                 txth.Text == "" || txtd1.Text == "" ||
                 Convert.ToDouble(txtL.Text) == 0 || Convert.ToDouble(txtL.Text) < 0 ||
                 Convert.ToDouble(txtb.Text) == 0 || Convert.ToDouble(txtb.Text) < 0 ||
@@ -105,19 +106,43 @@ namespace VitkostUWP
                 }
 
                 Izvijanja izvijanja = (Izvijanja)Enum.Parse(typeof(Izvijanja), cmbIzvijanje.SelectedValue.ToString());
-                using (var se = new VitkostEC2(
-                    izvijanja,
-                    Convert.ToDouble(txtNg.Text),
-                    Convert.ToDouble(txtNq.Text),
-                    Convert.ToDouble(txtL.Text),
-                    Convert.ToDouble(txtb.Text),
-                    Convert.ToDouble(txth.Text),
-                    (cmbBeton.SelectedItem as BetonModelEC),
-                    (cmbArmatura.SelectedItem as ReinforcementTypeModelEC),
-                    Convert.ToDouble(txtd1.Text)
+                //using (var se = new VitkostEC2(
+                //    izvijanja,
+                //    Convert.ToDouble(txtNg.Text),
+                //    Convert.ToDouble(txtNq.Text),
+                //    Convert.ToDouble(txtL.Text),
+                //    Convert.ToDouble(txtb.Text),
+                //    Convert.ToDouble(txth.Text),
+                //    (cmbBeton.SelectedItem as BetonModelEC),
+                //    (cmbArmatura.SelectedItem as ReinforcementTypeModelEC),
+                //    Convert.ToDouble(txtd1.Text)
+                //    ))
+                using (var se = new VitkostEC2_V2(
+                    new ElementGeometySlenderness()
+                    {
+                        b = Convert.ToDouble(txtb.Text) ,
+                        d1 = Convert.ToDouble(txtd1.Text) ,
+                        h = Convert.ToDouble(txth.Text),
+                        izvijanje= izvijanja,
+                        L= Convert.ToDouble(txtL.Text),
+                    },
+                    new ForcesSlenderness()
+                    {
+                         M_bottom= Convert.ToDouble(txtMb.Text),
+                         M_top= Convert.ToDouble(txtMt.Text),
+                         N= Convert.ToDouble(txtN.Text),
+                    },
+                    new Material()
+                    {
+                         armatura= cmbArmatura.SelectedItem as ReinforcementTypeModelEC,
+                         beton= cmbBeton.SelectedItem as BetonModelEC,
+                    }
                     ))
                 {
-                    lblAs.Text = "Potrebna Armatura: " + Math.Round(se.usv_As, 2) + " [cm2]";
+                    se.Calculate();
+                    se.KontrolaCentPritPreseka();
+                    se.ProracunArmature();
+                    lblAs.Text = "Potrebna Armatura: " + Math.Round(se.As, 2) + " [cm2]";
                     lblMsd_II.Text = se.Msd_I == 0 ? "Msd_II: " + Math.Round(se.Msd_II, 2) + " [kNm]" : "Msd_I: " + Math.Round(se.Msd_I, 2) + " [kNm]";
                     lblIsAcOK.Text = "Da li je dovoljan presek stuba: " + se.IsAcOK;
                 }

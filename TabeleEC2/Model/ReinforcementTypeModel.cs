@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TabeleEC2.Model
 {
@@ -39,6 +40,10 @@ namespace TabeleEC2.Model
                 }
                 return list;
             }
+        }
+        public override string ToString()
+        {
+            return $"{name}; fyd:{Math.Round(fyd,2)}MPa; fyk:{Math.Round(fyk,2)}Mpa; Es:{Es}GPa";
         }
     }
     public class ReinforcementTypeModelPBAB : IReinforcementTypeModel
