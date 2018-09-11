@@ -34,7 +34,7 @@ namespace TabeleEC2.Model
             } }
         public override string ToString()
         {
-            return$"{name}; fcd:{Math.Round(fcd,2)}MPa; fck:{fck}Mpa; Ecm:{Ecm}GPa";
+            return$"{name}; fcd: {Math.Round(fcd,2)}MPa; fck: {fck}Mpa; Ecm: {Ecm}GPa";
         }
     }
     public enum BetonClassType
@@ -190,7 +190,7 @@ namespace TabeleEC2.Model
         }
         public override string ToString()
         {
-            return $"{name}; fcd:{Math.Round(fcd, 2)}MPa; fck:{fck}Mpa; Ecm:{Math.Round(Ecm,2)}GPa";
+            return $"{name}; fcd: {Math.Round(fcd, 2)}MPa; fck: {fck}Mpa; Ecm: {Math.Round(Ecm,2)}GPa";
         }
     }
 

@@ -74,10 +74,10 @@
                 <controls:HamburgerMenu.ItemsSource>
                     <controls:HamburgerMenuItemCollection>
                         <controls:HamburgerMenuGlyphItem
-                            Glyph="&#59563;"                     
+                            Glyph="&#59563;"                  
                             Label="Transverzalne sile" />
                         <controls:HamburgerMenuGlyphItem
-                            Glyph="&#59563;"                     
+                            Glyph="&#59563;"                 
                             Label="Vitkost" />
                     </controls:HamburgerMenuItemCollection>
                 </controls:HamburgerMenu.ItemsSource>

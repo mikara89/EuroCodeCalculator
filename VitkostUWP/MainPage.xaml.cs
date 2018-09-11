@@ -63,17 +63,17 @@ namespace VitkostUWP
             this.InitializeComponent();
             var list = Enum.GetNames(typeof(Izvijanja));
             cmbIzvijanje.ItemsSource = list;
-            cmbIzvijanje.SelectedValue = "Pokretan_I_Ukljeste";
+            cmbIzvijanje.SelectedValue = Enum.GetName(typeof(Izvijanja),Izvijanja.Ukljesten_Sa_Jedne);
             cmbBeton.ItemsSource = TabeleEC2.BetonClasses.GetBetonClassListEC();
             cmbBeton.SelectedIndex = 3;           
             cmbArmatura.ItemsSource = TabeleEC2.ReinforcementType.GetArmatura();
             cmbArmatura.SelectedIndex = 0;
-            txtN.Text = "" + 43.5;
-            txtMt.Text = "" + 18.0;
-            txtMb.Text = "" + (-18.0);
-            txtL.Text = "" + 400;
-            txtb.Text = "" + 25;
-            txth.Text = "" + 25;
+            txtN.Text = "" + 569.7;
+            txtMt.Text = "" + 2037.79;
+            txtMb.Text = "" + (0);
+            txtL.Text = "" + 850;
+            txtb.Text = "" + 60;
+            txth.Text = "" + 60;
             txtd1.Text = "" + 4;
 
             btnIzracunaj.Click +=
@@ -143,8 +143,9 @@ namespace VitkostUWP
                     se.KontrolaCentPritPreseka();
                     se.ProracunArmature();
                     lblAs.Text = "Potrebna Armatura: " + Math.Round(se.As, 2) + " [cm2]";
-                    lblMsd_II.Text = se.Msd_I == 0 ? "Msd_II: " + Math.Round(se.Msd_II, 2) + " [kNm]" : "Msd_I: " + Math.Round(se.Msd_I, 2) + " [kNm]";
+                    lblMsd_II.Text = "MEd: " + Math.Round(se.MEd, 2) + " [kNm]";
                     lblIsAcOK.Text = "Da li je dovoljan presek stuba: " + se.IsAcOK;
+                    ResulteText.Text = se.ToString();
                 }
             }
             catch (Exception)

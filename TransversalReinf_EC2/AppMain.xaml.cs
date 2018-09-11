@@ -28,24 +28,15 @@ namespace TransversalReinf_EC2
         {
             this.InitializeComponent();
             frameT.Navigate(typeof(MainPage));
-            HamburgerMenu.ItemClick += (s, e) => { OnItemSelect(s, e); };
-            HamburgerMenu.OptionsItemClick += (s, e) => { OnItemSelect(s, e); };
+            HamburgerMenu.ItemInvoked += (s, e) => { OnItemSelect(s, e); };
         }
-
-        private void HamburgerMenu_OptionsItemClick(object sender, ItemClickEventArgs e)
+        private void OnItemSelect(object sender, HamburgetMenuItemInvokedEventArgs e) 
         {
-            var MenuItemSelected = sender as HamburgerMenuItem;
-            if (MenuItemSelected.Label == "Transverzalne sile")
+            if ((e.InvokedItem as HamburgerMenuGlyphItem).Label == "Transverzalne sile")
                 frameT.Navigate(typeof(MainPage));
-            if (MenuItemSelected.Label == "About")
-                frameT.Navigate(typeof(AboutView));
-        }
-        private void OnItemSelect(object sender, ItemClickEventArgs e) 
-        {
-            var MenuItemSelected = sender as HamburgerMenuItem;
-            if (MenuItemSelected.Label == "Transverzalne sile")
-                frameT.Navigate(typeof(MainPage));
-            if (MenuItemSelected.Label == "About")
+            else if ((e.InvokedItem as HamburgerMenuGlyphItem).Label == "Vitkost")
+                frameT.Navigate(typeof(VitkostView));
+            else if (e.IsItemOptions && (e.InvokedItem as HamburgerMenuGlyphItem).Label == "About")
                 frameT.Navigate(typeof(AboutView));
         }
     }

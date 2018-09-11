@@ -43,7 +43,7 @@ namespace TabeleEC2.Model
         }
         public override string ToString()
         {
-            return $"{name}; fyd:{Math.Round(fyd,2)}MPa; fyk:{Math.Round(fyk,2)}Mpa; Es:{Es}GPa";
+            return $"{name}; fyd: {Math.Round(fyd,2)}MPa; fyk: {Math.Round(fyk,2)}MPa; Es: {Es}GPa";
         }
     }
     public class ReinforcementTypeModelPBAB : IReinforcementTypeModel

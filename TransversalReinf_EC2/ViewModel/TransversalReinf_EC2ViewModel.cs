@@ -28,8 +28,8 @@ namespace TransversalReinf_EC2.ViewModel
             this.beton = beton;
             this.Longitud_As1 = Longitud_As1;
 
-            CalculateCommand = new CommandHandler(async() =>await Calculate());
-            CalculateArmCommand = new CommandHandler(async () => await CalculateArm());
+            CalculateCommand = new CommandHandler(async p =>await Calculate());
+            CalculateArmCommand = new CommandHandler(async p=> await CalculateArm());
 
         }
 

@@ -111,6 +111,7 @@
     <Compile Include="ViewModel\Convert\ObsevCollOfStringsShortConverter.cs" />
     <Compile Include="ViewModel\Convert\TextAddInFrontConverter.cs" />
     <Compile Include="ViewModel\TransversalReinf_EC2ViewModel.cs" />
+    <Compile Include="ViewModel\VitkostViewModel.cs" />
     <Compile Include="View\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
@@ -127,6 +128,10 @@
   <ItemGroup>
     <Content Include="Assets\Image\concrete_floor_20131007_1557821133.jpg" />
     <Content Include="Assets\Image\forest-1814790_1920.jpg" />
+    <Content Include="Assets\Vitkost\Pokretan_I_Nepokretan.jpg" />
+    <Content Include="Assets\Vitkost\Pokretan_I_Ukljeste.jpg" />
+    <Content Include="Assets\Vitkost\Ukljesten_Sa_Jedne.jpg" />
+    <Content Include="Assets\Vitkost\Ukljesten_Sa_Obe.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
