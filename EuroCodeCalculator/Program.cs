@@ -13,7 +13,7 @@ namespace EuroCodeCalculator
     {
         static void Main(string[] args)
         {
-            test();
+            testqq();
         }
         private static void testSteper()
         {
@@ -361,19 +361,32 @@ namespace EuroCodeCalculator
             v.ProracunArmature();
 
         }
-        private static void test()
+        private static void testqq()
         {
+            var g = new ElementGeomety()
+            {
+                b = 60,
+                d1 = 4,
+                h = 60,
+            };
             var m = new Material()
             {
                 beton = TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == "C30/37"),
                 armatura = ReinforcementType.GetArmatura().First(n => n.name == "B500B"),
             };
-            var s = new SymmetricalReinfByMaxAndMinPercentageReinf(m);
+            var s1 = new SymmetricalReinfByMaxAndMinPercentageReinf(m,g);
 
-            var r= s.Get_ρ(457.5, 67.83,40,30);
-            
+            var r1= s1.Get_ρ(862.12, 569.7, g.b, g.h);
+            var As1 = (r1 * g.b * g.h)/2;
+            var p1 = Math.Round(r1 * 100, 2);
+            var s2 = new SymmetricalReinfByClassicMethod(m,g);
+            var r2 = s2.Get_ω2(862.12, 569.7);
+            var As2 = r2 * g.b * g.d*m.beton.fcd/10/m.armatura.fyd;
+            var p2 = Math.Round(As2 / g.b / g.h*2*100,2);
+            Console.WriteLine($"{Math.Round(As1, 2)}({p1}%)cm2 == {Math.Round(As2, 2)}({p2}%)cm2");
+            Console.ReadKey();
         }
-        private static void testqq()
+        private static void test()
         {
             var m = new Material()
             {

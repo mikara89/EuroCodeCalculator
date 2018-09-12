@@ -24,13 +24,14 @@ namespace TabeleEC2.Model
         public double εc3 { get; set; }
         public double εcu3 { get; set; }
         public double ρ { get; set; }
+        public double α { get; set; } = 0.85;
         /// <summary>
         /// fcd=α*fck/1,5 => α=0.85;
         /// [MPa] /10 => [kN/cm2]
         /// </summary>
         public double fcd {
             get {
-                return 0.85 * fck / 1.5;
+                return α * fck / 1.5;
             } }
         public override string ToString()
         {

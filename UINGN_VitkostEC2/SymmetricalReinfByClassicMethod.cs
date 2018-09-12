@@ -69,11 +69,14 @@ namespace CalculatorEC2Logic
             
             if (ω > 1.0)
                 throw new Exception("the percentage of reinforcement has been exceeded, make cross-section bigger");
-            if (ω < 0.05) return 0.05;
+            if (ω < 0.05) {
+                searchingOf_ω = minOf_ω;
+                return 0.05;
+            };
             return ω;
         }
 
-        private int CheckDiagram(Generate_ω_LineForDiagram toCheck, double μRd, double νRd)
+        private int CheckDiagram(Generate_ω_LineForDiagram toCheck, double μRd, double νRd, int percision=3)
         { 
             var test = new List<μSd_And_νSd>(toCheck.ListOfDotsInLineOfDiagram);
             var νSdmax = test.Single(m => m.μSd == test.Max(n => n.μSd)).νSd;
@@ -84,9 +87,9 @@ namespace CalculatorEC2Logic
                                  .Aggregate((x, y) => Math.Abs(x.μSd - μRd) < Math.Abs(y.μSd - μRd) ? x : y);
 
                 if (
-                    (Math.Round(μRd, 3) == Math.Round(closestItemByM.μSd, 3))
+                    (Math.Round(μRd, percision) == Math.Round(closestItemByM.μSd, percision))
                     &&
-                    (Math.Round(νRd, 3) == Math.Round(closestItemByM.νSd, 3)))
+                    (Math.Round(νRd, percision) == Math.Round(closestItemByM.νSd, percision)))
                 {
                     find = closestItemByM;
                     return 0;
@@ -102,9 +105,9 @@ namespace CalculatorEC2Logic
                                  .Aggregate((x, y) => Math.Abs(x.μSd - μRd) < Math.Abs(y.μSd - μRd) ? x : y);
 
                 if (
-                    (Math.Round(μRd, 3) == Math.Round(closestItemByM.μSd, 3))
+                    (Math.Round(μRd, percision) == Math.Round(closestItemByM.μSd, percision))
                     &&
-                    (Math.Round(νRd, 3) == Math.Round(closestItemByM.νSd, 3)))
+                    (Math.Round(νRd, percision) == Math.Round(closestItemByM.νSd, percision)))
                 {
                     find = closestItemByM;
                     return 0;

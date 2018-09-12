@@ -35,7 +35,6 @@ namespace CalculatorEC2Logic
         public double ratio_d1_and_h
         {
             get { return 1 - ratio_d_and_h; }
-            set { ratio_d_and_h = 1 - value; }
         }
         /// <summary>
         /// 0.0035 by defoult
@@ -46,8 +45,9 @@ namespace CalculatorEC2Logic
         private Generate_ρ_LineForDiagram maxOf_ρ;
         private Generate_ρ_LineForDiagram searchingOf_ρ;
 
-        public SymmetricalReinfByMaxAndMinPercentageReinf(IMaterial material)
+        public SymmetricalReinfByMaxAndMinPercentageReinf(IMaterial material,IElementGeometry geomety)
         {
+            ratio_d_and_h = (geomety as ElementGeomety).d / geomety.h;
             _material = material;
             SetMinimumOf_ρ_and_Max();
         }
@@ -71,11 +71,11 @@ namespace CalculatorEC2Logic
             maxOf_ρ.ρ = 0.04;
             maxOf_ρ.GetLineForDiagram();
             searchingOf_ρ = new Generate_ρ_LineForDiagram(_material);
-            maxOf_ρ.αcc = αcc;
-            maxOf_ρ.λ = λ;
-            maxOf_ρ.η = η;
-            maxOf_ρ.ratio_d_and_h = ratio_d_and_h;
-            maxOf_ρ.ratio_d1_and_h = ratio_d1_and_h;
+            searchingOf_ρ.αcc = αcc;
+            searchingOf_ρ.λ = λ;
+            searchingOf_ρ.η = η;
+            searchingOf_ρ.ratio_d_and_h = ratio_d_and_h;
+            searchingOf_ρ.ratio_d1_and_h = ratio_d1_and_h;
         }
         public double Get_ρ(double Mbh, double NbhPower2)
         {
@@ -107,12 +107,12 @@ namespace CalculatorEC2Logic
         }
         public double Get_ρ(double M, double N, double b, double h)
         {
-            var Mbh = M / (b * h);
-            var NbhPower2 = N / (b * Math.Pow(h, 2));
+            var Mbh = M*1000000 / (b*10 * Math.Pow(h*10, 2));
+            var NbhPower2 = N*1000 / (b*10 *h*10);
 
             return Get_ρ(Mbh: Mbh, NbhPower2: NbhPower2);
         }
-        private int CheckDiagram(Generate_ρ_LineForDiagram toCheck, double Mbh, double NbhPower2)
+        private int CheckDiagram(Generate_ρ_LineForDiagram toCheck, double Mbh, double NbhPower2, int percision = 3)
         {
             toCheck.GetLineForDiagram();
             var test = toCheck.ListOfDotsInLineOfDiagram;
@@ -127,9 +127,9 @@ namespace CalculatorEC2Logic
                                  .Aggregate((x, y) => Math.Abs(x.Mbh - Mbh) < Math.Abs(y.Mbh - Mbh) ? x : y);
 
                 if (
-                    (Mbh - 0.05 >= closestItemByM.Mbh && closestItemByM.Mbh <= Mbh+0.05)
+                    (Math.Round( Mbh, percision) >= Math.Round(closestItemByM.Mbh, percision) && Math.Round(closestItemByM.Mbh, percision) <= Math.Round(Mbh, percision))
                     &&
-                    (NbhPower2 - 0.05 >= closestItemByM.NbhPower2 && closestItemByM.NbhPower2 >= NbhPower2 + 0.05))
+                    (Math.Round(NbhPower2, percision) >= Math.Round(closestItemByM.NbhPower2, percision) && Math.Round(closestItemByM.NbhPower2, percision) >= Math.Round(NbhPower2, percision)))
                 {
                     return 0;
                 }
@@ -144,9 +144,9 @@ namespace CalculatorEC2Logic
                                  .Aggregate((x, y) => Math.Abs(x.Mbh - Mbh) < Math.Abs(y.Mbh - Mbh) ? x : y);
 
                 if (
-                    (Mbh - 0.02 >= closestItemByM.Mbh && closestItemByM.Mbh <= Mbh + 0.02)
+                    (Math.Round(Mbh, percision) >= Math.Round(closestItemByM.Mbh, percision) && Math.Round(closestItemByM.Mbh, percision) <= Math.Round(Mbh, percision))
                     &&
-                    (NbhPower2 - 0.02 >= closestItemByM.NbhPower2 && closestItemByM.NbhPower2 >= NbhPower2 + 0.02))
+                    (Math.Round(NbhPower2, percision) >= Math.Round(closestItemByM.NbhPower2, percision) && Math.Round(closestItemByM.NbhPower2, percision) >= Math.Round(NbhPower2 , percision)))
                 {
                     return 0;
                 }
@@ -163,36 +163,35 @@ namespace CalculatorEC2Logic
             /// <summary>
             /// 0.85 by defoult
             /// </summary>
-            public double αcc { get; set; } = 0.85;
+            public double αcc { get; set; }
 
             /// <summary>
             /// 0.8 by defoult
             /// </summary>
-            public double λ { get; set; } = 0.8;
+            public double λ { get; set; }
 
             /// <summary>
             /// 1 by defoult
             /// </summary>
-            public double η { get; set; } = 1;
+            public double η { get; set; }
 
 
             /// <summary>
             /// 0.004 by defoult
             /// </summary>
-            public double ρ { get; set; } = 0.004;
+            public double ρ { get; set; }
 
             /// <summary>
             /// 0.95 by defoult
             /// </summary>
-            public double ratio_d_and_h { get; set; } = 0.95;
+            public double ratio_d_and_h { get; set; }
 
             /// <summary>
             /// 0.95 by defoult
             /// </summary>
             public double ratio_d1_and_h
             {
-                get { return 1 - ratio_d_and_h; }
-                set { ratio_d_and_h = 1 - value; }
+                get;set;
             }
             /// <summary>
             /// 0.0035 by defoult
