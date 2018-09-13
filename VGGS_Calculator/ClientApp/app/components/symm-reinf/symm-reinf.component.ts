@@ -214,23 +214,9 @@ export class SymmReinfComponent implements OnInit {
                     }
                 }
             });
-            this.createTextOnLines();
         });
     }
 
-    ///ne radi////
-    createTextOnLines() {
-        //this.isReady = false;
-        //const canvas= <HTMLCanvasElement> document.getElementById("canvas");
-        //if (canvas !== undefined) {
-        //    let ctx = canvas.getContext("2d");
-        //    ctx.fillStyle = "blue";
-        //    ctx.font = "30px Arial";
-        //    ctx.fillText("Hello World", 0, 0);
-        //    ctx.restore();
-        //}
-        //this.isReady = true;
-    }
 
     addData(chart: any, dataset: any) {
         (chart.data.datasets as ChartDataSets[]).push(dataset);
@@ -248,7 +234,6 @@ export class SymmReinfComponent implements OnInit {
                 if (x.label.includes("w=") || x.label.includes("0 to"))
                     t.push(x);
             });
-            //(chart.data.datasets as ChartDataSets[]).splice(count - 4, 3);
             t.forEach(x => {
                 let i = (chart.data.datasets as ChartDataSets[]).indexOf(x);
                 (chart.data.datasets as ChartDataSets[]).splice(i, 1);
@@ -289,10 +274,7 @@ export class SymmReinfComponent implements OnInit {
         this.removeDataResult(this.chart);
         this.symServices.getLinesFromInput(this.izracunaj)
             .subscribe((line: searcedPoint) => {
-                //let data = this.sortDataFromSearch(line);
-                //let dataset = this.createDataSet('#000000',Math.round(line.w*100)/100, data.points);
-                //this.addData(this.chart, dataset);
-                /// ni to zero anmi to zero lines
+
                 this.addData(this.chart, this.createDataSet('#000000', '0 to μSd', [{ x: this.izracunaj.mi, y: 0 }, { x: this.izracunaj.mi, y: this.izracunaj.ni }]));
                 this.addData(this.chart, this.createDataSet('#000000', '0 to νSd', [{ x: 0, y: this.izracunaj.ni }, { x: this.izracunaj.mi, y: this.izracunaj.ni }]));
                 this.addData(this.chart, this.createDataSet('#000000', 'w= ' + Math.round(line.w * 100) / 100, [{ x: this.izracunaj.mi, y: this.izracunaj.ni }], 2));

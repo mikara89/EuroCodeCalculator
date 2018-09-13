@@ -26,8 +26,10 @@ namespace TestingCharts
     {
         public MainWindow()
         {
+            
             InitializeComponent();
             testqq();
+
         }
 
         private void testqq()
@@ -44,38 +46,43 @@ namespace TestingCharts
                 h = 40,
             };
             var sym = new SymmetricalReinfByClassicMethod(material, geometry);
-
-            var x = new List<double>();
-            var y = new List<double>();
-
-
-            //r.ForEach(n => points.Add(new Point( n.Mbh, n.NbhPower2)));
-
-            //var l= new List<List<Point>>();
-            //l.Add(points);
-            //list.ItemsSource = l;
-            Grid g = new Grid();
-            var l = new List<List<Point>>();
+            var random = new Random();
+            var l = new List<PointCollection>();
             for (int i = 0; i < sym.GetAllLines().Count; i++)
             {
-                l.Add(new List<Point>());
+                l.Add(new PointCollection());
                 var r = sym.GetAllLines()[i];
-                var toRemove = new SymmetricalReinfByClassicMethod.μSd_And_νSdCollection();
-                r.ForEach(z => { if (z.μSd < 0 || z.νSd < 0) toRemove.Add(z); });
-                toRemove.ForEach(z => r.Remove(z));
+                var x = new List<double>();
+                var y = new List<double>();
+                r.ForEach(n => { x.Add(n.μSd); y.Add(n.νSd); });
 
-                r.ForEach(n => x.Add(n.μSd));
-                r.ForEach(n => y.Add(n.νSd));
-                r.ForEach(n => l[i].Add( new Point(n.μSd, n.νSd)));
-                LineGraph lineGraph = new LineGraph();
-                lineGraph.Plot(x, y);
-                var a = r.First(t => t.νSd == r.Max(n=>n.νSd) );
-                //g.Children.Add(lineGraph);
+
+                var lg = new LineGraph();
+                lines.Children.Add(lg);
+                lg.Stroke = new SolidColorBrush(Color.FromArgb(255, GetRandumByte(random), GetRandumByte(random), GetRandumByte(random)));
+                lg.Description = String.Format("w= {0}", i==0?0.05:Convert.ToDouble(i)/10);
+                lg.StrokeThickness = 2;
+                lg.Plot(x, y);
+
             }
-            // Char.Content = g;
-            //var c = new Chart();
-            
-            list.DataContext = l;
         }
+        private byte GetRandumByte(Random random)
+        {
+            return Convert.ToByte(random.Next(0, 256));
+        }
+
+        public class DisplayRange
+        {
+            public double Start { get; set; }
+            public double End { get; set; }
+
+            public DisplayRange(double start, double end)
+            {
+                Start = start;
+                End = end;
+            }
+        }
+
+       
     }
 }
