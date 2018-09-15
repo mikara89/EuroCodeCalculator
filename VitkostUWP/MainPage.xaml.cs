@@ -106,23 +106,13 @@ namespace VitkostUWP
                 }
 
                 Izvijanja izvijanja = (Izvijanja)Enum.Parse(typeof(Izvijanja), cmbIzvijanje.SelectedValue.ToString());
-                //using (var se = new VitkostEC2(
-                //    izvijanja,
-                //    Convert.ToDouble(txtNg.Text),
-                //    Convert.ToDouble(txtNq.Text),
-                //    Convert.ToDouble(txtL.Text),
-                //    Convert.ToDouble(txtb.Text),
-                //    Convert.ToDouble(txth.Text),
-                //    (cmbBeton.SelectedItem as BetonModelEC),
-                //    (cmbArmatura.SelectedItem as ReinforcementTypeModelEC),
-                //    Convert.ToDouble(txtd1.Text)
-                //    ))
+
                 var g = new ElementGeometySlenderness()
                 {
                     b = Convert.ToDouble(txtb.Text),
                     d1 = Convert.ToDouble(txtd1.Text),
                     h = Convert.ToDouble(txth.Text),
-                    izvijanje = izvijanja,
+                    k = OjleroviSlucajeviIzvijanja.GetK(izvijanja),
                     L = Convert.ToDouble(txtL.Text),
                 };
                 var f = new ForcesSlenderness(g.li, g.h)

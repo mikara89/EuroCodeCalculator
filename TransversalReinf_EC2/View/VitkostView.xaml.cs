@@ -59,6 +59,19 @@ namespace TransversalReinf_EC2.View
                 }
             }
         }
+        private double _k;
+
+        public double k
+        {
+            get { return _k; }
+            set
+            {
+                if (_k != value)
+                {
+                    SetValue(ref _k, value);
+                }
+            }
+        }
         public ICommand CalculateCommand => new CommandHandler(async p => await IzracunajAsync());
         public VitkostView()
         {
@@ -66,18 +79,22 @@ namespace TransversalReinf_EC2.View
             var list = Enum.GetNames(typeof(Izvijanja));
             cmbIzvijanje.ItemsSource = list;
             cmbIzvijanje.SelectedValue = Enum.GetName(typeof(Izvijanja), Izvijanja.Ukljesten_Sa_Jedne);
+            settingK(cmbIzvijanje);
             cmbBeton.ItemsSource = TabeleEC2.BetonClasses.GetBetonClassListEC();
             cmbBeton.SelectedIndex = 3;
             cmbArmatura.ItemsSource = TabeleEC2.ReinforcementType.GetArmatura();
             cmbArmatura.SelectedIndex = 0;
-            txtN.Text = "" + 569.7;
-            txtMt.Text = "" + 2037.79;
-            txtMb.Text = "" + (0);
-            txtL.Text = "" + 850;
-            txtb.Text = "" + 60;
-            txth.Text = "" + 60;
+            txtN.Text = "" + 1620;
+            txtMt.Text = "" + 38.5;
+            txtMb.Text = "" + (-38.5);
+            txtL.Text = "" + 375;
+            txtb.Text = "" + 30;
+            txth.Text = "" + 30;
             txtd1.Text = "" + 4;
-
+            cmbIzvijanje.SelectionChanged += (s, e) => 
+            {
+                settingK(s as ComboBox);
+            };
             //btnIzracunaj.Click +=
             //    async (s, e) =>
             //    {
@@ -89,6 +106,12 @@ namespace TransversalReinf_EC2.View
 
             cmbIzvijanje.SelectionChanged += (s, e) => { Imagechange(); };
         }
+        private void settingK(ComboBox cmb) 
+        {
+            var selected = cmb.SelectedItem as string;
+            k = OjleroviSlucajeviIzvijanja.GetK((Izvijanja)Enum.Parse(typeof(Izvijanja), cmbIzvijanje.SelectedValue.ToString()));
+        }
+
         private async Task IzracunajAsync()
         {
             try
@@ -107,7 +130,7 @@ namespace TransversalReinf_EC2.View
                     return;
                 }
 
-                Izvijanja izvijanja = (Izvijanja)Enum.Parse(typeof(Izvijanja), cmbIzvijanje.SelectedValue.ToString());
+                //Izvijanja izvijanja = (Izvijanja)Enum.Parse(typeof(Izvijanja), cmbIzvijanje.SelectedValue.ToString());
 
                 //await Task.Run(() =>
                 // {
@@ -116,7 +139,7 @@ namespace TransversalReinf_EC2.View
                     b = Convert.ToDouble(txtb.Text),
                     d1 = Convert.ToDouble(txtd1.Text),
                     h = Convert.ToDouble(txth.Text),
-                    izvijanje = izvijanja,
+                    k = this.k,
                     L = Convert.ToDouble(txtL.Text),
                 };
                 var f = new ForcesSlenderness(g.li, g.h)

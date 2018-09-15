@@ -19,12 +19,26 @@
         </Grid.ColumnDefinitions>
         <Grid Padding="10" Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2.2*"/>
+                <ColumnDefinition Width="2.8*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" >
-                <StackPanel Padding="0,10,0,0" HorizontalAlignment="Center" Orientation="Horizontal">
-                    <ComboBox x:Name="cmbIzvijanje" HorizontalAlignment="Left" Grid.Column="0" VerticalAlignment="Top" Width="182" IsDropDownOpen="False" IsSynchronizedWithCurrentItem="False"/>
+                <StackPanel Padding="0,10,0,0"
+                            HorizontalAlignment="Center" 
+                            Orientation="Horizontal">
+                    <ComboBox x:Name="cmbIzvijanje" 
+                              HorizontalAlignment="Left"
+                              Grid.Column="0" 
+                              VerticalAlignment="Top" 
+                              Width="182" 
+                              IsDropDownOpen="False" 
+                              IsSynchronizedWithCurrentItem="False"/>
+                    <TextBlock Padding="5,0,0,0" 
+                               Text="k=" 
+                               VerticalAlignment="Center"/>
+                    <TextBox Padding="5,0,0,0" 
+                             MinWidth="50" 
+                             Text="{Binding ElementName=window, Path=k,Mode=TwoWay}"/>
                 </StackPanel>
                 <Grid Padding="0,10,0,0" HorizontalAlignment="Stretch" >
                     <Grid.ColumnDefinitions>

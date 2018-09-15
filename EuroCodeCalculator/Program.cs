@@ -283,7 +283,7 @@ namespace EuroCodeCalculator
             var g = new ElementGeometySlenderness() {
                 b = 25,
                 h = 25,
-                izvijanje = Izvijanja.Pokretan_I_Ukljeste,
+                k = OjleroviSlucajeviIzvijanja.GetK(Izvijanja.Pokretan_I_Ukljeste),
                 d1=4,
                 L=400,
             };
@@ -311,7 +311,7 @@ namespace EuroCodeCalculator
             {
                 b = 25,
                 h = 25,
-                izvijanje = Izvijanja.Ukljesten_Sa_Obe,
+                k = OjleroviSlucajeviIzvijanja.GetK(Izvijanja.Pokretan_I_Ukljeste),
                 d1 = 4,
                 L = 800,
             };
@@ -339,7 +339,7 @@ namespace EuroCodeCalculator
             {
                 b = 30 ,
                 h = 40,
-                izvijanje = Izvijanja.Ukljesten_Sa_Jedne,
+                k = OjleroviSlucajeviIzvijanja.GetK(Izvijanja.Pokretan_I_Ukljeste),
                 d1 = 4,
                 L = 350,
             };

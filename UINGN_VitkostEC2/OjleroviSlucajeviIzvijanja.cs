@@ -21,7 +21,7 @@ namespace CalculatorEC2Logic
 
 
 
-        public static double GetK(Izvijanja izvijanje)
+        public static double GetK(Izvijanja? izvijanje)
         {
             switch (izvijanje)
             {
@@ -33,6 +33,8 @@ namespace CalculatorEC2Logic
                     return Ukljesten_Sa_Jedne;
                 case Izvijanja.Ukljesten_Sa_Obe:
                     return Ukljesten_Sa_Obe;
+                case null:
+                    return 0;
             }
 
             return 0;

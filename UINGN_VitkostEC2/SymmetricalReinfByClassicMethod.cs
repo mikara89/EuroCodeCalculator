@@ -37,8 +37,10 @@ namespace CalculatorEC2Logic
         public double Get_ω2(double MRd, double NRd)
         {
             var geo = _geometry as ElementGeomety;
-            var mi = MRd/( Math.Pow(geo.d / 100, 2) * geo.b / 100 * _material.beton.fcd * 1000);
-            var ni = NRd/ (geo.d / 100 * geo.b / 100 * _material.beton.fcd * 1000);
+            //var mi = MRd/( Math.Pow(geo.d / 100, 2) * geo.b / 100 * _material.beton.fcd * 1000);
+            //var ni = NRd/ (geo.d / 100 * geo.b / 100 * _material.beton.fcd * 1000);
+            var mi = MRd*1000000 / (Math.Pow(geo.d *10, 2) * geo.b *10 * _material.beton.fcd);
+            var ni = NRd*1000 / (geo.d *10 * geo.b *10 * _material.beton.fcd);
             return Get_ω(mi, ni);
         }
 
@@ -48,6 +50,7 @@ namespace CalculatorEC2Logic
             double addTo_ω = maxOf_ω.ω / 2;
             for (int i = 0; i < 20; i++)
             {
+                addTo_ω = addTo_ω / 2;
                 if (ω < 0.05) break;
                 searchingOf_ω = new Generate_ω_LineForDiagram(_material, _geometry, ω);
                 switch (CheckDiagram(searchingOf_ω, μRd, νRd))
@@ -63,7 +66,7 @@ namespace CalculatorEC2Logic
                     default:
                         break;
                 }
-                addTo_ω = addTo_ω / 2;
+                
                 iterations = i;
             }
             
