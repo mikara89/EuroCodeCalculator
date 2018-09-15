@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TestingCharts"
         xmlns:d3="clr-namespace:InteractiveDataDisplay.WPF;assembly=InteractiveDataDisplay.WPF"
         mc:Ignorable="d" x:Name="window" Background="LightGray"
-        Title="MainWindow" Height="450" Width="650">
+        Title="Classic Interaction Diagram" Height="450" Width="650" ResizeMode="NoResize">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -26,9 +26,9 @@
         <Grid Background="Azure" Grid.Column="1">
             
             <StackPanel Background="Azure" Margin="5" Grid.Column="1" Orientation="Vertical">
-                <TextBlock  
+                <TextBlock  FontStyle="Oblique"
                            Height="20" 
-                           Text="Parametri: "/>
+                           Text="Parameters: "/>
                 <DockPanel Margin="0,0,0,5">
                     <TextBlock Width="30" 
                                Padding="5,0,5,0" 
@@ -51,9 +51,9 @@
                     <TextBox DockPanel.Dock="Right" />
                 </DockPanel>
                 <DockPanel Margin="0,0,0,5">
-                    <TextBlock Width="60" 
+                    <TextBlock Width="90" 
                                Padding="5,0,5,0" 
-                               Text="beton: " 
+                               Text="Concrete: " 
                                DockPanel.Dock="Left"/>
                     <ComboBox DockPanel.Dock="Right">
                         <ComboBox.ItemTemplate>
@@ -66,9 +66,9 @@
                     </ComboBox>
                 </DockPanel>
                 <DockPanel Margin="0,0,0,5">
-                    <TextBlock Width="60" 
+                    <TextBlock Width="90" 
                                Padding="5,0,5,0" 
-                               Text="armatura: " 
+                               Text="Reinforcement: " 
                                DockPanel.Dock="Left"/>
                     <ComboBox DockPanel.Dock="Right">
                         <ComboBox.ItemTemplate>

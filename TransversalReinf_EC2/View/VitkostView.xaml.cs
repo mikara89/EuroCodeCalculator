@@ -111,27 +111,26 @@ namespace TransversalReinf_EC2.View
 
                 //await Task.Run(() =>
                 // {
-                     using (var se = new VitkostEC2_V2(
-                   new ElementGeometySlenderness()
-                   {
-                       b = Convert.ToDouble(txtb.Text),
-                       d1 = Convert.ToDouble(txtd1.Text),
-                       h = Convert.ToDouble(txth.Text),
-                       izvijanje = izvijanja,
-                       L = Convert.ToDouble(txtL.Text),
-                   },
-                   new ForcesSlenderness()
-                   {
-                       M_bottom = Convert.ToDouble(txtMb.Text),
-                       M_top = Convert.ToDouble(txtMt.Text),
-                       N = Convert.ToDouble(txtN.Text),
-                   },
-                   new Material()
-                   {
-                       armatura = cmbArmatura.SelectedItem as ReinforcementTypeModelEC,
-                       beton = cmbBeton.SelectedItem as BetonModelEC,
-                   }
-                   ))
+                var g = new ElementGeometySlenderness()
+                {
+                    b = Convert.ToDouble(txtb.Text),
+                    d1 = Convert.ToDouble(txtd1.Text),
+                    h = Convert.ToDouble(txth.Text),
+                    izvijanje = izvijanja,
+                    L = Convert.ToDouble(txtL.Text),
+                };
+                var f = new ForcesSlenderness(g.li, g.h)
+                {
+                    M_bottom = Convert.ToDouble(txtMb.Text),
+                    M_top = Convert.ToDouble(txtMt.Text),
+                    NEd = Convert.ToDouble(txtN.Text),
+                };
+                var m = new Material()
+                {
+                    armatura = cmbArmatura.SelectedItem as ReinforcementTypeModelEC,
+                    beton = cmbBeton.SelectedItem as BetonModelEC,
+                };
+                     using (var se = new VitkostEC2_V2(g,f,m))
                      {
                          se.Calculate();
                          se.KontrolaCentPritPreseka();

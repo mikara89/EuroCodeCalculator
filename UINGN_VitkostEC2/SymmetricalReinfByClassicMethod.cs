@@ -48,7 +48,7 @@ namespace CalculatorEC2Logic
             double addTo_ω = maxOf_ω.ω / 2;
             for (int i = 0; i < 20; i++)
             {
-                
+                if (ω < 0.05) break;
                 searchingOf_ω = new Generate_ω_LineForDiagram(_material, _geometry, ω);
                 switch (CheckDiagram(searchingOf_ω, μRd, νRd))
                 {

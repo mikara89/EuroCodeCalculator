@@ -287,9 +287,9 @@ namespace EuroCodeCalculator
                 d1=4,
                 L=400,
             };
-            var f = new ForcesSlenderness()
+            var f = new ForcesSlenderness(g.li,g.h)
             {
-                N=85.725,
+                NEd=85.725,
                 M_top=0,
                 M_bottom=0,
             };
@@ -315,9 +315,9 @@ namespace EuroCodeCalculator
                 d1 = 4,
                 L = 800,
             };
-            var f = new ForcesSlenderness()
+            var f = new ForcesSlenderness(g.li,g.h)
             {
-                N = 100,
+                NEd = 100,
                 //M_top = -50,
                 //M_bottom = 50,
             };
@@ -343,9 +343,9 @@ namespace EuroCodeCalculator
                 d1 = 4,
                 L = 350,
             };
-            var f = new ForcesSlenderness()
+            var f = new ForcesSlenderness(g.li, g.h)
             {
-                N = 457.5,
+                NEd = 457.5,
                 M_top = 20.25,
                 //M_bottom = 50,
             };
