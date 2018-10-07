@@ -83,9 +83,9 @@ namespace CalculatorEC2Logic
         {
             if (TipDim == TipDimenzionisanja.Vezano)
                 μSd = TabeleEC2.KofZaProracunPravougaonogPresekaEC.GetμSd(Msds, b_eff, d, beton.fcd / 10);
-            else μSd = TabeleEC2.KofZaProracunPravougaonogPresekaEC.GetμSd();
+            else μSd = new KofZaProracunPravougaonogPresekaModelEC(-3.5, 20).μRd;
 
-            KofZaProracunPravougaonogPreseka = TabeleEC2.KofZaProracunPravougaonogPresekaEC.GetItem_Full(μSd);
+            KofZaProracunPravougaonogPreseka = TabeleEC2.KofZaProracunPravougaonogPresekaEC.Get_Kof_From_μ(μSd);
         }
 
         private void Start()

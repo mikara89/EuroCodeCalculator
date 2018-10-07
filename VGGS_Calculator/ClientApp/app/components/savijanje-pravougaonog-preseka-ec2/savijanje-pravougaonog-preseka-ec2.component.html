@@ -314,7 +314,7 @@
                             [(ngModel)]="izracunaj.mu">
                         <option *ngFor="let mu of muList"
                                 [ngValue]="mu['&mu;Rd']">
-                            &epsilon;c/&epsilon;s1= {{mu['&epsilon;c']}}/{{mu['&epsilon;s1']}}; &mu;Rd={{mu['&mu;Rd']}}
+                            &epsilon;c/&epsilon;s1= {{mu['&epsilon;c'] | number:'1.1-1'}}/{{mu['&epsilon;s1'] | number:'1.1-1'}}; &mu;Rd={{mu['&mu;Rd'] | number:'1.3-3'}}
                         </option>
                     </select>
                 </div>

@@ -4,7 +4,6 @@ using TabeleEC2;
 using System.Linq;
 using TabeleEC2.Model;
 using System.Diagnostics;
-using CalculatorEC2Logic.SavijanjePreseka.EC2;
 using static CalculatorEC2Logic.SymmetricalReinfByMaxAndMinPercentageReinf;
 
 namespace EuroCodeCalculator
@@ -13,14 +12,24 @@ namespace EuroCodeCalculator
     {
         static void Main(string[] args)
         {
-            testqq();
+            var beton = BetonClasses.GetBetonClassListEC().Single(b => b.name == "C25/30");
+            var armatura = ReinforcementType.GetArmatura().Single(b => b.name == "B500B");
+            var m = new Material() { beton = beton, armatura = armatura };
+            var g = new ElementGeomety() { b = 25, h = 40, d1 = 6, d2 = 4 };
+            var f = new ForcesBendingAndCompressison(112.5, 67.5);
+            using (var obj = new SavijanjePravougaonogPresekaEC2_V2(f, g, m))
+            {
+                Console.WriteLine(obj.ToString());
+            }
+            Console.ReadKey();
         }
         private static void testSteper()
         {
+
             var beton = TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == "C25/30");
             var arm = ReinforcementType.GetArmatura().First(n => n.name == "B500B");
             //var b = new SavijanjePravougaonogPresekaEC2_V2(25,40,4,4, beton,arm,30,20,20);
-            var b = new SavijanjePravougaonogPresekaEC2_V2(25, 40, 6, 6, beton, arm, 50, 30, 50);
+            var b = new CalculatorEC2Logic.SavijanjePreseka.EC2.SavijanjePravougaonogPresekaEC2_V2(25, 40, 6, 6, beton, arm, 50, 30, 50);
             b.Calc();
             foreach (var item in b.Steper.Steps)
             {
@@ -396,6 +405,31 @@ namespace EuroCodeCalculator
             var s = new Generate_ρ_LineForDiagram(m);
 
             var r = s.ListOfDotsInLineOfDiagram;
+
+        }
+        private static void testAs() 
+        {
+            var g = new ElementGeomety()
+            {
+                b = 60,
+                d1 = 4,
+                h = 60,
+            };
+            var m = new Material()
+            {
+                beton = TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == "C30/37"),
+                armatura = ReinforcementType.GetArmatura().First(n => n.name == "B500B"),
+            };
+            m.beton.α = 1;
+            var s1 = new SymmetricalReinfByClassicMethod(m, g);
+
+            //var As1 = s1.Get_As(47.8, 1620); 
+            //var w= s1.Get_ω2(47.8, 1620);
+            var As1 = s1.Get_As(2204.74, 569.7);
+            var w = s1.Get_ω2(2204.74, 569.7);
+            var As2= g.b * (g.h - g.d1) * w * m.beton.fcd / (m.armatura.fyd * 10);
+            Console.WriteLine($"{As1} == {As2}");
+            Console.ReadKey();
 
         }
     }

@@ -5,11 +5,11 @@ using TabeleEC2.Model;
 
 namespace CalculatorEC2Logic
 {
-    public class SymmetricalReinfByClassicMethod 
+    public class SymmetricalReinfByClassicMethod
     {
-        private IMaterial _material; 
+        private IMaterial _material;
         private IElementGeometry _geometry;
-         
+
         /// <summary>
         /// 0.85 by defoult
         /// </summary>
@@ -20,8 +20,8 @@ namespace CalculatorEC2Logic
         private Generate_ω_LineForDiagram minOf_ω;
         private Generate_ω_LineForDiagram maxOf_ω;
         public Generate_ω_LineForDiagram searchingOf_ω { get; internal set; }
-         
-        public SymmetricalReinfByClassicMethod(IMaterial material, IElementGeometry geometry) 
+
+        public SymmetricalReinfByClassicMethod(IMaterial material, IElementGeometry geometry)
         {
             _material = material;
             _geometry = geometry;
@@ -30,25 +30,24 @@ namespace CalculatorEC2Logic
 
         private void SetMinimumOf_ω_and_Max()
         {
-            minOf_ω = new Generate_ω_LineForDiagram(_material, _geometry,0.05);
+            minOf_ω = new Generate_ω_LineForDiagram(_material, _geometry, 0.05);
             maxOf_ω = new Generate_ω_LineForDiagram(_material, _geometry, 1);
         }
 
         public double Get_ω2(double MRd, double NRd)
         {
-            var geo = _geometry as ElementGeomety;
-            //var mi = MRd/( Math.Pow(geo.d / 100, 2) * geo.b / 100 * _material.beton.fcd * 1000);
-            //var ni = NRd/ (geo.d / 100 * geo.b / 100 * _material.beton.fcd * 1000);
-            var mi = MRd*1000000 / (Math.Pow(geo.d *10, 2) * geo.b *10 * _material.beton.fcd);
-            var ni = NRd*1000 / (geo.d *10 * geo.b *10 * _material.beton.fcd);
+            var geo = _geometry;
+
+            var mi = MRd * 1000000 / (Math.Pow(geo.d * 10, 2) * geo.b * 10 * _material.beton.fcd);
+            var ni = NRd * 1000 / (geo.d * 10 * geo.b * 10 * _material.beton.fcd);
             return Get_ω(mi, ni);
         }
 
-        public double Get_ω(double μRd, double νRd) 
+        public double Get_ω(double μRd, double νRd)
         {
             var ω = maxOf_ω.ω / 2;
             double addTo_ω = maxOf_ω.ω / 2;
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 50; i++)
             {
                 addTo_ω = addTo_ω / 2;
                 if (ω < 0.05) break;
@@ -66,21 +65,46 @@ namespace CalculatorEC2Logic
                     default:
                         break;
                 }
-                
+
                 iterations = i;
             }
-            
+
             if (ω > 1.0)
                 throw new Exception("the percentage of reinforcement has been exceeded, make cross-section bigger");
-            if (ω < 0.05) {
+            if (ω < 0.05)
+            {
                 searchingOf_ω = minOf_ω;
                 return 0.05;
             };
             return ω;
         }
 
-        private int CheckDiagram(Generate_ω_LineForDiagram toCheck, double μRd, double νRd, int percision=3)
-        { 
+        public double Get_As(double MRd, double NRd)
+        {
+            for (double i = -3.5; i <= -0.1; i += 0.01)
+            {
+                var item = new μSd_And_νSd(_geometry, _material).GetFromKof(new KofZaProracunPravougaonogPresekaModelEC(i, 20));
+                var As1 = (NRd - 0.85 * _material.beton.fcd * item.kof.αv * item.kof.ξ * _geometry.d * _geometry.b) / (item.σs2 - item.σs1);
+                var As2 = Math.Abs(MRd * 100 - 0.85 * _material.beton.fcd * item.kof.αv * item.kof.ξ * _geometry.d * _geometry.b * (_geometry.h / 2 - item.kof.ka * item.x)) / ((_geometry.h / 2 + _geometry.d1) * Math.Abs((item.σs2 + item.σs1)));
+
+
+                if (Math.Round(As1, 2) == Math.Round(As2, 2)) return As1 * 2;
+
+            }
+            for (double i = 19.9; i > -1.5; i -= 0.01)
+            {
+                var item = new μSd_And_νSd(_geometry, _material).GetFromKof(new KofZaProracunPravougaonogPresekaModelEC(-3.5, i));
+
+                var As1 = (NRd - 0.85 * _material.beton.fcd * item.kof.αv * item.kof.ξ * _geometry.d * _geometry.b) / (item.σs2 - item.σs1);
+                var As2 = Math.Abs(MRd * 100 - 0.85 * _material.beton.fcd * item.kof.αv * item.kof.ξ * _geometry.d * _geometry.b * (_geometry.h / 2 - item.kof.ka * item.x)) / ((_geometry.h / 2 + _geometry.d1) * Math.Abs((item.σs2 + item.σs1)));
+
+                if (Math.Round(As1, 2) == Math.Round(As2, 2)) return As1 * 2;
+            }
+            return 0;
+        }
+
+        private int CheckDiagram(Generate_ω_LineForDiagram toCheck, double μRd, double νRd, int percision = 3)
+        {
             var test = new List<μSd_And_νSd>(toCheck.ListOfDotsInLineOfDiagram);
             var νSdmax = test.Single(m => m.μSd == test.Max(n => n.μSd)).νSd;
             if (νRd >= νSdmax)
@@ -97,7 +121,7 @@ namespace CalculatorEC2Logic
                     find = closestItemByM;
                     return 0;
                 }
-                else if (closestItemByM.νSd > νRd){ find = closestItemByM; return 1; }
+                else if (closestItemByM.νSd > νRd) { find = closestItemByM; return 1; }
                 else { find = closestItemByM; return 2; };
 
             }
@@ -135,10 +159,10 @@ namespace CalculatorEC2Logic
                 $"  d1: {geo.d1}{geo.GetUnits()}{Environment.NewLine }" +
                 $"Sile{Environment.NewLine }" +
                 $"  μRd: {Math.Round(find.μSd, 2)}{Environment.NewLine }" +
-                $"  MRd: {Math.Round(find.μSd*Math.Pow(geo.d / 100, 2)*geo.b/100*_material.beton.fcd*1000, 2)} kNm{Environment.NewLine }" +
+                $"  MRd: {Math.Round(find.μSd/100 * Math.Pow(geo.d, 2) * geo.b * _material.beton.fcd/10, 2)} kNm{Environment.NewLine }" +
                 $"  νRd: {Math.Round(find.νSd, 2)}{Environment.NewLine }" +
-                $"  NRd: {Math.Round(find.νSd * geo.d / 100 * geo.b / 100 * _material.beton.fcd * 1000, 2)} kN{Environment.NewLine }" +
-                $"  Mehanički koficijent armiranja: {Math.Round(searchingOf_ω.ω,2)}{Environment.NewLine }" +
+                $"  NRd: {Math.Round(find.νSd * geo.d  * geo.b  * _material.beton.fcd/10, 2)} kN{Environment.NewLine }" +
+                $"  Mehanički koficijent armiranja: {Math.Round(searchingOf_ω.ω, 3)}{Environment.NewLine }" +
                 $"  Iteracije: {iterations}";
 
         }
@@ -149,13 +173,13 @@ namespace CalculatorEC2Logic
             private readonly IElementGeometry _geometry;
             public double ω { get; internal set; }
 
-            public μSd_And_νSdCollection ListOfDotsInLineOfDiagram { get; set; } 
+            public μSd_And_νSdCollection ListOfDotsInLineOfDiagram { get; set; }
             /// <summary>
             /// 0.85 by defoult
             /// </summary>
             public double αcc { get; set; }
 
-            public Generate_ω_LineForDiagram(IMaterial material, IElementGeometry geometry,double ω, double αcc=0.85) 
+            public Generate_ω_LineForDiagram(IMaterial material, IElementGeometry geometry, double ω, double αcc = 0.85)
             {
                 _material = material;
                 _geometry = geometry;
@@ -167,7 +191,7 @@ namespace CalculatorEC2Logic
 
         public class μSd_And_νSdCollection : List<μSd_And_νSd>
         {
-            public μSd_And_νSdCollection(IElementGeometry geometry, IMaterial material,double ω)
+            public μSd_And_νSdCollection(IElementGeometry geometry, IMaterial material, double ω)
             {
                 if (geometry == null)
                 {
@@ -179,8 +203,8 @@ namespace CalculatorEC2Logic
                     throw new ArgumentNullException(nameof(material));
                 }
 
-                
-                for (double i = -3.5; i <= -0.1; i+=0.1)
+
+                for (double i = -3.5; i <= -0.1; i += 0.1)
                 {
                     var item = new μSd_And_νSd(geometry, material);
                     Add(item.GetFromKof(new KofZaProracunPravougaonogPresekaModelEC(i, 20), ω));
@@ -201,26 +225,26 @@ namespace CalculatorEC2Logic
         public class μSd_And_νSd
         {
             private readonly IElementGeometry geometry;
-            private readonly IMaterial material; 
+            private readonly IMaterial material;
 
             public double μSd { get; internal set; }
             public double νSd { get; internal set; }
-            public KofZaProracunPravougaonogPresekaModelEC kof { get; internal set; } 
-            public double εs2 { get; internal set; } 
-            public double σs1 { get; internal set; } 
+            public KofZaProracunPravougaonogPresekaModelEC kof { get; internal set; }
+            public double εs2 { get; internal set; }
+            public double σs1 { get; internal set; }
             public double σs2 { get; internal set; }
             public double x { get; internal set; }
-            public μSd_And_νSd(IElementGeometry geometry,IMaterial material)
+            public μSd_And_νSd(IElementGeometry geometry, IMaterial material)
             {
                 this.geometry = geometry ?? throw new ArgumentNullException(nameof(geometry));
                 this.material = material ?? throw new ArgumentNullException(nameof(material));
             }
-            public μSd_And_νSd GetFromKof(KofZaProracunPravougaonogPresekaModelEC kof,double ω) 
+            public μSd_And_νSd GetFromKof(KofZaProracunPravougaonogPresekaModelEC kof, double ω)
             {
                 this.kof = kof ?? throw new ArgumentNullException(nameof(kof));
                 var fyd = material.armatura.fyd * 10;
 
-                x = (geometry as ElementGeomety).d * kof.ξ;
+                x = geometry.d * kof.ξ;
 
                 εs2 = kof.εc / x * (x - geometry.d1);
 
@@ -229,9 +253,28 @@ namespace CalculatorEC2Logic
 
                 sigma = Math.Abs(εs2) * material.armatura.Es;
                 σs2 = sigma > fyd ? fyd : sigma;
-                
+
                 νSd = 0.85 * kof.αv * kof.ξ + ω * ((σs2 / fyd) - (σs1 / fyd));
-                μSd = 0.85 * kof.αv * kof.ξ * (geometry.h / (geometry as ElementGeomety).d * 0.5 - kof.ka * kof.ξ) + ω * (geometry.h / (geometry as ElementGeomety).d * 0.5 - geometry.d1 / (geometry as ElementGeomety).d) * Math.Abs((σs2 / fyd) + (σs1 / fyd));
+                μSd = 0.85 * kof.αv * kof.ξ * (geometry.h /geometry.d * 0.5 - kof.ka * kof.ξ) + ω * (geometry.h / geometry.d * 0.5 - geometry.d1 /geometry.d) * Math.Abs((σs2 / fyd) + (σs1 / fyd));
+
+                return this;
+            }
+            public μSd_And_νSd GetFromKof(KofZaProracunPravougaonogPresekaModelEC kof)
+            {
+                this.kof = kof ?? throw new ArgumentNullException(nameof(kof));
+                var fyd = material.armatura.fyd * 10;
+
+                x = geometry.d * kof.ξ;
+
+                εs2 = kof.εc / x * (x - geometry.d1);
+
+                var sign = kof.εs1 / Math.Abs(kof.εs1);
+                var sigma = kof.εs1 * material.armatura.Es;
+                σs1 = sigma > fyd ? sign*fyd : sign*sigma;
+
+                sign = εs2 / Math.Abs(εs2);
+                sigma = Math.Abs(εs2) * material.armatura.Es;
+                σs2 = sigma > fyd ? sign * fyd : sign * sigma;
 
                 return this;
             }
@@ -243,7 +286,7 @@ namespace CalculatorEC2Logic
             var result = new List<μSd_And_νSdCollection>();
             var r = new Generate_ω_LineForDiagram(_material, _geometry, 0.05);
             result.Add(r.ListOfDotsInLineOfDiagram);
-            for (double i = 0.1; i <= 1; i+=0.1)
+            for (double i = 0.1; i <= 1; i += 0.1)
             {
                 r = new Generate_ω_LineForDiagram(_material, _geometry, i);
                 result.Add(r.ListOfDotsInLineOfDiagram);

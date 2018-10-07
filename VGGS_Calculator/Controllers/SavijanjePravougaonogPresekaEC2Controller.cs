@@ -24,7 +24,7 @@ namespace VGGS_Calculator.Controllers
                 var Result = new SavijanjePravougaonogPresekaEC2Model();
                 await Task.Run(() =>
                 {
-                    Result = sav.Calculate(model);
+                    Result = sav.Calculate(model); 
                 });
 
                 return Ok(Result);

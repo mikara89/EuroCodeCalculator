@@ -15,7 +15,7 @@ namespace VGGS_Calculator.Controllers
             var kofList = new List<TabeleEC2.Model.KofZaProracunPravougaonogPresekaModelEC>();
             await Task.Run(() =>
             {
-                kofList = TabeleEC2.KofZaProracunPravougaonogPresekaEC.GetKofZaProracunPravougaonogPresekaList();
+                kofList = TabeleEC2.KofZaProracunPravougaonogPresekaEC.GetList();
             });
 
             return kofList;

@@ -35,7 +35,7 @@ namespace TabeleEC2.Model
             } }
         public override string ToString()
         {
-            return$"{name}; fcd: {Math.Round(fcd,2)}MPa; fck: {fck}Mpa; Ecm: {Ecm}GPa";
+            return$"{name}; fcd: {Math.Round(fcd,2)}MPa; fck: {fck}MPa; Ecm: {Ecm}GPa";
         }
     }
     public enum BetonClassType
