@@ -23,16 +23,26 @@ bld/
 [Ll]og/
 
 # MyIgnors
-EuroCodeCalculator
-PNGZU_TransverzalneSile
-TestingCharts
-TransversalReinf_EC2
-Test
-TestResults
-UINGN_VitkostEC2
-VGGSCalculatorEN1992
-ProjectBuilderWPF
-VitkostUWP
+
+EuroCodeCalculator/
+
+PNGZU_TransverzalneSile/
+
+TestingCharts/
+
+TransversalReinf_EC2/
+
+Test/
+
+TestResults/
+
+UINGN_VitkostEC2/
+
+VGGSCalculatorEN1992/
+
+ProjectBuilderWPF/
+
+VitkostUWP/
 
 
 # Visual Studio 2015 cache/options directory
