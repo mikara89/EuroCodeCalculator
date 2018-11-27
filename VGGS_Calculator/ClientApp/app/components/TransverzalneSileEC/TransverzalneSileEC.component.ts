@@ -9,7 +9,7 @@ import { TransSileEc2IzracunajService } from '../../services/trans-sile-ec2-izra
     templateUrl: './TransverzalneSileEC.component.html'
 })
 export class TransverzalneSileECComponent implements OnInit {
-    IsVed:boolean;
+    IsVed:boolean=true;
     IsPageReady: boolean;
     IsCalcuating: boolean;
     betonclassList: any;
@@ -54,8 +54,7 @@ export class TransverzalneSileECComponent implements OnInit {
                 this.IsPageReady = true;
             });
         });
-        
-        
+        this.Toggled(true);
     }
     log(a: any) {
         console.log(a);

@@ -1,12 +1,26 @@
-﻿namespace VGGS_Calculator.Core.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VGGS_Calculator.Core.Models
 {
     public class SavijanjePravougaonogPresekaEC2Model  
     {
+        [Required]
+        [GreaterThenZero]
         public double b { get; set; }
-        public double h { get; set; }
+        [Required]
+        [GreaterThenZero]
+        public double h { get; set; } 
+        [Required]
+        [GreaterThenZero] 
         public double d1 { get; set; }
+        [Required] 
+        [GreaterThenZero]
         public double d2 { get; set; }
+        [Required]
+        [ReinforcementExist]
         public string armtype { get; set; }
+        [Required]
+        [ConcreteExist]
         public string betonClass { get; set; }
         public double Mg { get; set; }
         public double Mq { get; set; }
@@ -32,22 +46,3 @@
         }
     }
 }
-/////Osnovni podaci///
-//b/h={5}/{6} cm;
-//d1={7} cm; μSd={8}; 
-//Beton:{9}
-//Armatura:{10}
-//Msd={11} kNm; Nsd={12} kN;
-/////Izračunato///
-//Msds={0} kNm
-//εc = { 1 }‰ εs1={2}‰
-//As1_pot={3} cm2
-//As2_pot = { 4 } cm2
-//", Round(Msds),
-//KofZaProracunPravougaonogPreseka.εc,
-//KofZaProracunPravougaonogPreseka.εs1, 
-//Round(As1_pot),
-//Round(As2_pot),
-//b,h,d1,Round(μSd,3),
-//beton.name,armatura.name,
-//Round(Msd),Round(Nsd));

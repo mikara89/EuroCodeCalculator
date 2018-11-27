@@ -34,8 +34,10 @@ namespace VGGS_Calculator.Core.Models
         [GreaterThenZero]
         public double d1 { get; set; }
         [Required]
+        [ReinforcementExist]
         public string armtype { get; set; }
         [Required]
+        [ConcreteExist]
         public string betonClass { get; set; }
         public string result { get; set; }
     }

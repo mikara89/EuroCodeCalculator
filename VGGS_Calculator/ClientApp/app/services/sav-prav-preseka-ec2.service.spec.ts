@@ -1,5 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
-
+import { } from 'jasmine';
 import { SavPravPresekaEc2Service } from './sav-prav-preseka-ec2.service';
 
 describe('SavPravPresekaEc2Service', () => {

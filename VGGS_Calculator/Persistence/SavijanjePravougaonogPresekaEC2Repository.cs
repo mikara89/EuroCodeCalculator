@@ -17,6 +17,7 @@ namespace VGGS_Calculator.Persistence
                     beton = TabeleEC2.BetonClasses.GetBetonClassListEC().Single(b => b.name == input.betonClass),
                     armatura = TabeleEC2.ReinforcementType.GetArmatura().Single(a => a.name == input.armtype)
                 },
+
                 geometry: new CalculatorEC2Logic.ElementGeomety()
                 {
                     b = input.b,

@@ -49,7 +49,7 @@ export class SavijanjePravougaonogPresekaEc2Component implements OnInit {
                 this.IsPageReady = true;
             });
         });
-        
+        this.Toggled(true);
         this.kofServices.getList().subscribe(kof => {this.muList = kof; });
     }
     Toggled(b: boolean) {

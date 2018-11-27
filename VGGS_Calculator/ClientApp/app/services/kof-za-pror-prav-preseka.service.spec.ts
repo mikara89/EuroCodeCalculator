@@ -1,5 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
-
+import { } from 'jasmine';
 import { KofZaProrPravPresekaService } from './kof-za-pror-prav-preseka.service';
 
 describe('KofZaProrPravPresekaService', () => {
