@@ -1,30 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TabeleEC2;
-using TabeleEC2.Model;
 
 namespace CalculatorEC2Logic
 {
-    public interface Vitkost
+    public class VitkostEC2 : IVitkost, IDisposable
     {
-        void Calculate();
-        void KontrolaCentPritPreseka();
-        void ProracunArmature();
-
-    }
-    public class VitkostEC2_V2 : Vitkost, IDisposable
-    {
-        private event Action OnChangeSomethingRecalculate;
-        public bool IsAcOK { get; private set; }
-        public IElementGeometrySlenderness ElementGeometry { get; private set; }
-        public IForcesSlenderness Forces { get; private set; }
-        public IMaterial Material { get; private set; }
+        public bool IsAcOK { get;  private set; }
+        public IElementGeometrySlenderness ElementGeometry { get;}
+        public IForcesSlenderness Forces { get;}
+        public IMaterial Material {get;}
         public double λ_lim { get { return Lamda_lim(); } }
-        public double MEd { get; private set; } 
+        public double MEd { get; private set; }
 
-        private double _φ_ef;
-        private double _ω;
         private double ei;
         private double e2;
         private double e0;
@@ -32,39 +20,53 @@ namespace CalculatorEC2Logic
         /// <summary>
         /// efektivni koeficient tecenja
         /// </summary>
-        public double φ_ef { get => _φ_ef; set { _φ_ef = value; OnChangeSomethingRecalculate?.Invoke(); } }
+        public double φ_ef { get; set; }
         /// <summary>
         /// Mehanički koficijen armiranja
         /// </summary>
-        public double ω { get => _ω; set { _ω = value; OnChangeSomethingRecalculate?.Invoke(); } }
-
+        public double ω { get; set; }
+        /// <summary>
+        /// Potrebna armatura u obe zone
+        /// </summary>
         public double As { get; private set; }
 
-        public VitkostEC2_V2(IElementGeometrySlenderness elementGeomety, IForcesSlenderness forces, IMaterial material)
+        /// <summary>
+        /// Define vitkost instanc
+        /// </summary>
+        /// <param name="elementGeomety">Geometry parametars</param>
+        /// <param name="forces">Forces parametars</param>
+        /// <param name="material">Material parametars</param>
+        public VitkostEC2(
+            IElementGeometrySlenderness elementGeomety,
+            IForcesSlenderness forces,
+            IMaterial material)
         {
             ElementGeometry = elementGeomety;
             Forces = forces;
             Material = material;
-
-            if (OnChangeSomethingRecalculate == null)
-                OnChangeSomethingRecalculate += () => { Calculate(); };
         }
-
+        /// <summary>
+        /// Calculate λ_limit
+        /// </summary>
+        /// <returns>value as double</returns>
         public double Lamda_lim()
         {
             var n = Forces.NEd / (ElementGeometry.b * ElementGeometry.h * Material.beton.fcd / 10);
-            var A = _φ_ef == 0 ? 0.7 : 1 / (1 + 2.0 * _φ_ef);
-            var B = _ω == 0 ? 1.1 : Math.Sqrt(1 + 2 * _ω);
+            var A = φ_ef == 0 ? 0.7 : 1 / (1 + 2.0 * φ_ef);
+            var B = ω == 0 ? 1.1 : Math.Sqrt(1 + 2 * ω);
             double C = 0.7;
             if (Forces.M_bottom != 0 && Forces.M_top != 0)
             {
-                var rm = (Forces.M_bottom >= Forces.M_top) ? Forces.M_bottom / Forces.M_top: Forces.M_top / Forces.M_bottom;
+                var rm = (Forces.M01 >= Forces.M02) ? Forces.M01 / Forces.M02 : Forces.M02 / Forces.M01;
                 C = 1.7 - rm;
             }
             else C = 0.7;
             return 20 * A * B * C / Math.Sqrt(n);
         }
 
+        /// <summary>
+        /// Calculating eccentricity cose by II order
+        /// </summary>
         public void Calculate()
         {
 
@@ -93,11 +95,17 @@ namespace CalculatorEC2Logic
             }
             MEd =Forces.MEd(e2);
         }
+        /// <summary>
+        /// Chack if section setified
+        /// </summary>
         public void KontrolaCentPritPreseka()
         {
             var potAc = Forces.NEd / (Material.beton.fcd / 10 + 0.003 * 0.002 * Material.armatura.Es * 1000);
             IsAcOK = potAc <= ElementGeometry.b * ElementGeometry.h ? true : false;
         }
+        /// <summary>
+        /// Calculating required reinforcement
+        /// </summary>
         public void ProracunArmature()
         {
             var Msd_ = MEd;
@@ -112,6 +120,7 @@ namespace CalculatorEC2Logic
             As = A_list.Max();
             KontrolaCentPritPreseka();
         }
+
         private double GetAsd(double MEd, double NEd)
         {
             var sym = new SymmetricalReinfByClassicMethod(Material, new ElementGeomety()
@@ -138,17 +147,16 @@ namespace CalculatorEC2Logic
             return 0.15 * Forces.NEd / material.armatura.fyd;
         }
 
-
-
         public override string ToString()
         {
             var Red = Math.Round(e2 / 100 * Forces.NEd, 2) == 0? "I red" : "II red";
             return $@"//////Result///////
     Forces:
-        NEd:         {Forces.NEd}kN
-        MEd_top:     {Forces.M_top}kNm
-        MEd_bottom:  {Forces.M_bottom}kNm
-        M0Ed:        {Forces.M0Ed}kNm
+        NEd:         {Forces.NEd:F2}kN
+        MEd_top:     {Forces.M_top:F2}kNm
+        MEd_bottom:  {Forces.M_bottom:F2}kNm
+        M0Ed:        {Forces.M0Ed:F2}kNm
+        MEd:         {MEd:F2}kNm
     Material:
         Armatrua:    {Material.armatura.ToString()}
         Beton:       {Material.beton.ToString()}
@@ -157,29 +165,29 @@ namespace CalculatorEC2Logic
         h:           {ElementGeometry.h}{ElementGeometry.unit}
         d1:          {ElementGeometry.d1}{ElementGeometry.unit}
         L:           {ElementGeometry.L}{ElementGeometry.unit}
-        k:           {Math.Round( ElementGeometry.k,3)}
-        li:          {Math.Round(ElementGeometry.li, 2)}{ElementGeometry.unit}
-        λ:           {Math.Round(ElementGeometry.λ, 2)}
-        λlimit:      {Math.Round(λ_lim,2)}
+        k:           {ElementGeometry.k:F2}
+        li:          {ElementGeometry.li:F2}{ElementGeometry.unit}
+        λ:           {ElementGeometry.λ:F2}
+        λlimit:      {λ_lim:F2}
     Result:
-        {nameof(MEd)}: {Math.Round(MEd, 2)}kNm
-        {nameof(e0)}= Max(h / 30,20mm)= {Math.Round(e0,2)}cm 
-        {nameof(ei)}= li / 400= {Math.Round(ei, 2)}cm 
-        {nameof(e2)}= (1/r)li^2/c= {Math.Round(e2, 2)}cm
+        {nameof(MEd)}: {MEd:F2}kNm
+        {nameof(e0)}= Max(h / 30,20mm)= {e0:F2}cm 
+        {nameof(ei)}= li / 400= {ei:F2}cm 
+        {nameof(e2)}= (1/r)li^2/c= {e2:F2}cm
 
-        M01 = Min(| Mtop |,| Mbottom |) - ei*NEd= {Math.Round(Forces.M01, 2)}kNm;
-        M02 = Max(| Mtop |,| Mbottom |) + ei*NEd= {Math.Round(Forces.M02, 2)}kNm;
-        M0Ed= (0.6 M02 + 0.4 M01) ≥ 0.4M02= {Forces.M0Ed}kNm;
-        M2= e2*NEd= {Math.Round(e2/100*Forces.NEd,2)}kNm; [{Red}]
+        M01 = Min(| Mtop |,| Mbottom |) - ei*NEd= {Forces.M01:F2}kNm;
+        M02 = Max(| Mtop |,| Mbottom |) + ei*NEd= {Forces.M02:F2}kNm;
+        M0Ed= (0.6 M02 + 0.4 M01) ≥ 0.4*M02= {Forces.M0Ed:F2}kNm;
+        M2= e2*NEd= {e2/100*Forces.NEd:F2}kNm; [{Red}]
         e0*NEd={e0/100*Forces.NEd}kNm;
-        MEd= Max (M02, M0Ed + M2, M01 + 0.5*M2, e0*NEd)= {Math.Round(MEd, 2)}kNm
-
-        As1=As2={Math.Round(GetAsd(MEd, Forces.NEd), 2)}cm2 => As={Math.Round(GetAsd(MEd, Forces.NEd), 2)*2}cm2
-        min_As_for_N=0.15*NEd/fyd = {Math.Round( Get_minAs_for_N(Forces.NEd,Material as Material),2)}cm2
-        min_As= 0.004* NEd = {Math.Round(Get_minAs_for_section(ElementGeometry.b, ElementGeometry.h), 2)}cm2
-        max_As = 0.04* NEd = {Math.Round(Get_maxAs_for_section(ElementGeometry.b, ElementGeometry.h), 2)}cm2
-        min_Ac={Math.Round(Forces.NEd / (Material.beton.fcd / 10 + 0.003 * 0.002 * Material.armatura.Es * 1000), 2)}cm2
-        min_Ac<Ac=> {Math.Round(Forces.NEd / (Material.beton.fcd / 10 + 0.003 * 0.002 * Material.armatura.Es * 1000), 2)}cm2 < { Math.Round(ElementGeometry.b * ElementGeometry.h, 2)}cm2 => {IsAcOK}
+        MEd= Max (M02, M0Ed + M2, M01 + 0.5*M2, e0*NEd);
+        MEd= {MEd:F2}kNm
+        As1=As2={GetAsd(MEd, Forces.NEd):F2}cm2 => As={GetAsd(MEd, Forces.NEd)*2:F2}cm2
+        min_As_for_N=0.15*NEd/fyd = { Get_minAs_for_N(Forces.NEd,Material as Material):F2}cm2
+        min_As= 0.004* NEd = {Get_minAs_for_section(ElementGeometry.b, ElementGeometry.h):F2}cm2
+        max_As = 0.04* NEd = {Get_maxAs_for_section(ElementGeometry.b, ElementGeometry.h):F2}cm2
+        min_Ac={Forces.NEd / (Material.beton.fcd / 10 + 0.003 * 0.002 * Material.armatura.Es * 1000):F2}cm2
+        min_Ac<Ac=> {Forces.NEd / (Material.beton.fcd / 10 + 0.003 * 0.002 * Material.armatura.Es * 1000):F2}cm2 < { ElementGeometry.b * ElementGeometry.h:F2}cm2 => {IsAcOK}
 ";
         }
         public void Dispose()

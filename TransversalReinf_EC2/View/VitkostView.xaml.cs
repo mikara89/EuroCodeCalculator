@@ -153,7 +153,7 @@ namespace TransversalReinf_EC2.View
                     armatura = cmbArmatura.SelectedItem as ReinforcementTypeModelEC,
                     beton = cmbBeton.SelectedItem as BetonModelEC,
                 };
-                     using (var se = new VitkostEC2_V2(g,f,m))
+                     using (var se = new VitkostEC2(g,f,m))
                      {
                          se.Calculate();
                          se.KontrolaCentPritPreseka();

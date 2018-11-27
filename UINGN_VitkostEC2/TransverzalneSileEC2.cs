@@ -7,11 +7,6 @@ namespace CalculatorEC2Logic
 {
     public class TransverzalneSileEC2:IDisposable
     {
-        //TODO
-        public override string ToString()
-        {
-            return Result();
-        }
 
         private double b;
         private double h;
@@ -30,9 +25,7 @@ namespace CalculatorEC2Logic
         public double sp { get; set; }
         public double sp_max { get; private set; }
         public double sp_min { get; private set; }
-        private double Θ= 45 * Math.PI / 180;
-
-        public double _Θ { get {return (Θ * 180/ Math.PI); } set { Θ =value * Math.PI / 180; } } 
+        private double Θ=45 * Math.PI/180;
 
         public double As1 { get; } 
         public ReinforcementModelEC Asw_Model { get; set; }
@@ -50,7 +43,9 @@ namespace CalculatorEC2Logic
                 return _Ved;
             } set { _Ved = value; } }
 
-        
+        public double Vrd_max2 { get; private set; }
+
+
         /// <summary>
         /// Trans. sila koju presek moze da prihvati bez armature
         /// </summary>
@@ -69,6 +64,7 @@ namespace CalculatorEC2Logic
         public double ρ1 { get; private set; }
         public double k { get; private set; }
         public List<double> List_s { get; private set; }
+        public double Vrd_s { get; private set; }
 
         public TransverzalneSileEC2(
             double b,
@@ -232,17 +228,21 @@ namespace CalculatorEC2Logic
         }
         public void Armatura(int m, double s, ReinforcementModelEC Asw_Model)
         {
+            var z = 0.9 * d;
+
+            //Θ = 0.5* Math.Asin(Ved * 1000 / (0.20 * (1.0 - beton.fck / 250.0) * beton.fck * b * 10 * z * 10));
+
             this.Asw_Model = Asw_Model; 
             this.m = m;
             this.s = s;
             var cot = (1 / Math.Tan(Θ));
-            var z = 0.9 * d;
-            var Vrd_s = (Asw / s) * z * armatura.fyd * m * (1 / Math.Tan(Θ));
+            
+            Vrd_s = (Asw / s) * z * armatura.fyd * m * (1 / Math.Tan(Θ));
 
             var ν = 0.6 * (1.0 - (beton.fck / 250.0));///fck u MPa
             var v1 = ν;
             var αcw = 1;
-            var Vrd_max2 = (αcw * b*10* z*10 * v1 * beton.fcd) / (Math.Tan(Θ) + (1/ Math.Tan(Θ)))/1000; 
+            Vrd_max2 = (αcw * b* z * v1 * beton.fcd/10) / (Math.Tan(Θ) + (1/ Math.Tan(Θ)));
             Vrd = (new List<double>() {Vrd_s, Vrd_max2}).Min(); 
             IskoriscenostArmature = Round(Ved / Vrd_s);
             IskoriscenostBetona = Round(Ved / Vrd_max2);
@@ -311,7 +311,7 @@ namespace CalculatorEC2Logic
         }
 
 
-        private string Result()
+        public string Result()
         {
             return String.Format(@"///Osnovni Podaci////
 b/h={6}/{7} cm
@@ -323,8 +323,9 @@ Ved={0} kN
 Vrd={1} kN
 Vrd_c={2} kN
 Vrd_max={3} kN
-IskoriscenostArmature={4}%
-IskoriscenostBetona={5}%
+Θ={17}%
+IskoriscenostArmature={4}%({16}kN)
+IskoriscenostBetona={5}%({15}kN)
 As1={11}cm2;
 Asw={12}cm2
 Asw_min={13}cm2;
@@ -337,19 +338,35 @@ IskoriscenostArmature*100,
 IskoriscenostBetona*100,
 b,h,d1,beton.name,armatura.name,
 Round(As1), Round(Asw),
-Round(Asw_min), Round(As_add)
-
+Round(Asw_min), Round(As_add),
+Round(Vrd_max2,2),Round(Vrd_s,2),
+Round(Θ.Angle())
 );
         }
-
+        public override string ToString()
+        {
+            return Result();
+        }
         private double Round(double D, int percision=2)
         {
             return Math.Round(D, percision);
         }
 
+
         public void Dispose()
         {
             GC.Collect();
+        }
+    }
+    public static class MyExteds
+    {
+        public static double Radians(this double d)
+        {
+            return d * Math.PI / 180; ;
+        }
+        public static double Angle(this double d)
+        {
+            return d *  180/ Math.PI ;
         }
     }
 }

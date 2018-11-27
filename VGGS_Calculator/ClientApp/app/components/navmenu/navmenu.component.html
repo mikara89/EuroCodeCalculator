@@ -28,6 +28,13 @@
                 <li [routerLinkActive]="['link-active']"
                     [attr.data-toggle]="newInnerWidth > 767?null:'collapse'"
                     [attr.data-target]="newInnerWidth > 767?null:'.navbar-collapse'">
+                    <a [routerLink]="['/savijanjepravresec']">
+                        <span class='glyphicon glyphicon-arrow-down'></span> Savijanje pravougaonog preseka EC2
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']"
+                    [attr.data-toggle]="newInnerWidth > 767?null:'collapse'"
+                    [attr.data-target]="newInnerWidth > 767?null:'.navbar-collapse'">
                     <a [routerLink]="['/transverzalnesileec']">
                         <i class="fa fa-exchange" aria-hidden="true"></i>
                         <span></span> Transverzalne Sile EC
@@ -36,15 +43,8 @@
                 <li [routerLinkActive]="['link-active']"
                     [attr.data-toggle]="newInnerWidth > 767?null:'collapse'"
                     [attr.data-target]="newInnerWidth > 767?null:'.navbar-collapse'">
-                    <a [routerLink]="['/savijanjepravresec']">
-                        <span class='glyphicon glyphicon-th-list'></span> Savijanje pravougaonog preseka EC2
-                    </a>
-                </li>
-                <li [routerLinkActive]="['link-active']"
-                    [attr.data-toggle]="newInnerWidth > 767?null:'collapse'"
-                    [attr.data-target]="newInnerWidth > 767?null:'.navbar-collapse'">
                     <a [routerLink]="['/vitkostec']">
-                        <span class='glyphicon glyphicon-th-list'></span> Vitkost EC2 <br /><i>(in Next version)</i>
+                        <span class='glyphicon glyphicon-bell'></span> Vitkost EC2 <br />
                     </a>
                 </li>
                 <li [routerLinkActive]="['link-active']"

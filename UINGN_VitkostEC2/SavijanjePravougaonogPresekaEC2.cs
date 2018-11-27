@@ -284,6 +284,7 @@ namespace CalculatorEC2Logic
             Mrd_limit = (KofZaProracunPravougaonogPreseka_lim.μRd * geometry.b * Math.Pow(geometry.d, 2) * Material.beton.fcd / 10) / 100;
             As1_pot = Mrd_limit * 100 / (KofZaProracunPravougaonogPreseka_lim.ζ * geometry.d * Material.armatura.fyd) - (Forces.Nsd / Material.armatura.fyd) + (Msds * 100 - Mrd_limit * 100) / ((geometry.d - geometry.d2) * Material.armatura.fyd);
             As2_pot = (Msds * 100 - Mrd_limit * 100) / ((geometry.d - geometry.d2) * Material.armatura.fyd);
+            As2_pot = As2_pot < 0 ? 0 : As2_pot;
             if ((As1_pot + As2_pot) / geometry.b / geometry.h > ρ_max)
                 throw new Exception("ρ_max prekoraceno! Povećajte poprecni presek");
             if (Forces.IsMsdNegativ)

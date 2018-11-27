@@ -7,8 +7,6 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
-import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
-import { CounterComponent } from './components/counter/counter.component';
 import { TransverzalneSileECComponent } from './components/TransverzalneSileEC/TransverzalneSileEC.component';
 import { BetonClassService } from './services/beton-class.service';
 import { ArmaturaTypeService } from './services/armatura-type.service';
@@ -20,13 +18,12 @@ import { SavPravPresekaEc2Service } from './services/sav-prav-preseka-ec2.servic
 import { LoaderRotatingDotsComponent } from './components/loader-rotating-dots/loader-rotating-dots.component';
 import { SymmReinfComponent } from './components/symm-reinf/symm-reinf.component';
 import { SymmReinfService } from './services/symm-reinf.service';
+import { VitkostService } from './services/vitkost.service';
 
 @NgModule({
     declarations: [
         AppComponent,
         NavMenuComponent, 
-        CounterComponent,
-        FetchDataComponent,
         HomeComponent,
         TransverzalneSileECComponent,
         VitkostEc2Component,
@@ -55,6 +52,7 @@ import { SymmReinfService } from './services/symm-reinf.service';
         KofZaProrPravPresekaService,
         SavPravPresekaEc2Service,
         SymmReinfService,
+        VitkostService
     ]
 })
 export class AppModuleShared {

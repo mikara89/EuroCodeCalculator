@@ -1,1 +1,328 @@
-<h1>Ocekujte u sledecoj verziji!</h1>
+<h1>
+    Vitkost stuba prema EC2
+    <i class="fa fa-check-circle-o" 
+       aria-hidden="true" 
+       *ngIf="validCalc && izracunaj.result" 
+       title="Valid!"></i>
+    <i class="fa fa-times-circle-o" 
+       aria-hidden="true" 
+       *ngIf="!validCalc && izracunaj.result" 
+       title="Not Valid!"></i>
+    <i class="fa fa-question-circle-o" 
+       aria-hidden="true" 
+       *ngIf="!izracunaj.result" 
+       title="Not Calculated!"></i>
+</h1>
+<loader-rotating-dots *ngIf="!IsPageReady"></loader-rotating-dots>
+<div *ngIf="IsPageReady">
+    <!--{{izracunaj | json}}-->
+    <form class="col-xl-3 col-lg-4 col-md-5 col-sm-5 col-xs-12"
+          #f="ngForm">
+        <!--Slenderness-->
+        <!--Field to pick Slenderness type-->
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    Izvijanje
+                </span>
+                <select (change)="reset(); setK();"
+                        class="form-control"
+                        name="Slenderness"
+                        #Slenderness="ngModel"
+                        [(ngModel)]="izracunaj.Slenderness">
+                    <option *ngFor="let sle of SlendernessList"
+                            [ngValue]="sle.name">
+                        {{sle.name}}
+                    </option>
+                </select>
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    k=
+                </span>
+                <input (change)="reset()"
+                       type="number"
+                       [(ngModel)]="izracunaj.k"
+                       class="form-control"
+                       placeholder="exp. 150"
+                       required
+                       name="k"
+                       #k="ngModel"
+                       id="k">
+                <span class="input-group-addon test-active"
+                      *ngIf="k.touched && !k.valid"
+                      id="basic-addon2">
+                    <i class="fa fa-times"
+                       aria-hidden="true"
+                       title="Not Valid!"></i>
+                </span>
+            </div>
+        </div>
+        <!--Forces-->
+        <!--Field for N force-->
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    N=
+                </span>
+                <input (change)="reset()"
+                       type="number"
+                       [(ngModel)]="izracunaj.N"
+                       class="form-control"
+                       placeholder="exp. 150"
+                       required
+                       name="N"
+                       #N="ngModel"
+                       id="N">
+                <span class="input-group-addon test-active"
+                      *ngIf="N.touched && !N.valid"
+                      id="basic-addon2">
+                    <i class="fa fa-times"
+                       aria-hidden="true"
+                       title="Not Valid!"></i>
+                </span>
+                <span class="input-group-addon"
+                      id="basic-addon2">
+                    [kN]
+                </span>
+            </div>
+        </div>
+        <!--Field for M top force-->
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    M top=
+                </span>
+                <input (change)="reset()"
+                       type="number"
+                       [(ngModel)]="izracunaj.M_top"
+                       class="form-control"
+                       placeholder="exp. 150"
+                       required
+                       name="M_top"
+                       #M_top="ngModel"
+                       id="M_top">
+                <span class="input-group-addon test-active"
+                      *ngIf="M_top.touched && !M_top.valid"
+                      id="basic-addon2">
+                    <i class="fa fa-times"
+                       aria-hidden="true"
+                       title="Not Valid!"></i>
+                </span>
+                <span class="input-group-addon"
+                      id="basic-addon2">
+                    [kNm]
+                </span>
+            </div>
+        </div>
+        <!--Field for M bottom force-->
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    M bottom=
+                </span>
+                <input (change)="reset()"
+                       type="number"
+                       [(ngModel)]="izracunaj.M_bottom"
+                       class="form-control"
+                       placeholder="exp. 150"
+                       required
+                       name="M_bottom"
+                       #M_bottom="ngModel"
+                       id="M_bottom">
+                <span class="input-group-addon test-active"
+                      *ngIf="M_bottom.touched && !M_bottom.valid"
+                      id="basic-addon2">
+                    <i class="fa fa-times"
+                       aria-hidden="true"
+                       title="Not Valid!"></i>
+                </span>
+                <span class="input-group-addon"
+                      id="basic-addon2">
+                    [kNm]
+                </span>
+            </div>
+        </div>
+
+        <!--Geometry-->
+        <!--Field for L of column-->
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    L=
+                </span>
+                <input (change)="reset()"
+                       type="number"
+                       [(ngModel)]="izracunaj.L"
+                       class="form-control"
+                       placeholder="exp. 375"
+                       required
+                       name="L"
+                       #L="ngModel"
+                       id="L">
+                <span class="input-group-addon test-active"
+                      *ngIf="L.touched && !L.valid  || L.touched && L.value<=0"
+                      id="basic-addon2">
+                    <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                </span>
+                <span class="input-group-addon"
+                      id="basic-addon2">
+                    [cm]
+                </span>
+            </div>
+        </div>
+        <!--Field for b of column-->
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    b=
+                </span>
+                <input (change)="reset()"
+                       type="number"
+                       [(ngModel)]="izracunaj.b"
+                       class="form-control"
+                       placeholder="exp. 25"
+                       required
+                       name="b"
+                       #b="ngModel"
+                       id="b">
+                <span class="input-group-addon test-active"
+                      *ngIf="b.touched && !b.valid  || b.touched && b.value<=0"
+                      id="basic-addon2">
+                    <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                </span>
+                <span class="input-group-addon"
+                      id="basic-addon2">
+                    [cm]
+                </span>
+            </div>
+        </div>
+        <!--Field for h of column-->
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    h=
+                </span>
+                <input (change)="reset()"
+                       type="number"
+                       [(ngModel)]="izracunaj.h"
+                       class="form-control"
+                       placeholder="exp. 40"
+                       required
+                       name="h"
+                       #h="ngModel"
+                       id="h">
+                <span class="input-group-addon test-active"
+                      *ngIf="h.touched && !h.valid || h.touched && h.value<=0"
+                      id="basic-addon2">
+                    <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                </span>
+                <span class="input-group-addon"
+                      id="basic-addon2">
+                    [cm]
+                </span>
+            </div>
+        </div>
+        <!--Field for d1 of column-->
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    d1=
+                </span>
+                <input (change)="reset()"
+                       type="number"
+                       [(ngModel)]="izracunaj.d1"
+                       class="form-control"
+                       placeholder="exp. 4"
+                       required
+                       name="d1"
+                       #d1="ngModel"
+                       id="d1">
+                <span class="input-group-addon test-active"
+                      *ngIf="d1.touched && !d1.valid || d1.touched && d1.value<=0 ||d1.touched && 2*d1.value>h.value"
+                      id="basic-addon2">
+                    <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                </span>
+                <span class="input-group-addon"
+                      id="basic-addon2">
+                    [cm]
+                </span>
+            </div>
+        </div>
+
+        <!--Material-->
+        <!--Field to pick concrete type-->
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    Beton
+                </span>
+                <select (change)="reset()"
+                        class="form-control"
+                        name="beton"
+                        [(ngModel)]="izracunaj.betonClass">
+                    <option *ngFor="let beton of betonclassList"
+                            [value]="beton.name">
+                        {{beton.name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <!--Field to pick reif type-->
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon test-active"
+                      id="basic-addon2">
+                    Armatura
+                </span>
+                <select (change)="reset(); " (click)="log(f)"
+                        class="form-control"
+                        name="armatura"
+                        [(ngModel)]="izracunaj.armtype">
+                    <option *ngFor="let arm of armaturaTypeList"
+                            [ngValue]="arm.name">
+                        {{arm.name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <!--Submit button-->
+        <div class="row">
+            <button [attr.disabled]="(izracunaj.result!=null || f.invalid==true || h.value<=0|| b.value<=0|| d1.value<=0)==false?null:true"
+                    (click)="Izracunaj();"
+                    class="btn-primary btn ">
+                <i class="fa fa fa-spinner fa-spin"
+                   *ngIf="IsCalcuating"></i>
+                <span *ngIf="IsCalcuating"> Racunam...</span>
+                <span *ngIf="!IsCalcuating"> Izracunaj</span>
+            </button>
+        </div>
+        <!--{{result | json}}-->
+    </form>
+
+    
+    <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 col-xs-12 form-group ">
+         <img [src]="'/Vitkost/'+Image">
+    </div>
+    <!--Field for result-->
+    <div class="col-xl-4 col-lg-3 col-md-12 col-sm-12 col-xs-12 form-group "
+         *ngIf="izracunaj.result">
+        <label for="comment">
+            Rezultat:
+        </label>
+        <textarea class="form-control"
+                  disabled
+                  rows="15"
+                  id="comment">
+        {{izracunaj.result}}
+        </textarea>
+    </div>
+</div>

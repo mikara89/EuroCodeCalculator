@@ -88,8 +88,11 @@ namespace TabeleEC2.Model
             SetByEcEs1(-3.5, 20);
         }
 
+        public override string ToString()
+        {
+            return $"εc/εs1={εc:F3}/{εs1:F3}";
+        }
 
-      
     }
     public class KofZaProracunPravougaonogPresekaModelPBAB : IKofZaProracunPravougaonogPresekaModel
     {

@@ -12,15 +12,13 @@ namespace EuroCodeCalculator
     {
         static void Main(string[] args)
         {
-            var beton = BetonClasses.GetBetonClassListEC().Single(b => b.name == "C25/30");
-            var armatura = ReinforcementType.GetArmatura().Single(b => b.name == "B500B");
-            var m = new Material() { beton = beton, armatura = armatura };
-            var g = new ElementGeomety() { b = 25, h = 40, d1 = 6, d2 = 4 };
-            var f = new ForcesBendingAndCompressison(112.5, 67.5);
-            using (var obj = new SavijanjePravougaonogPresekaEC2_V2(f, g, m))
-            {
-                Console.WriteLine(obj.ToString());
-            }
+            var a = (Izvijanja)2;
+
+            var name = OjleroviSlucajeviIzvijanja.GetName(a);
+            var izv = OjleroviSlucajeviIzvijanja.GetIzvijanje(name);
+            var val = OjleroviSlucajeviIzvijanja.GetK(izv);
+            Console.WriteLine(name + " " + izv + " " + val);
+            //testTs();
             Console.ReadKey();
         }
         private static void testSteper()
@@ -42,25 +40,25 @@ namespace EuroCodeCalculator
             }
             Console.ReadKey();
         }
-        private static void ec2_TacnPostupak()
+        private static void ec2_TacnPostupak(double _Msd, double _b_eff, double _b_w, double _h_f, double _h, double _d1,  string _beton = "C25/30", string _armatura = "B500B") 
         {
-            double Msd = 180;
+            double Msd = _Msd;
             double Mu;
             double Du = 0;
-            double b_eff = 20;
-            double b_w = 20;
-            double h_f = 15;
-            double d = 44;
+            double b_eff = _b_eff;
+            double b_w = _b_w; // sirina donje ivice grede
+            double h_f = _h_f; //debljina ploce
+            double d = _h- _d1; //visina preseka - d1
             double s;
             double δ = h_f / d;
             double Nu = 0;
-            double bi = 0;
+            //double bi = 0;
 
-            BetonModelEC beton = BetonClasses.GetBetonClassListEC().Single(b => b.name == "C25/30");
-            ReinforcementTypeModelEC arm = ReinforcementType.GetArmatura().Single(a => a.name == "B500B");
+            BetonModelEC beton = BetonClasses.GetBetonClassListEC().Single(b => b.name == _beton);
+            ReinforcementTypeModelEC arm = ReinforcementType.GetArmatura().Single(a => a.name == _armatura);
             //var fcd = 2.05;
-            double As = (Du - Nu) / arm.fyd;
-
+            double As1 = (Du - Nu) / arm.fyd;
+            double As2 = 0;
             KofZaProracunPravougaonogPresekaModelEC kof1 = new KofZaProracunPravougaonogPresekaModelEC();
             KofZaProracunPravougaonogPresekaModelEC kof2 = new KofZaProracunPravougaonogPresekaModelEC();
 
@@ -75,7 +73,8 @@ namespace EuroCodeCalculator
             {
                 var kof = kof_test;
                 x = kof.ξ * d;
-                As= (Msd * 100) / (kof.ζ * d * arm.fyd);
+                As1= (Msd * 100) / (kof.ζ * d * arm.fyd);
+                Mu = Msd;
             }
             do
             {
@@ -84,36 +83,56 @@ namespace EuroCodeCalculator
                 x = s * d;
                 var Du1 = kof1.αv * b_eff * s * d * beton.fcd / 10;
                 var zb1 = d * (1 - kof1.ka * s);
+
                 var Ebd = ((s - δ) / s) * kof1.εc;
                 kof2.SetByEcEs1(Ebd, 20);
+
+
 
                 var Du2 = kof2.αv * (b_eff - b_w) * (x - h_f) * beton.fcd / 10;
                 var zb2 = d - h_f - kof2.ka * (x - h_f);
 
                 Mu = Du1 * zb1 / 100 - Du2 * zb2 / 100;
 
-                if(i > 30) break;
+                if (i > 200) break;
 
-           
-                    if (Mu * 1.0005 < Msd) { s += s_add; continue; }
-                    if (Mu > Msd * 1.001) { s_add = s_add / 2; s -= s_add; continue; }
+                if (Math.Round(Mu, 3) < Math.Round(Msd, 3))
+                {
+                    s += s_add;
+                    continue;
+                }
+                if (Math.Round(Mu, 3) > Math.Round(Msd, 3))
+                {
+                    s_add = s_add / 2;
+                    s -= s_add;
+                    continue;
+                }
 
-                if (Mu * 1.0005 >= Msd && Mu <= Msd * 1.001) { Du = Du1 - Du2; As = (Du - Nu) / arm.fyd; done = true; }
+                if (Math.Round(Mu, 3) == Math.Round(Msd, 3))
+                {
+                    Du = Du1 - Du2;
+                    As1 = (Du - Nu) / arm.fyd;
+                    done = true;
+                }
 
             } while (!done);
-            if(i>30 && done == false)
+
+            if (i>200 && done == false)
             {
-                Console.WriteLine("Can't calculate!");
+                Console.WriteLine($"Can't calculate! {i}");
                 Console.ReadKey();
                 return;
             }
-            bi = Mu / (kof1.μRd * Math.Pow(d, 2) * beton.fcd / 10);
-            As = (Du - Nu) / arm.fyd;
+            var bi = Mu / (kof1.μRd * Math.Pow(d, 2) * beton.fcd / 10);
+            As1 = (Du - Nu) / arm.fyd;
             x = kof1.ξ * d;
             Console.WriteLine("n= "+i);
-            Console.WriteLine("As= "+As);
+            Console.WriteLine("As1= " + As1);
+            Console.WriteLine("As2= " + As2);
             Console.WriteLine("x= " + x);
             Console.WriteLine("Mu= " + Mu);
+            Console.WriteLine(kof2 );
+            Console.WriteLine(kof1);
             Console.ReadKey();
 
             GC.Collect();
@@ -157,8 +176,8 @@ namespace EuroCodeCalculator
                 Mu = Math.Round(Du1 * zb1 / 100 - Du2 * zb2 / 100, 2);
 
                 if (Mu < Msd) { s += s_add; continue; }
-                //if (Mu > Msd) { s -= 0.09; continue; }
                 if (Mu > Math.Round(Msd * 1.001, 2)) { s_add = s_add / 2; s -= s_add; continue; }
+
                 if (Mu >= Msd && Mu <= Math.Round(Msd * 1.001, 2)) { done = true; }
 
             } while (!done);
@@ -216,6 +235,58 @@ namespace EuroCodeCalculator
                 kof2 = kof3;
             } while (!done);
 
+        }
+
+        private static void EC_T_Presek_PomocuFormule2()
+        {
+            double Msd = 6100; 
+            double b_eff = 175;
+            double b_w = 35;
+            double h_f = 15;
+            double d = 143;
+            double s;
+            double δ = h_f / d;
+            var μSd = 0.0;
+            var bi = b_eff;
+
+            BetonModelEC beton = BetonClasses.GetBetonClassListEC().Single(b => b.name == "C25/30");
+            ReinforcementTypeModelEC arm = ReinforcementType.GetArmatura().Single(a => a.name == "B500B");
+            var fcd = beton.fcd / 10;
+            
+
+            var kof2 = KofZaProracunPravougaonogPresekaEC.Get_Kof_From_μ(KofZaProracunPravougaonogPresekaEC.GetμSd(Msd, bi, d, fcd));
+            var kof3 = new KofZaProracunPravougaonogPresekaModelEC();
+            int i = 0;
+            bool done = false;
+
+            do
+            {
+                if (Math.Round(kof2.μRd, 2) == Math.Round(kof3.μRd, 2))
+                    break;
+                else
+                    if(kof3.μRd!=0)
+                        kof2 = kof3;
+                ++i;
+                var x = kof2.ξ * d;
+                var εc_test = kof2.εc * h_f / x;
+                var kofTest = new KofZaProracunPravougaonogPresekaModelEC(εc_test,kof2.εs1);
+
+ 
+                bi = Math.Abs(1 - (kofTest.αv / kof2.αv) * (1 - h_f / (kof2.ξ * d)) * (1 - (b_w / b_eff)))* b_eff;
+                kof3 = KofZaProracunPravougaonogPresekaEC.Get_Kof_From_μ(KofZaProracunPravougaonogPresekaEC.GetμSd(Msd, bi, d, fcd));
+                 
+            } while (!done);
+            var sav = new SavijanjePravougaonogPresekaEC2_V2( 
+                new ForcesBendingAndCompressison(6100,0),
+                new ElementGeomety() { b=bi, d1=7, d2=7, h=150},
+                new Material() { armatura=arm, beton=beton }) ;
+            Console.WriteLine("n= " + i);
+            Console.WriteLine("As1= " + sav.As1_pot);
+            Console.WriteLine("As2= " + sav.As2_pot);
+            Console.WriteLine("x= " + sav.KofZaProracunPravougaonogPreseka.ξ*sav.geometry.d);
+            Console.WriteLine("Msd= " + Msd);
+            Console.WriteLine(kof2);
+            Console.ReadKey();
         }
         private static void EfSirPres()
         {
@@ -307,7 +378,7 @@ namespace EuroCodeCalculator
                 beton = TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == "C30/37"),
                 armatura = ReinforcementType.GetArmatura().First(n => n.name == "B500B"),
             };
-            var v = new VitkostEC2_V2(g,f,m);
+            var v = new VitkostEC2(g,f,m);
 
             v.Calculate();
             v.KontrolaCentPritPreseka();
@@ -335,7 +406,7 @@ namespace EuroCodeCalculator
                 beton = TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == "C25/30"),
                 armatura = ReinforcementType.GetArmatura().First(n => n.name == "B500B"),
             };
-            var v = new VitkostEC2_V2(g, f, m);
+            var v = new VitkostEC2(g, f, m);
             //v.φ_ef = 3;
             v.Calculate();
             v.KontrolaCentPritPreseka();
@@ -363,7 +434,7 @@ namespace EuroCodeCalculator
                 beton = TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == "C25/30"),
                 armatura = ReinforcementType.GetArmatura().First(n => n.name == "B500B"),
             };
-            var v = new VitkostEC2_V2(g, f, m);
+            var v = new VitkostEC2(g, f, m);
             //v.φ_ef = 3;
             v.Calculate();
             v.KontrolaCentPritPreseka();
@@ -431,6 +502,18 @@ namespace EuroCodeCalculator
             Console.WriteLine($"{As1} == {As2}");
             Console.ReadKey();
 
+        }
+
+        private static void testTs()
+        {
+            var beton = TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == "C25/30");
+            beton.α = 1;
+            var armatura = ReinforcementType.GetArmatura().First(n => n.name == "B500B");
+            var t = new TransverzalneSileEC2(35, 70, beton, armatura, new ReinforcementModelEC(12,4), 770, 5);
+
+            t.Armatura(2, 14, new ReinforcementModelEC(12, 1));
+
+            Console.Write(t.Result());
         }
     }
 }

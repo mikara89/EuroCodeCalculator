@@ -126,7 +126,7 @@ namespace VitkostUWP
                     armatura = cmbArmatura.SelectedItem as ReinforcementTypeModelEC,
                     beton = cmbBeton.SelectedItem as BetonModelEC,
                 };
-                using (var se = new VitkostEC2_V2(g, f, m))
+                using (var se = new VitkostEC2(g, f, m))
                 {
                     se.Calculate();
                     se.KontrolaCentPritPreseka();

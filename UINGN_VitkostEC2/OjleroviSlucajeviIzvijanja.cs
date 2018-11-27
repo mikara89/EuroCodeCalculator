@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CalculatorEC2Logic
@@ -39,6 +40,38 @@ namespace CalculatorEC2Logic
 
             return 0;
         }
-    
+        public static string GetName(Izvijanja izvijanje)
+        {
+            var r= Enum.GetName(typeof(Izvijanja), izvijanje).Replace("_", " ").ToLower();
+            return FirstLetterToUpper(r);
+        }
+        public static Izvijanja? GetIzvijanje(string izvijanje)
+        {
+            var r = izvijanje.Split(' ');
+            var str = "";
+            r.ToList().ForEach(x => str += FirstLetterToUpper(x)+"_");
+            var a= str.Remove(str.Length - 1,1);
+
+            for (int i = 0; i < Enum.GetNames(typeof(Izvijanja)).Length; i++)
+            {
+                if(a== Enum.GetNames(typeof(Izvijanja))[i])
+                {
+                    return (Izvijanja)i;
+                }
+            }
+            return null;
+        }
+
+        private static string FirstLetterToUpper(string str)
+        {
+            str = str.ToLower();
+            if (str == null)
+                return null;
+
+            if (str.Length > 1)
+                return char.ToUpper(str[0]) + str.Substring(1);
+
+            return str.ToUpper();
+        }
     }
 }

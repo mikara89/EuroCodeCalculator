@@ -135,6 +135,12 @@ namespace TabeleEC2
    'cm2': 3.8
  },
  {
+   'diameter': 25,
+   'weight_per_meter': 3.951,
+   'Opseg': 7.85,
+   'cm2': 4.91
+ },
+ {
    'diameter': 28,
    'weight_per_meter': 4.834,
    'Opseg': 8.8,
