@@ -16,7 +16,6 @@ namespace CalculatorEC2Logic
         }
         public double M_top { get; set; }
         public double M_bottom { get; set; }
-
         public double NEd { get; set; }
 
         public double M02
@@ -44,8 +43,23 @@ namespace CalculatorEC2Logic
         }
         public double MEd(double e2=0)
         {
-            var list = new List<double>() { M02, Math.Max(h / 30, 2) / 100 * NEd + e2 / 100 * NEd, M01 + 0.5 * M02, Math.Max(h / 30, 2) / 100 * NEd };
-            return list.Max();
+            var M2 = e2 / 100 * NEd;
+            //MEd = Max(M02, M0Ed + M2, M01 + 0.5 * M2, e0 * NEd);
+            var t1 = M02;
+            var t2 = M0Ed + M2;
+            var t3 = M01 + 0.5 * M2;
+            var t4 = Math.Max(h / 30, 2) / 100 * NEd;
+            //var list = new List<double>() { M02, Math.Max(h / 30, 2) / 100 * NEd + e2 / 100 * NEd, M01 + 0.5 * M02, Math.Max(h / 30, 2) / 100 * NEd };
+            var list = new List<double>() { t1, t2, t3, t4 };
+            double result=0;
+
+            list.ForEach(x =>
+            {
+                if (Math.Abs(x) >= result)
+                    result = x;
+            });
+
+            return result;
         }
     }
 }
