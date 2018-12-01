@@ -108,7 +108,7 @@ namespace CalculatorEC2Logic
         /// </summary>
         public void ProracunArmature()
         {
-            var Msd_ = MEd;
+            var Msd_ =Math.Abs(MEd);
             var Vsd = Forces.NEd / (ElementGeometry.b * (ElementGeometry.h - ElementGeometry.d1) * Material.beton.fcd / 10);
             var mIsd = Msd_  / (ElementGeometry.b * Math.Pow((ElementGeometry.h - ElementGeometry.d1),2) * Material.beton.fcd / 10);
             var minAs_for_section = Get_minAs_for_section(ElementGeometry.b , ElementGeometry.h);

@@ -49,16 +49,15 @@ namespace CalculatorEC2Logic
             var t2 = M0Ed + M2;
             var t3 = M01 + 0.5 * M2;
             var t4 = Math.Max(h / 30, 2) / 100 * NEd;
-            //var list = new List<double>() { M02, Math.Max(h / 30, 2) / 100 * NEd + e2 / 100 * NEd, M01 + 0.5 * M02, Math.Max(h / 30, 2) / 100 * NEd };
             var list = new List<double>() { t1, t2, t3, t4 };
             double result=0;
 
             list.ForEach(x =>
             {
-                if (Math.Abs(x) >= result)
+                if (Math.Abs(x) >= Math.Abs(result))
                     result = x;
             });
-
+          
             return result;
         }
     }
