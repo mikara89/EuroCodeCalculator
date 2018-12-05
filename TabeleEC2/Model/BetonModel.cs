@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TabeleEC2.Model
 {
@@ -6,38 +8,7 @@ namespace TabeleEC2.Model
     {
 
     }
-    public class BetonModelEC:IBetonModel
-    {
-        public string name { get; set; }
-        public int fck { get; set; }
-        public int fck_cube { get; set; }
-        public int fcm { get; set; }
-        public double fctm { get; set; }
-        public double fctk005 { get; set; }
-        public double fctk095 { get; set; }
-        public int Ecm { get; set; }
-        public double εc1 { get; set; }
-        public double εcu1 { get; set; }
-        public double εc2 { get; set; }
-        public double εcu2 { get; set; }
-        public double n { get; set; }
-        public double εc3 { get; set; }
-        public double εcu3 { get; set; }
-        public double ρ { get; set; }
-        public double α { get; set; } = 0.85;
-        /// <summary>
-        /// fcd=α*fck/1,5 => α=0.85;
-        /// [MPa] /10 => [kN/cm2]
-        /// </summary>
-        public double fcd {
-            get {
-                return α * fck / 1.5;
-            } }
-        public override string ToString()
-        {
-            return$"{name}; fcd: {Math.Round(fcd,2)}MPa; fck: {fck}MPa; Ecm: {Ecm}GPa";
-        }
-    }
+   
     public enum BetonClassType
     {
          C12_16,
@@ -50,46 +21,46 @@ namespace TabeleEC2.Model
         C45_55,
         C55_60
     }
-    public class BetonModelEC_v2 : IBetonModel 
+    public class BetonModelEC : IBetonModel  
     {
-        private readonly double α;
+        public double α=0.85;
 
+        public static IEnumerable<string> ListOfBetonClassesNames()
+        {
+            List<string> list = new List<string>();
+            Enum.GetNames(typeof(BetonClassType))
+                .ToList()
+                .ForEach(x => list
+                    .Add(x.Replace("_", "/")));
+            return list;
+        }
+        public static IEnumerable<BetonModelEC> ListOfBetonClasses()
+        {
+            List<BetonModelEC> list = new List<BetonModelEC>();
+            Enum.GetNames(typeof(BetonClassType))
+                .ToList()
+                .ForEach(x => list
+                    .Add(new BetonModelEC(x.Replace("_", "/"))));
+            return list;
+        }
         private string GetStringFromType(BetonClassType betonClassType)
         {
-            switch (betonClassType)
-            {
-                case BetonClassType.C12_16:
-                    return "C12/16";
-                case BetonClassType.C16_20:
-                    return "C16/20";
-                case BetonClassType.C20_25:
-                    return "C20/25";
-                case BetonClassType.C25_30:
-                    return "C25/30";
-                case BetonClassType.C30_37:
-                    return "C30/37";
-                case BetonClassType.C35_45:
-                    return "C35/45";
-                case BetonClassType.C40_50:
-                    return "C40/50";
-                case BetonClassType.C45_55:
-                    return "C45/55";
-                case BetonClassType.C55_60:
-                    return "C55/60";
-                default:
-                    throw new ArgumentOutOfRangeException($"{nameof(betonClassType)} doesn't exist");
-            }
+            return Enum.GetName(typeof(BetonClassType), betonClassType).Replace("_", "/");
         }
-        public BetonModelEC_v2(double α = 0.85)
+        public BetonModelEC(double α = 0.85)
         {
 
         }
-        public BetonModelEC_v2(BetonClassType betonClassType,double α=0.85)
+        public BetonModelEC(BetonClassType betonClassType,double α=0.85)
         {
             this.name = GetStringFromType(betonClassType);
             this.α = α;
         }
-
+        public BetonModelEC(string betonClassName, double α = 0.85) 
+        {
+            this.name = betonClassName;
+            this.α = α;
+        }
         public string name { get;internal set; }
         public int fck { get
             {

@@ -4,8 +4,8 @@ using System.Linq;
 
 namespace CalculatorEC2Logic
 {
-    public class VitkostEC2 : IVitkost, IDisposable
-    {
+    public class SlendernessEC2 : ISlenderness, IDisposable
+    { 
         public bool IsAcOK { get;  private set; }
         public IElementGeometrySlenderness ElementGeometry { get;}
         public IForcesSlenderness Forces { get;}
@@ -36,7 +36,7 @@ namespace CalculatorEC2Logic
         /// <param name="elementGeomety">Geometry parametars</param>
         /// <param name="forces">Forces parametars</param>
         /// <param name="material">Material parametars</param>
-        public VitkostEC2(
+        public SlendernessEC2(
             IElementGeometrySlenderness elementGeomety,
             IForcesSlenderness forces,
             IMaterial material)

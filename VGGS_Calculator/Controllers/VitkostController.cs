@@ -1,6 +1,7 @@
 ﻿using CalculatorEC2Logic;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using TabeleEC2.Model;
 using VGGS_Calculator.Core.Models;
 
 namespace VGGS_Calculator.Controllers
@@ -55,14 +56,12 @@ namespace VGGS_Calculator.Controllers
                 };
                 var material = new Material()
                 {
-                    beton = TabeleEC2.BetonClasses
-                        .GetBetonClassListEC()
-                        .Single(b => b.name == model.betonClass),
+                    beton = new BetonModelEC(model.betonClass),
                     armatura = TabeleEC2.ReinforcementType
                         .GetArmatura()
                         .Single(a => a.name == model.armtype)
                 };
-                var v = new VitkostEC2(geo, forces, material);
+                var v = new SlendernessEC2(geo, forces, material);
 
                 v.Calculate();
                 v.KontrolaCentPritPreseka();

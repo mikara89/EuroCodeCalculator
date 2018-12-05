@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CalculatorEC2Logic;
 using Microsoft.AspNetCore.Mvc;
 using TabeleEC2;
+using TabeleEC2.Model;
 
 namespace VGGS_Calculator.Controllers
 {
@@ -34,7 +35,7 @@ namespace VGGS_Calculator.Controllers
             {
                 var material = new Material()
                 {
-                    beton = TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == model.material.betonClass),
+                    beton = new BetonModelEC(model.material.betonClass),
                     armatura = ReinforcementType.GetArmatura().First(n => n.name == model.material.armtype),
                 };
                 var geometry = new ElementGeomety()
@@ -64,7 +65,7 @@ namespace VGGS_Calculator.Controllers
             {
                 var material = new Material()
                 {
-                    beton =TabeleEC2.BetonClasses.GetBetonClassListEC().First(n => n.name == model.material.betonClass),
+                    beton = new BetonModelEC(model.material.betonClass),
                     armatura = ReinforcementType.GetArmatura().First(n => n.name == model.material.armtype),
                 };
                 var geometry = new ElementGeomety()

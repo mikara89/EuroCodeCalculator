@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TabeleEC2;
+using TabeleEC2.Model;
 
 namespace VGGS_Calculator.Core.Models
 {
@@ -16,7 +17,7 @@ namespace VGGS_Calculator.Core.Models
             if (value is string)
             {
                 var b = value as string;
-                return BetonClasses.GetBetonClassListEC()
+                return BetonModelEC.ListOfBetonClasses()
                     .Any(x => x.name == (string)value); ;
             }
             return false;

@@ -1,6 +1,6 @@
 ﻿namespace CalculatorEC2Logic
 {
-    public interface IVitkost
+    public interface ISlenderness 
     {
         void Calculate();
         void KontrolaCentPritPreseka();

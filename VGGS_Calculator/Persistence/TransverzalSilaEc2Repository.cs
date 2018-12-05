@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TabeleEC2.Model;
 using VGGS_Calculator.Core;
 using VGGS_Calculator.Core.Models;
 
@@ -18,14 +19,14 @@ namespace VGGS_Calculator.Persistence
         {
             TransverzalneSileEc2ResultModel Result;
 
-            var beton = TabeleEC2.BetonClasses.GetBetonClassListEC().Where(n => n.name == trans.betonClass).SingleOrDefault();
+            var beton = new BetonModelEC(trans.betonClass);
             var arm = TabeleEC2.ReinforcementType.GetArmatura().Where(n => n.name == trans.armtype).SingleOrDefault();
             var armLong = new TabeleEC2.Model.ReinforcementModelEC(trans.armLongitudinal.diametar, trans.armLongitudinal.kom);
             bool armCalc = false;
             if (trans.u_diametar != 0 && trans.m != 0 && trans.s != 0) armCalc = true;
             if (trans.Ved == 0)
             {
-                using (var t = new CalculatorEC2Logic.TransverzalneSileEC2(
+                using (var t = new CalculatorEC2Logic.TransversalCalcEC2(
               trans.b,
               trans.h,
               beton,
@@ -33,7 +34,7 @@ namespace VGGS_Calculator.Persistence
               armLong,
               trans.Vg,
               trans.Vq,
-              trans.d1, 0, 0
+              trans.d1
               ))
                 {
                     if (armCalc)
@@ -57,14 +58,14 @@ namespace VGGS_Calculator.Persistence
             }
             else
             {
-                using (var t = new CalculatorEC2Logic.TransverzalneSileEC2(
+                using (var t = new CalculatorEC2Logic.TransversalCalcEC2(
              b: trans.b,
              h: trans.h,
              beton:beton,
              armatura: arm,
              As1_model: armLong,
              Ved: trans.Ved,
-             d1: trans.d1,Ng: 0,Nq: 0
+             d1: trans.d1
              ))
                 {
                     if (armCalc)

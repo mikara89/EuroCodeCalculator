@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using TabeleEC2.Model;
 using VGGS_Calculator.Models;
 
 namespace VGGS_Calculator.Controllers
@@ -10,12 +11,13 @@ namespace VGGS_Calculator.Controllers
     public class BetonClassController : Controller
     {
         [HttpGet("/api/betonclass")]
-        public async Task<List<TabeleEC2.Model.BetonModelEC>> GetBetonClassesAsync()
+        public async Task<IEnumerable<BetonModelEC>> GetBetonClassesAsync()
         {
-            var betonclass=new List<TabeleEC2.Model.BetonModelEC>();
+            IEnumerable<BetonModelEC> betonclass=null;
             await Task.Run(() =>
             {
-                betonclass = TabeleEC2.BetonClasses.GetBetonClassListEC();
+                //betonclass = TabeleEC2.BetonClasses.GetBetonClassListEC();
+                betonclass = BetonModelEC.ListOfBetonClasses();
             });
 
             return betonclass;

@@ -5,7 +5,7 @@ using TabeleEC2.Model;
 
 namespace CalculatorEC2Logic
 {
-    public class TransverzalneSileEC2:IDisposable
+    public class TransversalCalcEC2:IDisposable
     {
 
         private double b;
@@ -34,7 +34,7 @@ namespace CalculatorEC2Logic
         public double As_add { get; private set; }
         public double Vg { get; }
         public double Vq { get; }
-        public double Ned { get { return 1.35 * Ng + 1.5 * Nq; } }
+        public double Ned { get; set; }
         private double _Ved;
         public double Ved { get
             {
@@ -58,15 +58,13 @@ namespace CalculatorEC2Logic
         public double Vrd_c { get; set; }
         public double Vrd_max { get; private set; }
         public bool IsDimOk { get; private set; }
-        public double Ng { get; private set; }
-        public double Nq { get; private set; }
 
         public double ρ1 { get; private set; }
         public double k { get; private set; }
         public List<double> List_s { get; private set; }
         public double Vrd_s { get; private set; }
 
-        public TransverzalneSileEC2(
+        public TransversalCalcEC2(
             double b,
             double h,
             BetonModelEC beton,
@@ -74,9 +72,7 @@ namespace CalculatorEC2Logic
             ReinforcementModelEC As1_model,  
             double Vg,
             double Vq,
-            double d1,
-            double Ng = 0,
-            double Nq = 0            
+            double d1       
             )
         {
             InitValidations(b,h,beton,armatura,As1_model,d1);
@@ -89,14 +85,10 @@ namespace CalculatorEC2Logic
             this.Vg = Vg;
             this.Vq = Vq;
             this.d1 = d1;
-            this.Ng = Ng;
-            this.Nq = Nq;
 
             Validations();
             Calc_Vrd_c();
 
-            //if (Errors.Count() != 0)
-                //return;
             GetS();
             GetSp();
             GetListOfM();
@@ -108,16 +100,14 @@ namespace CalculatorEC2Logic
             }
         }
 
-        public TransverzalneSileEC2(
+        public TransversalCalcEC2(
             double b,
             double h,
             BetonModelEC beton,
             ReinforcementTypeModelEC armatura,
             ReinforcementModelEC As1_model,
             double Ved,
-            double d1,
-            double Ng = 0,
-            double Nq = 0
+            double d1
             )
         {
             InitValidations(b, h, beton, armatura, As1_model, d1);
@@ -133,8 +123,6 @@ namespace CalculatorEC2Logic
             Validations();
             Calc_Vrd_c();
 
-            //if (Errors.Count() != 0)
-                //return;
             GetS();
             GetSp();
             GetListOfM();
