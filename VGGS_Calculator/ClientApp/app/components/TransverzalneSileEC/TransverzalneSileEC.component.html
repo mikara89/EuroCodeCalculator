@@ -11,8 +11,16 @@
     <form class="col-xl-3 col-lg-4 col-md-5 col-sm-5 col-xs-12" #f="ngForm">
         <div class="row">
             <div action="">
-                <input type="radio" name="gender" [attr.checked]="!IsVed" (click)="Toggled(false)"> Vg i Vq
-                <input type="radio" name="gender" [attr.checked]="IsVed" (click)="Toggled(true)"> Ved
+                <input type="radio" 
+                       name="gender" 
+                       [attr.checked]="!IsVed"
+                       (click)="Toggled(false);reset();"> 
+                Vg i Vq
+                <input type="radio" 
+                       name="gender" 
+                       [attr.checked]="IsVed" 
+                       (click)="Toggled(true);reset();"> 
+                Ved
             </div>
         </div>
         <div class="row" *ngIf="IsVed">

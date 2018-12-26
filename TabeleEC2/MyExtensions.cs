@@ -7,5 +7,14 @@ namespace Extensions
         {
             return Math.Round(d, i);
         }
+
+        public static double Radians(this double d)
+        {
+            return d * Math.PI / 180; ;
+        }
+        public static double Angle(this double d)
+        {
+            return d * 180 / Math.PI;
+        }
     }
 }

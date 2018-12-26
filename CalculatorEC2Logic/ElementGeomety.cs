@@ -2,7 +2,7 @@
 
 namespace CalculatorEC2Logic
 {
-    public class ElementGeomety : IElementGeometry
+    public class ElementGeometry : IElementGeometry
     {
         public string GetUnits()
         {

@@ -19,7 +19,7 @@ namespace VGGS_Calculator.Persistence
                     armatura = TabeleEC2.ReinforcementType.GetArmatura().Single(a => a.name == input.armtype)
                 },
 
-                geometry: new CalculatorEC2Logic.ElementGeomety()
+                geometry: new CalculatorEC2Logic.ElementGeometry()
                 {
                     b = input.b,
                     h = input.h,
@@ -29,7 +29,7 @@ namespace VGGS_Calculator.Persistence
                 forces: input.Msd == 0 ?
                     new CalculatorEC2Logic.ForcesBendingAndCompressison(1.35 * input.Mg + 1.5 * input.Mq, 1.35 * input.Ng + 1.5 * input.Nq) :
                     new CalculatorEC2Logic.ForcesBendingAndCompressison(input.Msd, input.Nsd),
-                kof: input.h == 0 ? TabeleEC2.KofZaProracunPravougaonogPresekaEC.Get_Kof_From_μ(input.mu) : null))
+                kof: input.h == 0 ? TabeleEC2.CoeffForCalcRectCrossSectionEC.Get_Kof_From_μ(input.mu) : null))
             {
                 ///Doo some thing
                 result.result = new SavijanjePravougaonogPresekaEC2Model.ResultModel()

@@ -47,10 +47,6 @@ namespace TabeleEC2.Model
         {
             return Enum.GetName(typeof(BetonClassType), betonClassType).Replace("_", "/");
         }
-        public BetonModelEC(double α = 0.85)
-        {
-
-        }
         public BetonModelEC(BetonClassType betonClassType,double α=0.85)
         {
             this.name = GetStringFromType(betonClassType);
@@ -115,7 +111,8 @@ namespace TabeleEC2.Model
         {
             get
             {
-                return 9500*Math.Pow((fck+8),1/3);
+                //return 22*Math.Pow((fcm/10),1.0/3.0)*1000;
+                return 9500 * Math.Pow((fck + 8), 1.0 / 3.0);
             }
         }
         //public double εc1 { get; set; }
@@ -162,33 +159,7 @@ namespace TabeleEC2.Model
         }
         public override string ToString()
         {
-            return $"{name}; fcd: {Math.Round(fcd, 2)}MPa; fck: {fck}Mpa; Ecm: {Math.Round(Ecm,2)}GPa";
+            return $"{name}; fcd: {Math.Round(fcd, 2)}MPa; fck: {fck}Mpa; Ecm: {Math.Round(Ecm/1000,2)}GPa";
         }
     }
-
-    public class BetonModelPBAB : IBetonModel
-    {
-        public string name {
-            get           
-            {
-                return "MB"+fbk;
-            }
-        }
-        public int fbk { get; set; } 
-        /// <summary>
-        /// fcd=α*fck/1,5 => α=0.85;
-        /// [MPa] /10 => [kN/cm2]
-        /// </summary>
-        public double fb
-        {
-            get
-            {
-                return fbk / 1.4285714285714285714285714285714;
-            }
-        }
-        
-    }
-
-
-
 }

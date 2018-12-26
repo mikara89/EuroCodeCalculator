@@ -8,7 +8,6 @@ namespace VGGS_Calculator.Core.Models
         [GreaterThenZero]
         public double b { get; set; }
         [Required]
-        [GreaterThenZero]
         public double h { get; set; } 
         [Required]
         [GreaterThenZero] 
@@ -35,7 +34,7 @@ namespace VGGS_Calculator.Core.Models
         public class ResultModel
         {
             public double Msds { get; set; } 
-            public TabeleEC2.Model.KofZaProracunPravougaonogPresekaModelEC kof { get; set; }  
+            public TabeleEC2.Model.CoeffForCalcRectCrossSectionModelEC kof { get; set; }  
             public double As1_pot { get; set; }
             public double As2_pot { get; set; }
             public double μSd { get; set; } 

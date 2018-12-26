@@ -47,7 +47,7 @@ namespace CalculatorEC2Logic
 
         public SymmetricalReinfByMaxAndMinPercentageReinf(IMaterial material,IElementGeometry geomety)
         {
-            ratio_d_and_h = (geomety as ElementGeomety).d / geomety.h;
+            ratio_d_and_h = (geomety as ElementGeometry).d / geomety.h;
             _material = material;
             SetMinimumOf_ρ_and_Max();
         }

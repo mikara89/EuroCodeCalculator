@@ -86,7 +86,7 @@ namespace CalculatorEC2Logic
                 Kr = Kr >= 1 ? Kr : 1;///if Kr>=1 then use it else use 1 
                 var t1 = (Material.armatura.fyd * 10 / (Material.armatura.Es * 1000));
                 var t2 = (1 / (0.45 * (ElementGeometry.h - ElementGeometry.d1)));
-                var Ko = (Material.armatura.fyd /** 10*/ / (Material.armatura.Es*100 /** 1000*/)) * (1 / (0.45 * (ElementGeometry.h - ElementGeometry.d1)));
+                var Ko = (Material.armatura.fyd / (Material.armatura.Es*100)) * (1 / (0.45 * (ElementGeometry.h - ElementGeometry.d1)));
 
                 var K = Kφ * Kr * Ko;
 
@@ -123,7 +123,7 @@ namespace CalculatorEC2Logic
 
         private double GetAsd(double MEd, double NEd)
         {
-            var sym = new SymmetricalReinfByClassicMethod(Material, new ElementGeomety()
+            var sym = new SymmetricalReinfByClassicMethod(Material, new ElementGeometry()
             {
                 b = ElementGeometry.b,
                 h = ElementGeometry.h,

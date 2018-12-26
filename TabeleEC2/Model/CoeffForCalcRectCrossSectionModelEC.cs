@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace TabeleEC2.Model
 {
-    public interface IKofZaProracunPravougaonogPresekaModel
+    public interface ICoeffForCalcRectCrossSectionModel
     {
 
     }
 
-    public class KofZaProracunPravougaonogPresekaModelEC: IKofZaProracunPravougaonogPresekaModel
+    public class CoeffForCalcRectCrossSectionModelEC: ICoeffForCalcRectCrossSectionModel
     {
 
         public double εc { get; set; }
@@ -43,18 +43,18 @@ namespace TabeleEC2.Model
         public bool LomPoBetonu { get { return εs1 < 5.0 ? false : true; } }
         public bool LomPoArmaturi { get { return !LomPoBetonu; } }
 
-        public KofZaProracunPravougaonogPresekaModelEC()
+        public CoeffForCalcRectCrossSectionModelEC()
         {
 
         }
-        public KofZaProracunPravougaonogPresekaModelEC(double εc, double εs1)
+        public CoeffForCalcRectCrossSectionModelEC(double εc, double εs1)
         {
             SetByEcEs1(εc, εs1);
         }
 
-        public KofZaProracunPravougaonogPresekaModelEC(double μSd) 
+        public CoeffForCalcRectCrossSectionModelEC(double μSd) 
         {
-            var k= KofZaProracunPravougaonogPresekaEC.Get_Kof_From_μ(μSd);
+            var k= CoeffForCalcRectCrossSectionEC.Get_Kof_From_μ(μSd);
             SetByEcEs1(k.εc, k.εs1);
         }
         public void SetByEcEs1(double εc, double εs1)
@@ -87,7 +87,10 @@ namespace TabeleEC2.Model
             }
             SetByEcEs1(-3.5, 20);
         }
-
+        public void SetByX(double X, double d)
+        {
+            SetByξ(X / d);
+        }
         public override string ToString()
         {
             return $"εc/εs1={εc:F3}/{εs1:F3}";

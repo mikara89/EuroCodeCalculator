@@ -81,9 +81,9 @@ namespace CalculatorEC2Logic
 
         public double Get_As(double MRd, double NRd)
         {
-            for (double i = -3.5; i <= -0.1; i += 0.01)
+            for (double i = -3.5; i <= -0.1; i += 0.001)
             {
-                var item = new μSd_And_νSd(_geometry, _material).GetFromKof(new KofZaProracunPravougaonogPresekaModelEC(i, 20));
+                var item = new μSd_And_νSd(_geometry, _material).GetFromKof(new CoeffForCalcRectCrossSectionModelEC(i, 20));
                 var As1 = (NRd - 0.85 * _material.beton.fcd * item.kof.αv * item.kof.ξ * _geometry.d * _geometry.b) / (item.σs2 - item.σs1);
                 var As2 = Math.Abs(MRd * 100 - 0.85 * _material.beton.fcd * item.kof.αv * item.kof.ξ * _geometry.d * _geometry.b * (_geometry.h / 2 - item.kof.ka * item.x)) / ((_geometry.h / 2 + _geometry.d1) * Math.Abs((item.σs2 + item.σs1)));
 
@@ -91,9 +91,9 @@ namespace CalculatorEC2Logic
                 if (Math.Round(As1, 2) == Math.Round(As2, 2)) return As1 * 2;
 
             }
-            for (double i = 19.9; i > -1.5; i -= 0.01)
+            for (double i = 19.9; i > -1.5; i -= 0.001)
             {
-                var item = new μSd_And_νSd(_geometry, _material).GetFromKof(new KofZaProracunPravougaonogPresekaModelEC(-3.5, i));
+                var item = new μSd_And_νSd(_geometry, _material).GetFromKof(new CoeffForCalcRectCrossSectionModelEC(-3.5, i));
 
                 var As1 = (NRd - 0.85 * _material.beton.fcd * item.kof.αv * item.kof.ξ * _geometry.d * _geometry.b) / (item.σs2 - item.σs1);
                 var As2 = Math.Abs(MRd * 100 - 0.85 * _material.beton.fcd * item.kof.αv * item.kof.ξ * _geometry.d * _geometry.b * (_geometry.h / 2 - item.kof.ka * item.x)) / ((_geometry.h / 2 + _geometry.d1) * Math.Abs((item.σs2 + item.σs1)));
@@ -102,8 +102,8 @@ namespace CalculatorEC2Logic
             }
             return 0;
         }
-
-        private int CheckDiagram(Generate_ω_LineForDiagram toCheck, double μRd, double νRd, int percision = 3)
+        
+    private int CheckDiagram(Generate_ω_LineForDiagram toCheck, double μRd, double νRd, int percision = 3)
         {
             var test = new List<μSd_And_νSd>(toCheck.ListOfDotsInLineOfDiagram);
             var νSdmax = test.Single(m => m.μSd == test.Max(n => n.μSd)).νSd;
@@ -147,7 +147,7 @@ namespace CalculatorEC2Logic
 
         public string TextResult()
         {
-            var geo = _geometry as ElementGeomety;
+            var geo = _geometry as ElementGeometry;
             if (find == null) return "No result!";
             return $@"///////Result////////{Environment.NewLine }" +
                 $"Material:{Environment.NewLine }" +
@@ -207,12 +207,12 @@ namespace CalculatorEC2Logic
                 for (double i = -3.5; i <= -0.1; i += 0.1)
                 {
                     var item = new μSd_And_νSd(geometry, material);
-                    Add(item.GetFromKof(new KofZaProracunPravougaonogPresekaModelEC(i, 20), ω));
+                    Add(item.GetFromKof(new CoeffForCalcRectCrossSectionModelEC(i, 20), ω));
                 }
                 for (double i = 19.9; i > -1.5; i -= 0.1)
                 {
                     var item = new μSd_And_νSd(geometry, material);
-                    Add(item.GetFromKof(new KofZaProracunPravougaonogPresekaModelEC(-3.5, i), ω));
+                    Add(item.GetFromKof(new CoeffForCalcRectCrossSectionModelEC(-3.5, i), ω));
                 }
 
                 var t = this;
@@ -229,7 +229,7 @@ namespace CalculatorEC2Logic
 
             public double μSd { get; internal set; }
             public double νSd { get; internal set; }
-            public KofZaProracunPravougaonogPresekaModelEC kof { get; internal set; }
+            public CoeffForCalcRectCrossSectionModelEC kof { get; internal set; }
             public double εs2 { get; internal set; }
             public double σs1 { get; internal set; }
             public double σs2 { get; internal set; }
@@ -239,7 +239,7 @@ namespace CalculatorEC2Logic
                 this.geometry = geometry ?? throw new ArgumentNullException(nameof(geometry));
                 this.material = material ?? throw new ArgumentNullException(nameof(material));
             }
-            public μSd_And_νSd GetFromKof(KofZaProracunPravougaonogPresekaModelEC kof, double ω)
+            public μSd_And_νSd GetFromKof(CoeffForCalcRectCrossSectionModelEC kof, double ω)
             {
                 this.kof = kof ?? throw new ArgumentNullException(nameof(kof));
                 var fyd = material.armatura.fyd * 10;
@@ -259,7 +259,7 @@ namespace CalculatorEC2Logic
 
                 return this;
             }
-            public μSd_And_νSd GetFromKof(KofZaProracunPravougaonogPresekaModelEC kof)
+            public μSd_And_νSd GetFromKof(CoeffForCalcRectCrossSectionModelEC kof)
             {
                 this.kof = kof ?? throw new ArgumentNullException(nameof(kof));
                 var fyd = material.armatura.fyd * 10;
