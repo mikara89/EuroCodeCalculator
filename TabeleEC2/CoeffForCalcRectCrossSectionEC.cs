@@ -15,7 +15,7 @@ namespace TabeleEC2
         
         public static CoeffForCalcRectCrossSectionModelEC GetLimitCoeff(BetonModelEC beton)
         {
-            if (beton.fck <= 35)
+            if (beton.fck <= 50)
             {
                 return new CoeffForCalcRectCrossSectionModelEC() { εc = -3.5, εs1 = 4.278, ζ = 0.813, ξ = 0.45, μRd = 0.252, ω = 0/*, kd = 0*/ };
             }else return new CoeffForCalcRectCrossSectionModelEC() { εc = -3.5, εs1 = 6.5, ζ = 0.854, ξ = 0.35, μRd = 0.206, ω = 0/*, kd = 0*/ };

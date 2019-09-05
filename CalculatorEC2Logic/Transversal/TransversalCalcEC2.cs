@@ -171,8 +171,10 @@ namespace CalculatorEC2Logic
             var z = 0.9 * Geometry.d;
             Θ = 0.5* Math.Asin(Forces.Ved * 1000 / (0.20 * (1.0 -Material.beton.fck / 250.0) * Material.beton.fck *Geometry.b * 10 * z * 10));
 
-            if (Θ.Angle() < 22.0) Θ = a_min.Radians();
-            else if (Θ.Angle() > 45) Θ = a_max.Radians();
+            if (Θ.Angle() < 22.0)
+                Θ = a_min.Radians();
+            else if (Double.IsNaN(Θ) || Θ.Angle() > 45)
+                Θ = a_max.Radians();
 
             this.Asw_Model = Asw_Model;
             this.m = m;

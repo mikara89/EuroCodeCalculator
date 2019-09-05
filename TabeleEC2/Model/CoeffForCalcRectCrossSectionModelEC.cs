@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace TabeleEC2.Model
 {
@@ -8,25 +7,28 @@ namespace TabeleEC2.Model
 
     }
 
-    public class CoeffForCalcRectCrossSectionModelEC: ICoeffForCalcRectCrossSectionModel
+    public class CoeffForCalcRectCrossSectionModelEC : ICoeffForCalcRectCrossSectionModel
     {
 
         public double εc { get; set; }
-        public double εs1 { get;  set; }
-        public double ξ { get;  set; }
-        public double ζ { get;  set; }
-        public double μRd { get;  set; }
-        public double ω { get;  set; }
+        public double εs1 { get; set; }
+        public double ξ { get; set; }
+        public double ζ { get; set; }
+        public double μRd { get; set; }
+        public double ω { get; set; }
         public double kd { get; set; }
-        public double αv { get
+        public double αv
+        {
+            get
             {
                 if (εc == 0)
                     return 0;
                 var e = Math.Abs(εc);
-                if (e>0 && e <= 2)
+                if (e > 0 && e <= 2)
                     return (e / 12) * (6 - e);
-                return (3*e -2)/(3*e);
-            }}
+                return (3 * e - 2) / (3 * e);
+            }
+        }
         public double ka
         {
             get
@@ -35,8 +37,8 @@ namespace TabeleEC2.Model
                     return 0;
                 var e = Math.Abs(εc);
                 if (e > 0 && e <= 2)
-                    return (8-e) / (4*(6-e));
-                return (e *(3*e-4)+2) / (2*e*(3*e-2));
+                    return (8 - e) / (4 * (6 - e));
+                return (e * (3 * e - 4) + 2) / (2 * e * (3 * e - 2));
             }
         }
 
@@ -52,9 +54,9 @@ namespace TabeleEC2.Model
             SetByEcEs1(εc, εs1);
         }
 
-        public CoeffForCalcRectCrossSectionModelEC(double μSd) 
+        public CoeffForCalcRectCrossSectionModelEC(double μSd)
         {
-            var k= CoeffForCalcRectCrossSectionEC.Get_Kof_From_μ(μSd);
+            var k = CoeffForCalcRectCrossSectionEC.Get_Kof_From_μ(μSd);
             SetByEcEs1(k.εc, k.εs1);
         }
         public void SetByEcEs1(double εc, double εs1)
@@ -71,17 +73,17 @@ namespace TabeleEC2.Model
         }
         public void SetByξ(double ξ)
         {
-            if (ξ < 0.149 && ξ>0)
+            if (ξ < 0.149 && ξ > 0)
             {
                 this.εs1 = 20;
-                this.εc =-(( ξ / (1 - ξ)) * εs1);
+                this.εc = -((ξ / (1 - ξ)) * εs1);
                 SetByEcEs1(this.εc, this.εs1);
                 return;
             }
             if (ξ > 0.149)
             {
                 this.εc = -3.5;
-                this.εs1 = ((1 - ξ)/ ξ) * Math.Abs(εc);
+                this.εs1 = ((1 - ξ) / ξ) * Math.Abs(εc);
                 SetByEcEs1(this.εc, this.εs1);
                 return;
             }

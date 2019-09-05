@@ -23,7 +23,7 @@ namespace TabeleEC2.Model
     }
     public class BetonModelEC : IBetonModel  
     {
-        public double α=0.85;
+        public double αcc=0.85;
 
         public static IEnumerable<string> ListOfBetonClassesNames()
         {
@@ -50,12 +50,12 @@ namespace TabeleEC2.Model
         public BetonModelEC(BetonClassType betonClassType,double α=0.85)
         {
             this.name = GetStringFromType(betonClassType);
-            this.α = α;
+            this.αcc = α;
         }
         public BetonModelEC(string betonClassName, double α = 0.85) 
         {
             this.name = betonClassName;
-            this.α = α;
+            this.αcc = α;
         }
         public string name { get;internal set; }
         public int fck { get
@@ -87,7 +87,7 @@ namespace TabeleEC2.Model
         {
             get
             {
-                return 0.30 * Math.Pow(fck, 2 / 3);
+                return 0.30 * Math.Pow(fck, 2.0 / 3.0);
             }
         }
         public double fctk005
@@ -143,7 +143,7 @@ namespace TabeleEC2.Model
                     default:
                         break;
                 }
-                return 9500 * Math.Pow((fck + 8), 1 / 3);
+                return 9500 * Math.Pow((fck + 8), 1.0 / 3.0);
             }
         }
         /// <summary>
@@ -154,7 +154,7 @@ namespace TabeleEC2.Model
         {
             get
             {
-                return α * fck / 1.5;
+                return αcc * fck / 1.5;
             }
         }
         public override string ToString()
