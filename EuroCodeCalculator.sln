@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EuroCodeCalculator", "EuroCodeCalculator\EuroCodeCalculator.csproj", "{D7C54F58-EEF7-4CC1-941D-10ED60F345F7}"
 EndProject
@@ -21,9 +21,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingCharts", "TestingCha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreckingENCalc", "..\CreckingENCalc\CreckingENCalc\CreckingENCalc.csproj", "{346FD858-632D-43EA-9819-F4DB8C70339D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalcModels", "CalcModels\CalcModels.csproj", "{59A00222-FFCC-4CAB-9A46-824FDD2F4DCE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalcModels", "CalcModels\CalcModels.csproj", "{59A00222-FFCC-4CAB-9A46-824FDD2F4DCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreckingCalcENTest", "CreckingCalcENTest\CreckingCalcENTest.csproj", "{25510784-D58D-4BC1-BC02-5A5C42BA769F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreckingCalcENTest", "CreckingCalcENTest\CreckingCalcENTest.csproj", "{25510784-D58D-4BC1-BC02-5A5C42BA769F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterDiagRCSection", "InterDiagRCSection\InterDiagRCSection.csproj", "{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -197,6 +199,22 @@ Global
 		{25510784-D58D-4BC1-BC02-5A5C42BA769F}.Release|x64.Build.0 = Release|Any CPU
 		{25510784-D58D-4BC1-BC02-5A5C42BA769F}.Release|x86.ActiveCfg = Release|Any CPU
 		{25510784-D58D-4BC1-BC02-5A5C42BA769F}.Release|x86.Build.0 = Release|Any CPU
+		{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}.Debug|ARM.Build.0 = Debug|Any CPU
+		{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}.Debug|x64.Build.0 = Debug|Any CPU
+		{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}.Debug|x86.Build.0 = Debug|Any CPU
+		{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}.Release|ARM.ActiveCfg = Release|Any CPU
+		{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}.Release|ARM.Build.0 = Release|Any CPU
+		{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}.Release|x64.ActiveCfg = Release|Any CPU
+		{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}.Release|x64.Build.0 = Release|Any CPU
+		{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}.Release|x86.ActiveCfg = Release|Any CPU
+		{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

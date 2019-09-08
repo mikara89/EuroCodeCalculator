@@ -25,6 +25,7 @@ namespace TabeleEC2
                     fyd=50/1.15,
                     Es=200,
                     Symbol="B",
+                    eps_ud=20,
                 },
                 new ReinforcementTypeModelEC
                 {
@@ -33,6 +34,7 @@ namespace TabeleEC2
                     fyd=46/1.15,
                     Es=200,
                     Symbol="B",
+                    eps_ud=20,
                 },
                 new ReinforcementTypeModelEC
                 {
@@ -41,6 +43,7 @@ namespace TabeleEC2
                     fyd=42/1.15,
                     Es=200,
                     Symbol="B",
+                    eps_ud=20,
                 },
                 new ReinforcementTypeModelEC
                 {
@@ -49,6 +52,7 @@ namespace TabeleEC2
                     fyd = 25 / 1.15,
                     Es = 200,
                     Symbol = "B",
+                    eps_ud=20,
                 },
                 new ReinforcementTypeModelEC
                 {
@@ -57,6 +61,7 @@ namespace TabeleEC2
                     fyd = 22 / 1.15,
                     Es = 200,
                     Symbol = "B",
+                    eps_ud=20,
                 }
             };
         }

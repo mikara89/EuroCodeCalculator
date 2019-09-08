@@ -9,4 +9,5 @@
         double d2 { get; set; }
         double d { get; }
     }
+
 }

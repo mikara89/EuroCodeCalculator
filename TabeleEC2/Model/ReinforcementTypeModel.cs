@@ -10,6 +10,10 @@ namespace TabeleEC2.Model
         string Symbol { get; set; }
         List<ReinforcementTabelModel> ListOfArmatura{get;}
         List<int> ListOfNum{get;}
+        /// <summary>
+        /// Max diletacion value
+        /// </summary>
+        double eps_ud { get;}
     }
     public class ReinforcementTypeModelEC: IReinforcementTypeModel
     {
@@ -41,6 +45,9 @@ namespace TabeleEC2.Model
                 return list;
             }
         }
+
+        public double eps_ud { get; internal set; }
+
         public override string ToString()
         {
             return $"{name}; fyd: {Math.Round(fyd,2)}MPa; fyk: {Math.Round(fyk,2)}MPa; Es: {Es}GPa";
@@ -79,5 +86,7 @@ namespace TabeleEC2.Model
                 return list;
             }
         }
+
+        public double eps_ud => throw new NotImplementedException();
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TabeleEC2.Model
 {
-    public interface IBetonModel
+    public interface IMaterial
     {
 
     }
@@ -21,7 +21,7 @@ namespace TabeleEC2.Model
         C45_55,
         C55_60
     }
-    public class BetonModelEC : IBetonModel  
+    public class BetonModelEC : IMaterial  
     {
         public double αcc=0.85;
 
@@ -117,11 +117,11 @@ namespace TabeleEC2.Model
         }
         //public double εc1 { get; set; }
         //public double εcu1 { get; set; }
-        //public double εc2 { get; set; }
-        //public double εcu2 { get; set; }
-        //public double n { get; set; }
-        //public double εc3 { get; set; }
-        //public double εcu3 { get; set; }
+        public double εc2 { get; set; } = -2.0;
+        public double εcu2 { get; set; } = -3.5;
+        public double n { get; set; } = 2;
+        public double εc3 { get; set; } = -1.75;
+        public double εcu3 { get; set; } = -3.5;
         public double ρ
         {
             get
