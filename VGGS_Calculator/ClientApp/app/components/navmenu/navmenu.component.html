@@ -54,6 +54,13 @@
                         <span class='glyphicon glyphicon-th-list'></span> Simetrično armiranje po klasicnoj metodi
                     </a>
                 </li>
+                <li [routerLinkActive]="['link-active']"
+                    [attr.data-toggle]="newInnerWidth > 767?null:'collapse'"
+                    [attr.data-target]="newInnerWidth > 767?null:'.navbar-collapse'">
+                    <a [routerLink]="['/interactivMN']">
+                        <span class='glyphicon glyphicon-th-list'></span>  Dijagram interakcije za AB preske
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

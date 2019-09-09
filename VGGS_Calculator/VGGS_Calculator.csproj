@@ -41,6 +41,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="CalcModels">
+      <HintPath>..\InterDiagRCSection\bin\Debug\netstandard2.0\CalcModels.dll</HintPath>
+    </Reference>
+    <Reference Include="InterDiagRCSection">
+      <HintPath>..\InterDiagRCSection\bin\Debug\netstandard2.0\InterDiagRCSection.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\models\SlendernessType.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\beton-class.service.ts" />
   </ItemGroup>

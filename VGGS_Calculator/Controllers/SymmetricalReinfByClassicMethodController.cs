@@ -88,6 +88,4 @@ namespace VGGS_Calculator.Controllers
             }
         }
     }
-
-   
 }

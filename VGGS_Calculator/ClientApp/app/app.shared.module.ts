@@ -19,6 +19,10 @@ import { LoaderRotatingDotsComponent } from './components/loader-rotating-dots/l
 import { SymmReinfComponent } from './components/symm-reinf/symm-reinf.component';
 import { SymmReinfService } from './services/symm-reinf.service';
 import { VitkostService } from './services/vitkost.service';
+import { InteractivComponent } from './components/Interactiv/Interactiv.component';
+import { InteractivService } from './services/interactiv.service';
+
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
     declarations: [
@@ -27,6 +31,7 @@ import { VitkostService } from './services/vitkost.service';
         HomeComponent,
         TransverzalneSileECComponent,
         VitkostEc2Component,
+        InteractivComponent,
         SymmReinfComponent,
         SavijanjePravougaonogPresekaEc2Component,
         LoaderRotatingDotsComponent,
@@ -35,6 +40,7 @@ import { VitkostService } from './services/vitkost.service';
         CommonModule,
         HttpModule,
         FormsModule,
+        ChartsModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
@@ -42,11 +48,13 @@ import { VitkostService } from './services/vitkost.service';
             { path: 'savijanjepravresec', component: SavijanjePravougaonogPresekaEc2Component },
             { path: 'vitkostec', component: VitkostEc2Component },
             { path: 'symmReinf', component: SymmReinfComponent },
+            { path: 'interactivMN', component: InteractivComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ],
     providers: [
         BetonClassService,
+        InteractivService,
         ArmaturaTypeService,
         TransSileEc2IzracunajService,
         KofZaProrPravPresekaService,
