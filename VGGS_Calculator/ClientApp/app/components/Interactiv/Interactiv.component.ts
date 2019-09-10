@@ -13,31 +13,11 @@ import { Color, BaseChartDirective } from 'ng2-charts';
     styleUrls: ['./Interactiv.component.css']
 })
 export class InteractivComponent implements OnInit {
-    @ViewChild(BaseChartDirective) chart: BaseChartDirective;
-    public lineChartData: ChartDataSets[] = [
-        {
-            label: 'Line1',
-            fill: true,
-            backgroundColor: this.RandomColor(true),
-            borderColor: this.RandomColor(),
-            pointRadius: 0,
-            pointHitRadius: 0, borderWidth: 2,
-            pointHoverRadius: 0,
-            data: [{x:0, y:0}]
-
-        }, {
-            label: '1',
-            fill: true,
-            backgroundColor: this.RandomColor(true),
-            borderColor: this.RandomColor(),
-            pointRadius: 0,
-            pointHitRadius: 0, borderWidth: 2,
-            pointHoverRadius: 0,
-            data: [{ x: 0, y: 0 }]
-
-        }];
+    chart:any=[];
+    public lineChartData: ChartDataSets[] = [];
     public lineChartOptions: Chart.ChartOptions =
         {
+
             responsive: true,
             scales: {
                 xAxes: [{
@@ -65,10 +45,15 @@ export class InteractivComponent implements OnInit {
 
                 }]
             }
+            
         };
-
-    public lineChartLegend = true;
     public lineChartType = 'line';
+
+    public lineChartConfig: Chart.ChartConfiguration =
+        {
+            data: { datasets:this.lineChartData },
+    };
+    
 
     isReady: boolean;
     textResult: any;
@@ -118,39 +103,23 @@ export class InteractivComponent implements OnInit {
                 {
                     label: 'Line1',
                     fill: true,
-                    backgroundColor: this.RandomColor(true),
-                    borderColor: this.RandomColor(),
+                    borderColor: 'black',
                     pointRadius: 0,
                     pointHitRadius: 0, borderWidth: 2,
                     pointHoverRadius: 0,
                     data: list
 
-                },
-                {
-                    label: '1',
-                    fill: true,
-                    backgroundColor: this.RandomColor(true),
-                    borderColor: this.RandomColor(),
-                    pointRadius: 2,
-                    pointHitRadius: 2, borderWidth: 2,
-                    pointHoverRadius: 4,
-                    data: [{ x: 0, y: 20 }, { x: 50, y: 20 }]
                 }];
-            console.log(this.chart);
-            
+            this.lineChartConfig.options = this.lineChartOptions;
+            this.lineChartConfig.type = this.lineChartType;
+            this.lineChartConfig.data.datasets = this.lineChartData;
+
+            this.chart = new Chart('canvas', this.lineChartConfig);
             this.isReady = true;
-
-
         });
         
     }
-    addData(dataset: ChartDataSets) {
-        //this.lineChartData[1] = dataset;
-        (this.chart.chart as Chart).data.datasets[1] = dataset;
-        (this.chart.chart as Chart).update();
-        console.log((this.chart.chart as Chart).data.datasets);
-
-    }
+    
     
     RandomColor(clean: boolean = false) {
         if (clean || this.color==null)
@@ -185,10 +154,14 @@ export class InteractivComponent implements OnInit {
                 this.pointsMN.splice(index, 1);
         });
         this.lineChartData.forEach((item, index) => {
-            if (item.data.length==1 && (item.data[0] as ChartPoint).x === point.x && (item.data[0] as ChartPoint).y === point.y)
+            if (item.data.length == 1 && (item.data[0] as ChartPoint).x === point.x && (item.data[0] as ChartPoint).y === point.y) {
                 this.lineChartData.splice(index, 1);
+                (this.chart as Chart).data.datasets.splice(index, 1);
+                (this.chart.chart as Chart).update();
+                console.log((this.chart as Chart).data.datasets);
+            }
         });
-        (this.chart.chart as Chart).update();
+        
     }
 
    
@@ -196,15 +169,21 @@ export class InteractivComponent implements OnInit {
         this.intServices.getListOfAllLines(this.izracunaj)
             .subscribe(
                 list => {
-                    this.lineChartData = [{ data: list }]
+                    this.updateLine({ data: list });
         });
     }
+    updateLine(dataset: ChartDataSets) {
+        (this.chart as Chart).data.datasets[0] = dataset;
+        (this.chart as Chart).update();
+
+    }
+ 
 
     AddPointMNAndPlot() {
         this.pointsMN.push({ x: this.izracunaj.mi, y: this.izracunaj.ni })
         this.addData(
             this.createDataSet(
-                this.RandomColor(),
+                this.RandomColor(true),
                 this.pointsMN.length,
                 [{ x: this.izracunaj.mi, y: this.izracunaj.ni }]
                 , 5
@@ -212,7 +191,11 @@ export class InteractivComponent implements OnInit {
         ); 
 
     }
+    addData(dataset: ChartDataSets) {
+        (this.chart as Chart).data.datasets.push(dataset);
+        (this.chart as Chart).update();
 
+    }
    
 }
 

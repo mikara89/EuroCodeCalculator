@@ -242,18 +242,9 @@
         </table>
     </div>
 </form>
-<!--<div *ngIf="chart" class="col-xl-9 col-lg-8 col-md-12 col-sm-12 col-xs-12">-->
-    <div class="chart col-xl-9 col-lg-8 col-md-12 col-sm-12 col-xs-12">
-        <!--<canvas *ngIf="isReady"
-                id="canvas">
+    <div class="col-xl-9 col-lg-8 col-md-12 col-sm-12 col-xs-12">
+        <canvas *ngIf="chart" id="canvas">
             {{chart}}
-        </canvas>-->
-
-        <canvas baseChart 
-                [datasets]="lineChartData"
-                [options]="lineChartOptions"
-                [legend]="lineChartLegend"
-                [chartType]="lineChartType">
         </canvas>
 
         <div class="form-group " *ngIf="textResult">
