@@ -218,24 +218,26 @@
             Add Point
         </button>
     </div>
-    <div class="row">
+    <div class="row" 
+         *ngIf="lineChartData.length>1">
         <table style="width:100%">
             <tr>
                 <th>M_Ed</th>
                 <th>N_Ed</th>
                 <th>Remove</th>
             </tr>
-            <tr *ngFor="let point of pointsMN">
-                <td>{{point.x}} kNm</td>
-                <td>{{point.y}} kNm</td>
+            <tr  
+                *ngFor="let point of lineChartData | slice:1">
+                <td>{{point.data[0].x}} kNm</td>
+                <td>{{point.data[0].y}} kNm</td>
                 <td>
                     <button class="btn btn-danger "
                         [disabled]=!ni.valid
-                        (click)="removePointMNAndPlot(point)"
+                        (click)="removePointMNAndPlot(point.data[0])"
                         type="button">x</button>
                     <button class="btn btn-info "
                         [disabled]=!ni.valid
-                        (click)="removePointMNAndPlot(point)"
+                        (click)="removePointMNAndPlot(point.data[0])"
                         type="button">?</button>
                 </td>
             </tr>
@@ -252,6 +254,7 @@
             <textarea class="form-control" disabled rows="15" id="comment">{{textResult}}</textarea>
         </div>
     </div>
+
 
 
 

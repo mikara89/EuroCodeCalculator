@@ -5,7 +5,6 @@ import { ChartDataSets, ChartPoint } from 'chart.js';
 import { BetonClassService } from '../../services/beton-class.service';
 import { ArmaturaTypeService } from '../../services/armatura-type.service';
 import { InteractivService } from '../../services/interactiv.service';
-import { Color, BaseChartDirective } from 'ng2-charts';
 
 @Component({
     selector: 'app-Interactiv',
@@ -57,7 +56,6 @@ export class InteractivComponent implements OnInit {
 
     isReady: boolean;
     textResult: any;
-    pointsMN: Point[]=[];
     private color: any;
 
     betonclassList: any;
@@ -95,6 +93,8 @@ export class InteractivComponent implements OnInit {
         });
         this.creatNewChart();
 
+    }
+    infoMN(point:any ){
     }
     creatNewChart() {
         this.intServices.getListOfAllLines(this.izracunaj).subscribe(list => {
@@ -149,16 +149,14 @@ export class InteractivComponent implements OnInit {
     }
 
     removePointMNAndPlot(point: Point) {
-        this.pointsMN.forEach((item, index) => {
-            if (item.x === point.x && item.y === point.y)
-                this.pointsMN.splice(index, 1);
-        });
         this.lineChartData.forEach((item, index) => {
-            if (item.data.length == 1 && (item.data[0] as ChartPoint).x === point.x && (item.data[0] as ChartPoint).y === point.y) {
+            if (
+                item.data.length == 1
+                && (item.data[0] as ChartPoint).x === point.x
+                && (item.data[0] as ChartPoint).y === point.y
+            ) {
                 this.lineChartData.splice(index, 1);
-                (this.chart as Chart).data.datasets.splice(index, 1);
                 (this.chart.chart as Chart).update();
-                console.log((this.chart as Chart).data.datasets);
             }
         });
         
@@ -169,22 +167,34 @@ export class InteractivComponent implements OnInit {
         this.intServices.getListOfAllLines(this.izracunaj)
             .subscribe(
                 list => {
-                    this.updateLine({ data: list });
+                    this.lineChartData[0] = 
+                        {
+                            label: 'Line1',
+                            fill: true,
+                            borderColor: 'black',
+                            pointRadius: 0,
+                            pointHitRadius: 0, borderWidth: 2,
+                            pointHoverRadius: 0,
+                            data: list
+
+                        };
+                    this.updateLine(this.lineChartData[0]);
         });
     }
     updateLine(dataset: ChartDataSets) {
-        (this.chart as Chart).data.datasets[0] = dataset;
+        this.lineChartData[0] = dataset;
         (this.chart as Chart).update();
 
     }
  
 
     AddPointMNAndPlot() {
-        this.pointsMN.push({ x: this.izracunaj.mi, y: this.izracunaj.ni })
         this.addData(
             this.createDataSet(
                 this.RandomColor(true),
-                this.pointsMN.length,
+                'M_Rd/N_Rd: ' + Math.round(this.izracunaj.mi * 100) / 100 + '/'
+                + Math.round(this.izracunaj.ni * 100) / 100,
+                //'M_Rd: ' + this.izracunaj.mi + 'kNm/N_Rd: ' + this.izracunaj.ni + 'kN',
                 [{ x: this.izracunaj.mi, y: this.izracunaj.ni }]
                 , 5
             )
@@ -192,7 +202,7 @@ export class InteractivComponent implements OnInit {
 
     }
     addData(dataset: ChartDataSets) {
-        (this.chart as Chart).data.datasets.push(dataset);
+        this.lineChartData.push(dataset);
         (this.chart as Chart).update();
 
     }

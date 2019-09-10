@@ -22,8 +22,6 @@ import { VitkostService } from './services/vitkost.service';
 import { InteractivComponent } from './components/Interactiv/Interactiv.component';
 import { InteractivService } from './services/interactiv.service';
 
-import { ChartsModule } from 'ng2-charts';
-
 @NgModule({
     declarations: [
         AppComponent,
@@ -40,7 +38,6 @@ import { ChartsModule } from 'ng2-charts';
         CommonModule,
         HttpModule,
         FormsModule,
-        ChartsModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
