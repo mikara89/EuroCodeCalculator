@@ -1,10 +1,11 @@
-﻿import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+﻿import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { SymmReinfService } from '../../services/symm-reinf.service';
 import * as Chart from 'chart.js';
 import { ChartDataSets, ChartPoint } from 'chart.js';
 import { BetonClassService } from '../../services/beton-class.service';
 import { ArmaturaTypeService } from '../../services/armatura-type.service';
 import { InteractivService } from '../../services/interactiv.service';
+import { DataSharedService } from '../../services/data-shared.service';
 
 @Component({
     selector: 'app-Interactiv',
@@ -12,6 +13,7 @@ import { InteractivService } from '../../services/interactiv.service';
     styleUrls: ['./Interactiv.component.css']
 })
 export class InteractivComponent implements OnInit {
+
     chart:any=[];
     public lineChartData: ChartDataSets[] = [];
     public lineChartOptions: Chart.ChartOptions =
@@ -47,7 +49,7 @@ export class InteractivComponent implements OnInit {
             
         };
     public lineChartType = 'line';
-
+    data: any;
     public lineChartConfig: Chart.ChartConfiguration =
         {
             data: { datasets:this.lineChartData },
@@ -56,7 +58,7 @@ export class InteractivComponent implements OnInit {
 
     isReady: boolean;
     textResult: any;
-    private color: any;
+    private color: any; 
 
     betonclassList: any;
     armaturaTypeList: any;
@@ -82,6 +84,7 @@ export class InteractivComponent implements OnInit {
     constructor(private intServices: InteractivService,
         private betonClasService: BetonClassService,
         private armaturaTypeService: ArmaturaTypeService,
+        private dataSharedServices: DataSharedService,
     ) { }
 
     ngOnInit() {
@@ -206,6 +209,14 @@ export class InteractivComponent implements OnInit {
         (this.chart as Chart).update();
 
     }
+
+    emitData(point: any) {
+        console.log(point);
+        this.dataSharedServices.onGetInfoData.emit((x: any) => {
+            x = point;
+            console.log(point);
+            });
+}
    
 }
 

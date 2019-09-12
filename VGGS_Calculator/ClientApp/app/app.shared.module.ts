@@ -21,6 +21,8 @@ import { SymmReinfService } from './services/symm-reinf.service';
 import { VitkostService } from './services/vitkost.service';
 import { InteractivComponent } from './components/Interactiv/Interactiv.component';
 import { InteractivService } from './services/interactiv.service';
+import { InfoModelComponent } from './components/info-model/info-model.component';
+import { DataSharedService } from './services/data-shared.service';
 
 @NgModule({
     declarations: [
@@ -30,6 +32,7 @@ import { InteractivService } from './services/interactiv.service';
         TransverzalneSileECComponent,
         VitkostEc2Component,
         InteractivComponent,
+        InfoModelComponent,
         SymmReinfComponent,
         SavijanjePravougaonogPresekaEc2Component,
         LoaderRotatingDotsComponent,
@@ -52,6 +55,7 @@ import { InteractivService } from './services/interactiv.service';
     providers: [
         BetonClassService,
         InteractivService,
+        DataSharedService,
         ArmaturaTypeService,
         TransSileEc2IzracunajService,
         KofZaProrPravPresekaService,

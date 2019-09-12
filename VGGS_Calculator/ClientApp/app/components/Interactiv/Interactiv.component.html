@@ -173,7 +173,6 @@
             </select>
         </div>
     </div>
-
     <div class="row px-2">
         <div class="input-group">
             <span class="input-group-addon" id="sizing-addon1">M_Ed</span>
@@ -218,7 +217,7 @@
             Add Point
         </button>
     </div>
-    <div class="row" 
+    <div class="row"
          *ngIf="lineChartData.length>1">
         <table style="width:100%">
             <tr>
@@ -226,34 +225,80 @@
                 <th>N_Ed</th>
                 <th>Remove</th>
             </tr>
-            <tr  
-                *ngFor="let point of lineChartData | slice:1">
+            <tr *ngFor="let point of lineChartData | slice:1">
                 <td>{{point.data[0].x}} kNm</td>
                 <td>{{point.data[0].y}} kNm</td>
                 <td>
-                    <button class="btn btn-danger "
-                        [disabled]=!ni.valid
-                        (click)="removePointMNAndPlot(point.data[0])"
-                        type="button">x</button>
-                    <button class="btn btn-info "
-                        [disabled]=!ni.valid
-                        (click)="removePointMNAndPlot(point.data[0])"
-                        type="button">?</button>
+                    <button class="btn btn-danger"
+                            [disabled]=!ni.valid
+                            (click)="removePointMNAndPlot(point.data[0])"
+                            type="button">
+                        x
+                    </button>
+                    <button type="button"
+                            (click)="data = point.data[0]"
+                            class="btn btn-info"
+                            data-toggle="modal"
+                            data-target="#myModal">
+                        ?
+                    </button>
                 </td>
             </tr>
         </table>
     </div>
 </form>
-    <div class="col-xl-9 col-lg-8 col-md-12 col-sm-12 col-xs-12">
-        <canvas *ngIf="chart" id="canvas">
-            {{chart}}
-        </canvas>
-
-        <div class="form-group " *ngIf="textResult">
-            <label for="comment">Rezultat:</label>
-            <textarea class="form-control" disabled rows="15" id="comment">{{textResult}}</textarea>
-        </div>
+<div class="col-xl-9 col-lg-8 col-md-12 col-sm-12 col-xs-12">
+    <canvas *ngIf="chart" id="canvas">
+        {{chart}}
+    </canvas>
+    <div class="form-group " *ngIf="textResult">
+        <label for="comment">Rezultat:</label>
+        <textarea class="form-control" disabled rows="15" id="comment">{{textResult}}</textarea>
     </div>
+</div>
+
+
+<!-- MODEL-->
+<div class="modal fade"
+     *ngIf="data"
+     id="myModal"
+     role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal">
+                    &times;
+                </button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+                <table style="width:100%">
+                    <tr>
+                        <th>M_Ed</th>
+                        <th>N_Ed</th>
+                    </tr>
+                    <tr>
+                        <td>{{data.x}} kNm</td>
+                        <td>{{data.y}} kNm</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-default"
+                        data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
 
 
 
