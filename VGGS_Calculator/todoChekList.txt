@@ -1,0 +1,9 @@
+﻿01.09.2019
+1) create API for detail interactiv diagram
+	-result object
+	-check if section is valid
+	-check if reinforsment is greater then 4% 
+2) implement consumation of that API and display result
+3) print result in word or excel file(or save it in clipboard)
+4) add option for dactility.
+

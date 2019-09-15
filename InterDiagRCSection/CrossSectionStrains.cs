@@ -9,31 +9,43 @@ namespace InterDiagRCSection
         private readonly bool Invert;
         private readonly IMaterial material;
         private readonly IElementGeometryWithReinf geometry;
-        public double M_Rd
+       
+
+        public double Fc => 1 * x * geometry.b * sig_c / 10;
+        public double Fs2 
+        {
+            get 
+            {
+                if (!Invert)
+                    return geometry.As_2 * sig_s2 / 10;
+                else return geometry.As_2 * sig_s1 / 10; 
+            }
+        }
+        public double Fs1
         {
             get
             {
                 if (!Invert)
-                    return ((0.85 * x * geometry.b * sig_c / 10 * (geometry.h / 2 - ka * x))
-                        - (geometry.As_2 * sig_s2 / 10 * (geometry.h / 2 - geometry.d2))
-                        + (geometry.As_1 * sig_s1 / 10 * (geometry.h / 2 - geometry.d1))) / 100;
-                else return -((0.85 * x * geometry.b * sig_c / 10 * (geometry.h / 2 - ka * x))
-                        + (geometry.As_2 * sig_s1 / 10 * (geometry.h / 2 - geometry.d2))
-                        - (geometry.As_1 * sig_s2 / 10 * (geometry.h / 2 - geometry.d1))) / 100;
+                    return geometry.As_1 * sig_s1 / 10;
+                else return geometry.As_1 * sig_s2 / 10; 
+            }
+        }
+       
+        public double N_Rd=> -(Fc - Fs2 - Fs1);
+        public double M_Rd 
+        {
+            get
+            {
+                if (!Invert)
+                    return (Fc * (geometry.h / 2 - ka * x)
+                        - (Fs2 * (geometry.h / 2 - geometry.d2))
+                        + (Fs1 * (geometry.h / 2 - geometry.d1))) / 100;
+                else return -((1.0 * x * geometry.b * sig_c / 10 * (geometry.h / 2 - ka * x))
+                        + (Fs2 * (geometry.h / 2 - geometry.d2))
+                        - (Fs1 * (geometry.h / 2 - geometry.d1))) / 100;
             }
             //=((0.85*[@x]*[@σc]/10*b*(h/2-[@ka]*[@x]))-(As_2*[@σs2]/10*(h/2-d_2))+(As_1*[@σs1]/10*(h/2-d_1)))/100
             //=-((0.85*[@x]*[@σc]/10*b*(h/2-[@ka]*[@x]))+(As_2*[@σs1]/10*(h/2-d_2))-(As_1*[@σs2]/10*(h/2-d_1)))/100
-        }
-        public double N_Rd
-        {
-            get
-            {
-                if (!Invert)
-                    return -((1 * x * geometry.b * sig_c / 10) - (geometry.As_2 * sig_s2 / 10) - (geometry.As_1 * sig_s1 / 10));
-                else return -((1 * x * geometry.b * sig_c / 10) - (geometry.As_1 * sig_s2 / 10) - (geometry.As_2 * sig_s1 / 10));
-            }
-            //=-((1*[@x]*b*[@σc]/10)-(As_2*[@σs2]/10)-(As_1*[@σs1]/10))
-            //=-((1*[@x]*b*[@σc]/10)-(As_1*[@σs2]/10)-(As_2*[@σs1]/10))
         }
         public double εc2 { get; internal set; }
         public double εc1 { get; internal set; }

@@ -5,9 +5,12 @@ using System.Threading.Tasks;
 
 namespace InterDiagRCSection
 {
+    
     public class Solver
     {
         public List<CrossSectionStrains> List { get; set; }
+        public List<string> Worrnings { get; set; }
+
         public IMaterial Material;
         public IElementGeometryWithReinf Geometry; 
         public Solver(IMaterial material, IElementGeometryWithReinf geometry)
@@ -18,7 +21,6 @@ namespace InterDiagRCSection
 
         public async Task Calc(double precision=0.01)
         {
-            int bb;
             List = new List<CrossSectionStrains>();
             await Task.Run(() =>
             {
@@ -72,6 +74,37 @@ namespace InterDiagRCSection
                         List.Reverse();
                     } while (j<2);
             });
+        }
+
+        public void GetWorrnings(double M, double N)
+        {
+
+            var ShotList_65 = new List<CrossSectionStrains>(); 
+            var ShotList_55 = new List<CrossSectionStrains>();
+            var ShotList_40 = new List<CrossSectionStrains>();
+            var ShotList_35 = new List<CrossSectionStrains>();
+            List.ForEach(x =>
+            {
+                if (x.N_Rd >= Geometry.b * Geometry.h * Material.beton.fcd * 0.65)
+                    ShotList_65.Add(x);
+                if (x.N_Rd >= Geometry.b * Geometry.h * Material.beton.fcd * 0.55)
+                    ShotList_55.Add(x);
+                if (x.N_Rd >= Geometry.b * Geometry.h * Material.beton.fcd * 0.40)
+                    ShotList_40.Add(x);
+                if (x.N_Rd >= Geometry.b * Geometry.h * Material.beton.fcd * 0.35)
+                    ShotList_35.Add(x);
+            });
+
+            if(Geometry.As_1+Geometry.As_2> Geometry.b * Geometry.h * 0.04)
+                Worrnings.Add("Sum of reinforcement greater than 4%");
+            if(ShotList_65.IsMNValid(M,N))
+                Worrnings.Add("the ductility condition is not satisfied for v_rd = 0.65");
+            if (ShotList_55.IsMNValid(M, N))
+                Worrnings.Add("the ductility condition is not satisfied for v_rd = 0.55");
+            if (ShotList_40.IsMNValid(M, N))
+                Worrnings.Add("the ductility condition is not satisfied for v_rd = 0.40");
+            if (ShotList_35.IsMNValid(M, N))
+                Worrnings.Add("the ductility condition is not satisfied for v_rd = 0.35");
         }
     }
 }

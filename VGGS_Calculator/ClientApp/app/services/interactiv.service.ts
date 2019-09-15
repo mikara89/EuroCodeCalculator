@@ -11,14 +11,10 @@ export class InteractivService {
         return this.http.post('/api/InterMN', calcModel)
             .map(res => res.json());
     }
-    getLinesFromInput(mi_ni:any) {
 
-        return this.http.post('/api/Symclassic/search', mi_ni)
-            .map(res => res.json());
-    }
     getExtremis(calcModel: any) {
 
-        return this.http.post('/api/InterMN/extremis', calcModel)
+        return this.http.post('/api/InterMN/search', calcModel)
             .map(res => res.json());
     }
 
