@@ -31,7 +31,7 @@ namespace InterDiagRCSection
         }
     
         public static bool IsMNValid<T>(this List<T> list, double M, double N) 
-            where T : CrossSectionStrains
+            where T : ICrossSectionStrains
         {
             bool result = false;
             List<PointF> poly= new List<PointF>();

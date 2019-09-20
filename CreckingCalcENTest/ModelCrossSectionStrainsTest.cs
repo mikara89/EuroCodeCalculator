@@ -12,6 +12,7 @@ namespace CreckingCalcENTest
     public class ModelCrossSectionStrainsTest
     {
         private static CrossSectionStrains Section;
+        private static CrossSectionStrainsV2 SectionV2;
 
         [ClassInitialize]
         public static void Init(TestContext tc)
@@ -29,6 +30,23 @@ namespace CreckingCalcENTest
                     d2 = 6,
                     As_1 = 6.8,
                     As_2 = 6.8
+                }
+            );
+            SectionV2 = new CrossSectionStrainsV2(
+                new Material
+                {
+                    beton = new BetonModelEC("C25/30"),
+                    armatura = TabeleEC2.ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
+                }, new ElementGeometryWithReinfV2
+                {
+                    b_eff=175,
+                    h_f=15,
+                    b = 35,
+                    h = 150,
+                    d1 = 7,
+                    d2 = 7,
+                    As_1 = 106.18,
+                    As_2 = 0
                 }
             );
         }
@@ -106,7 +124,41 @@ namespace CreckingCalcENTest
                               .First().n;
 
             Assert.IsNotNull(s.List);
-        } 
+        }
+        [TestMethod]
+        public async Task CalcTestV2()
+        {
+            var s = new SolverV2(
+               new Material
+               {
+                   beton = new BetonModelEC("C25/30"),
+                   armatura = TabeleEC2.ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
+               }, new ElementGeometryWithReinfV2
+               {
+                   b_eff = 175,
+                   h_f = 15,
+                   b = 35, 
+                   h = 150,
+                   d1 = 7,
+                   d2 = 7,
+                   As_1 = 106.18,
+                   As_2 = 0
+               }
+           );
+            var beton = new BetonModelEC("C25/30");
+            var armatura = TabeleEC2.ReinforcementType.GetArmatura().Single(r => r.name == "B500B");
+            await s.Calc(0.001);
+
+            ///Min And Max 
+            var Mmin = s.List
+                    .OrderBy(n => Math.Abs(n.M_Rd - 0))
+                    .Take(2);
+            var Nmin = s.List
+                    .OrderBy(n => Math.Abs(n.N_Rd - 0))
+                    .Take(2);
+
+            Assert.IsNotNull(s.List);
+        }
         //
     }
 }

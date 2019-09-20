@@ -5,21 +5,21 @@ using System.Threading.Tasks;
 
 namespace InterDiagRCSection
 {
-    
+
     public class Solver
     {
         public List<CrossSectionStrains> List { get; set; }
         public List<string> Worrnings { get; set; }
 
         public IMaterial Material;
-        public IElementGeometryWithReinf Geometry; 
+        public IElementGeometryWithReinf Geometry;
         public Solver(IMaterial material, IElementGeometryWithReinf geometry)
         {
             Material = material;
             Geometry = geometry;
         }
 
-        public async Task Calc(double precision=0.01)
+        public async Task Calc(double precision = 0.01)
         {
             List = new List<CrossSectionStrains>();
             await Task.Run(() =>
@@ -40,11 +40,11 @@ namespace InterDiagRCSection
                     }
                     //if (Invert)
                     //{
-                        var a1 = new CrossSectionStrains(Material, Geometry, Invert);
-                        a1.SetByEcEs1(Material.beton.εcu2, Material.armatura.eps_ud);
-                        List.Add(a1);
+                    var a1 = new CrossSectionStrains(Material, Geometry, Invert);
+                    a1.SetByEcEs1(Material.beton.εcu2, Material.armatura.eps_ud);
+                    List.Add(a1);
                     //}
-                    
+
 
                     ///Rotates about point B
                     ///Bending with or without compression or tensio (scope 3)
@@ -66,20 +66,20 @@ namespace InterDiagRCSection
                     }
                     //if (Invert)
                     //{
-                        var c1 = new CrossSectionStrains(Material, Geometry, Invert);
-                        c1.SetByEcEs1(Material.beton.εc2);
-                        List.Add(c1);
+                    var c1 = new CrossSectionStrains(Material, Geometry, Invert);
+                    c1.SetByEcEs1(Material.beton.εc2);
+                    List.Add(c1);
                     //}
                     if (!Invert)
                         List.Reverse();
-                    } while (j<2);
+                } while (j < 2);
             });
         }
 
         public void GetWorrnings(double M, double N)
         {
 
-            var ShotList_65 = new List<CrossSectionStrains>(); 
+            var ShotList_65 = new List<CrossSectionStrains>();
             var ShotList_55 = new List<CrossSectionStrains>();
             var ShotList_40 = new List<CrossSectionStrains>();
             var ShotList_35 = new List<CrossSectionStrains>();
@@ -95,9 +95,9 @@ namespace InterDiagRCSection
                     ShotList_35.Add(x);
             });
 
-            if(Geometry.As_1+Geometry.As_2> Geometry.b * Geometry.h * 0.04)
+            if (Geometry.As_1 + Geometry.As_2 > Geometry.b * Geometry.h * 0.04)
                 Worrnings.Add("Sum of reinforcement greater than 4%");
-            if(ShotList_65.IsMNValid(M,N))
+            if (ShotList_65.IsMNValid(M, N))
                 Worrnings.Add("the ductility condition is not satisfied for v_rd = 0.65");
             if (ShotList_55.IsMNValid(M, N))
                 Worrnings.Add("the ductility condition is not satisfied for v_rd = 0.55");
@@ -108,3 +108,4 @@ namespace InterDiagRCSection
         }
     }
 }
+

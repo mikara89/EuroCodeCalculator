@@ -2,9 +2,9 @@
 
 namespace CalcModels
 {
-    public class ElementGeometry : IElementGeometry
+    public class ElementGeometryWithReinf : IElementGeometryWithReinf
     {
-        public string GetUnits()
+        public string GetUnits() 
         {
             switch (unit)
             {
@@ -24,5 +24,7 @@ namespace CalcModels
         public double d { get => h - d1; }
         public UnitDimesionType unit { get; set; } = UnitDimesionType.cm;
         public double d2 { get; set; }
+        public double As_1 { get; set; }
+        public double As_2 { get; set; }
     }
 }
