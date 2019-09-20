@@ -49,7 +49,7 @@ export class InteractivComponent implements OnInit {
             
         };
     public lineChartType = 'line';
-    data: any;
+    infoData: InteractivModelDetails;
     public lineChartConfig: Chart.ChartConfiguration =
         {
             data: { datasets:this.lineChartData },
@@ -59,7 +59,7 @@ export class InteractivComponent implements OnInit {
     isReady: boolean;
     textResult: any;
     private color: any; 
-
+  
     betonclassList: any;
     armaturaTypeList: any;
 
@@ -84,7 +84,6 @@ export class InteractivComponent implements OnInit {
     constructor(private intServices: InteractivService,
         private betonClasService: BetonClassService,
         private armaturaTypeService: ArmaturaTypeService,
-        private dataSharedServices: DataSharedService,
     ) { }
 
     ngOnInit() {
@@ -97,7 +96,15 @@ export class InteractivComponent implements OnInit {
         this.creatNewChart();
 
     }
-    infoMN(point:any ){
+    infoMN(point: any) {
+        delete this.infoData;
+        this.izracunaj.m = point.x;
+        this.izracunaj.n = point.y;
+        this.intServices
+            .getExtremis(this.izracunaj)
+            .subscribe((x: any) => {
+                this.infoData = x as InteractivModelDetails;
+            });
     }
     creatNewChart() {
         this.intServices.getListOfAllLines(this.izracunaj).subscribe(list => {
@@ -210,13 +217,6 @@ export class InteractivComponent implements OnInit {
 
     }
 
-    emitData(point: any) {
-        console.log(point);
-        this.dataSharedServices.onGetInfoData.emit((x: any) => {
-            x = point;
-            console.log(point);
-            });
-}
    
 }
 

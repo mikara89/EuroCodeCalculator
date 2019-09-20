@@ -1,0 +1,77 @@
+﻿
+    <svg viewBox="0 0 50 50"
+         style="border:green solid;"
+         preserveAspectRatio="none">
+        <svg:g [attr.transform]="transform">
+
+            <!--Draw section-->
+            <g path
+               [d]="sectionPath"
+               stroke="green"
+               stroke-width="0.8"
+               fill="none" />
+            <!--Draw diletation-->
+            <g path
+               [d]="diletationPath"
+               stroke="red"
+               stroke-width="0.5"
+               fill="none" />
+
+
+
+            <!--Dimenzije h-->
+            <g *ngFor="let dim of dimHPath">
+                <g path stroke="red"
+                   stroke-width="0.3"
+                   [d]="dim" />
+            </g>
+            <text [attr.x]="dimHPoint.x"
+                  [attr.y]="dimHPoint.y"
+                  [attr.font-size]="font"
+                  font-family="Verdana"
+                  transform="rotate(270)">
+                h= {{model.geometry.h}}cm
+            </text>
+            <!--Dimenzije b-->
+            <g *ngFor="let dim of dimBPath">
+                <g path stroke="red"
+                   stroke-width="0.3"
+                   [d]="dim" />
+            </g>
+            <text [attr.x]="dimBPoint.x"
+                  [attr.y]="dimBPoint.y"
+                  [attr.font-size]="font"
+                  font-family="Verdana">
+                b= {{model.geometry.b}}cm
+            </text>
+        </svg:g>
+        <!--<g path stroke="red"
+          stroke-width="0.2"
+          d="M{{model.geometry.b/2+3}} 0 h4" />
+    <g path stroke="red"
+          stroke-width="0.2"
+          d="M{{model.geometry.b/2+3}} {{model.geometry.h}} h4" />
+    <text x="-{{model.geometry.b/2+5}}"
+          y="{{model.geometry.b/2+4}}"
+          font-size="2.5"
+          font-family="Verdana"
+          transform="rotate(270)">
+        h= {{model.geometry.h}}cm
+    </text>-->
+        <!--Dimenzije-->
+        <!--<path stroke="red"
+          stroke-width="0.2"
+          d="M18 -2 v40" />
+    <path stroke="red"
+          stroke-width="0.2"
+          d="M16 0 h4" />
+    <path stroke="red"
+          stroke-width="0.2"
+          d="M16 36 h4" />
+    <text x="-25" y="17.7"
+          font-size="2.5"
+          font-family="Verdana"
+          transform="rotate(270)">
+        d= 36cm
+    </text>-->
+    </svg>

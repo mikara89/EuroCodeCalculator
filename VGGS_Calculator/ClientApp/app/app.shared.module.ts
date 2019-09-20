@@ -23,6 +23,8 @@ import { InteractivComponent } from './components/Interactiv/Interactiv.componen
 import { InteractivService } from './services/interactiv.service';
 import { InfoModelComponent } from './components/info-model/info-model.component';
 import { DataSharedService } from './services/data-shared.service';
+import { EpsDisplayInfoComponent } from './components/info-model/eps-display-info/eps-display-info.component';
+import { PathComponent } from './components/info-model/path/path.component';
 
 @NgModule({
     declarations: [
@@ -32,6 +34,8 @@ import { DataSharedService } from './services/data-shared.service';
         TransverzalneSileECComponent,
         VitkostEc2Component,
         InteractivComponent,
+        EpsDisplayInfoComponent,
+        PathComponent,
         InfoModelComponent,
         SymmReinfComponent,
         SavijanjePravougaonogPresekaEc2Component,

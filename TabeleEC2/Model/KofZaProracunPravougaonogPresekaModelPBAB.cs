@@ -4,6 +4,7 @@ namespace TabeleEC2.Model
 {
     public class KofZaProracunPravougaonogPresekaModelPBAB
     {
+        public IMaterial Material { get;internal set; } 
         protected KofZaProracunPravougaonogPresekaModelPBAB()
         {
 
@@ -20,6 +21,7 @@ namespace TabeleEC2.Model
             this.εa1 = εa1;
         }
         public double εb { get; set; }
+        public double x(double h) => s * h;
         public double εa1 { get; set; }
         public double εa2 { get; set; }
 
@@ -40,7 +42,7 @@ namespace TabeleEC2.Model
             {
                 if (εb == 0)
                     return 0;
-                return (εb) / (εb - εa1);
+                return (Math.Abs(εb)) / (Math.Abs(εb) + εa1);
             }
         }
         public double αb1 

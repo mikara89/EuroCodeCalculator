@@ -1,22 +1,29 @@
-import { Component, OnInit, Input, HostListener, OnDestroy } from '@angular/core';
-import { DataSharedService } from '../../services/data-shared.service';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { InteractivService } from '../../services/interactiv.service';
 
 @Component({
   selector: 'info-model',
   templateUrl: './info-model.component.html',
   styleUrls: ['./info-model.component.css']
 })
-export class InfoModelComponent implements OnInit {
+export class InfoModelComponent implements OnInit  {
 
-    @Input('data')data: any;
-    constructor(private dataSharedServices: DataSharedService,) { }
+
+    @Input('infoData') infoData: InteractivModelDetails;
+    @Input('model') model: any;
+    isReady: boolean;
+    selectedItem: InteractivModelItem;
+    constructor(private cdr: ChangeDetectorRef) { }
 
     ngOnInit() {
-        //this.dataSharedServices
-        //    .onGetInfoData
-        //    .subscribe((x: any) => {
-        //        this.data = x;
-        //});
-  }
+        
+    }
+    selectedRow(select: any) {
+        this.isReady = false;
+        this.cdr.detectChanges();
+        this.selectedItem = select as InteractivModelItem;
+        this.isReady = true;
+        this.cdr.detectChanges();
+    }
 
 }

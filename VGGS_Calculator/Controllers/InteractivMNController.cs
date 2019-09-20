@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using VGGS_Calculator.Core.Models;
 
 namespace VGGS_Calculator.Controllers
 {
@@ -89,26 +90,19 @@ namespace VGGS_Calculator.Controllers
                 s.GetWorrnings(model.m, model.n);
                 var r = s.List.IsMNValid(model.m, model.n);
 
-                var listMaxMin = new List<CrossSectionStrains>
-                {
-                     s.List.Select(n => new { n, Mrd = Math.Abs(n.M_Rd - model.m) })
-                              .OrderBy(p => p.Mrd)
-                              .First().n,
-                    s.List.Select(n => new { n, Mrd = Math.Abs(n.M_Rd - model.m) })
-                              .OrderByDescending(p => p.Mrd)
-                              .First().n,
-                    s.List.Select(n => new { n, Nrd = Math.Abs(n.N_Rd - model.n) })
-                              .OrderBy(p => p.Nrd)
-                              .First().n,
-                    s.List.Select(n => new { n, Nrd = Math.Abs(n.N_Rd - model.n) })
-                              .OrderByDescending(p => p.Nrd)
-                              .First().n,
-            };
+                var listMaxMin = new List<CrossSectionStrains>();
+                listMaxMin.AddRange(
+                    s.List
+                    .OrderBy(n => Math.Abs(n.M_Rd - model.m))
+                    .Take(2)
+                    );
+                listMaxMin.AddRange(s.List.OrderBy(n => Math.Abs(n.N_Rd - model.n))
+                              .Take(2));
 
                 return Ok(
                     new
                     {
-                        extrims = listMaxMin,
+                        extrims = InfoDetailModel.Converts(listMaxMin.ToArray()),
                         isValid = s.List.IsMNValid(model.m, model.n),
                         worrnings = s.Worrnings,
                     });
@@ -141,5 +135,7 @@ namespace VGGS_Calculator.Controllers
                 public string armtype { get; set; }
             }
         }
+
+
     }
 }

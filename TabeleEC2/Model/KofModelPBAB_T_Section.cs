@@ -2,12 +2,14 @@
 {
     public class KofModelPBAB_T_Section: KofZaProracunPravougaonogPresekaModelPBAB
     {
+
         private KofModelPBAB_T_Section(double s, double s_old)
         {
-            var k = SetBy_S_PBAB(s);
-            εb = k.εb;
-            εa1 = k.εa1;
+            
+            var k= SetBy_S_PBAB(s);
+            set(k.εb, k.εa1);
             Set_εbd(s, s_old);
+            
         }
         public double εbd { get; set; }
         public double αb2
@@ -32,13 +34,13 @@
         /// Calculate sigma by given paramiters
         /// </summary>
         /// <param name="εa">in 0/00</param>
-        /// <param name="Ea">MPa(kN/cm2)</param>
-        /// <param name="sigma_v">MPa(kN/cm2)</param>
-        /// <returns>value in MPa(kN/cm2)</returns>
+        /// <param name="Ea">MPa</param>
+        /// <param name="sigma_v">kN/cm2</param>
+        /// <returns>value in kN/cm2</returns>
         public static double GetSigma(double εa, double Ea, double sigma_v)
         {
-            εa = System.Math.Abs(εa);
-            return εa/1000*Ea>= sigma_v? sigma_v: εa / 1000 * Ea;
+            var eps_a= System.Math.Abs(εa);
+            return eps_a / 10000*Ea>= sigma_v? sigma_v: eps_a / 10000 * Ea;
         }
         public static KofModelPBAB_T_Section SetBy(double s, double d,double dp, double a1, double a2) 
         {

@@ -1,42 +1,58 @@
-<button type="button" 
-        class="btn btn-info" 
-        data-toggle="modal" 
-        data-target="#myModal">?</button>
-<div class="modal fade" 
-     *ngIf="data"
-     id="myModal" 
-     role="dialog">
-    <div class="modal-dialog">
+﻿<div class="container-fluid">
 
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" 
-                        class="close" 
-                        data-dismiss="modal">
-                &times;
-                </button>
-                <h4 class="modal-title">Modal Header</h4>
-            </div>
-            <div class="modal-body">
-                <table style="width:100%">
-                    <tr>
-                        <th>M_Ed</th>
-                        <th>N_Ed</th>
-                    </tr>
-                    <tr>
-                        <td>{{data.x}} kNm</td>
-                        <td>{{data.y}} kNm</td>
-                    </tr>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" 
-                        class="btn btn-default" 
-                        data-dismiss="modal">Close</button>
-            </div>
-        </div>
+    <table class="table table-hover table-dark table-sm">
+        <tr>
+            <th>M_Ed<br />[kNm]</th>
+            <th>N_Ed<br />[kN]</th>
+            <th>Fs1<br />[kN]</th>
+            <th>Fs2<br />[kN]</th>
+            <th>Fc<br />[kN]</th>
+            <th>σ_s1<br />[Mpa]</th>
+            <th>σ_s2<br />[Mpa]</th>
+            <th>σ_c<br />[Mpa]</th>
+            <th>εc1<br />[‰]</th>
+            <th>εc2<br />[‰]</th>
+            <th>εs1<br />[‰]</th>
+            <th>εs2<br />[‰]</th>
+            <th>x<br />[cm]</th>
+        </tr>
+        <tr *ngFor="let info of infoData.extrims" class="active-row"
+            (click)="selectedRow(info)"
+            [ngClass]="{
+        'active-row':selectedItem==info
+        }">
+            <td>{{info.m_Rd | number:'1.1-2'}}</td>
+            <td>{{info.n_Rd | number:'1.1-2'}}</td>
+            <td>{{info.fs1 | number:'1.1-2'}}</td>
+            <td>{{info.fs2 | number:'1.1-2'}}</td>
+            <td>{{info.fc | number:'1.1-2'}}</td>
+            <td>{{info.sig_s1 | number:'1.1-2'}}</td>
+            <td>{{info.sig_s2 | number:'1.1-2'}}</td>
+            <td>{{info.sig_c | number:'1.1-2'}}</td>
+            <td>{{info.eps_c1 | number:'1.1-3'}}</td>
+            <td>{{info.eps_c2 | number:'1.1-3'}}</td>
+            <td>{{info.eps_s1 | number:'1.1-3'}}</td>
+            <td>{{info.eps_s2 | number:'1.1-3'}}</td>
+            <td>{{info.x | number:'1.1-2'}}</td>
+        </tr>
+    </table>
 
+    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4">
+        <eps-display-info *ngIf="isReady"
+                          [model]="model"
+                          [forces]="selectedItem">
+        </eps-display-info>
     </div>
-
+    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4">
+        <eps-display-info *ngIf="isReady"
+                          [model]="model"
+                          [forces]="selectedItem">
+        </eps-display-info>
+    </div>
+    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4">
+        <eps-display-info *ngIf="isReady"
+                          [model]="model"
+                          [forces]="selectedItem">
+        </eps-display-info>
+    </div>
 </div>

@@ -1,3 +1,34 @@
 .mybtn {
     width: 100%;
 }
+.table-dark tr {
+    background-color: #454d55;
+    color:white;
+}
+.table-dark tr th{
+    background-color: #454d55;
+    color: white;
+}
+.table-hover tbody tr:hover td, .table-hover {
+    cursor: pointer;
+    color: white;
+    background-color: #4e6d8d;
+}
+.table-sm tr {
+   font-size:small;
+}
+.table-txt-rigth tr{
+    text-align:right;
+}
+.table-txt-rigth tr th {
+    text-align: center;
+}
+i.fa.fa-check-circle-o {
+    color: #20f620;
+    font-size: large;
+}
+
+i.fa.fa-times-circle-o, i.fa.fa-times {
+    color: #ff0000;
+    font-size: large;
+}
