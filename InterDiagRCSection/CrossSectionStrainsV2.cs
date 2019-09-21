@@ -16,7 +16,7 @@ namespace InterDiagRCSection
 
                 return new double[] {
                     1 * x * geometry.b * sig_c / 10,
-                    (geometry.b_eff - geometry.b) <= 0 ? 0 : 1 * (x < geometry.h_f?x:geometry.h_f) * (geometry.b_eff - geometry.b)
+                    (geometry.b_eff - geometry.b) <= 0 ? 0 : 1 * (x < geometry.h_f?x:geometry.h_f) * (geometry.b_eff - geometry.b)* sig_c / 10
                 };
             } }
         public double Fs2
@@ -44,7 +44,7 @@ namespace InterDiagRCSection
                 double sumN=0;
                 foreach (var item in Fc)
                 {
-                    sumN = +item;
+                    sumN += item;
                 }
                 
                 return -(sumN - Fs2 - Fs1);
@@ -56,26 +56,20 @@ namespace InterDiagRCSection
                 if (!Invert)
                 {
                     if (x > geometry.h_f)
-                        return (Fc[0] * (geometry.h / 2 - ka * x)
-                        + (Fc[1] * (geometry.h / 2 - ka * geometry.h_f))
-                        - (Fs2 * (geometry.h / 2 - geometry.d2))
-                        + (Fs1 * (geometry.h / 2 - geometry.d1))) / 100;
+                        return (Fc[0] * (geometry.y1 - ka * x)
+                        + (Fc[1] * (geometry.y1 - ka * geometry.h_f))
+                        - (Fs2 * (geometry.y2 - geometry.d2))
+                        + (Fs1 * (geometry.y1 - geometry.d1))) / 100;
                     else 
-                        return ((Fc[0]+ Fc[1]) * (geometry.h / 2 - ka * x)
-                        - (Fs2 * (geometry.h / 2 - geometry.d2))
-                        + (Fs1 * (geometry.h / 2 - geometry.d1))) / 100;
+                        return ((Fc[0]+ Fc[1]) * (geometry.y1 - ka * x)
+                        - (Fs2 * (geometry.y2 - geometry.d2))
+                        + (Fs1 * (geometry.y1 - geometry.d1))) / 100;
                 }
                 else
                 {
-                    if (x > geometry.h_f)
-                        return -((Fc[0] * (geometry.h / 2 - ka * x))
-                        + (Fc[1] * (geometry.h / 2 - ka * geometry.h_f))
-                        + (Fs2 * (geometry.h / 2 - geometry.d2))
-                        - (Fs1 * (geometry.h / 2 - geometry.d1))) / 100;
-                    else
-                        return -(((Fc[0]+ Fc[1]) * (geometry.h / 2 - ka * x))
-                        + (Fs2 * (geometry.h / 2 - geometry.d2))
-                        - (Fs1 * (geometry.h / 2 - geometry.d1))) / 100;
+                    return -(((Fc[0]+ Fc[1]) * (geometry.y2 - ka * x))
+                    + (Fs2 * (geometry.y2 - geometry.d2))
+                    - (Fs1 * (geometry.y1 - geometry.d1))) / 100;
                 }
                    
             }
@@ -204,13 +198,27 @@ namespace InterDiagRCSection
             get
             {
                 var e = Math.Abs(εc2);
-                if (εc2 == -2 && εs2 == -2)
-                    return 0.500;
+                //if (εc2 == -2 && εs2 == -2)
+                //    return 0.500;
+                //if (this.x == geometry.h)
+                //{
+                //    e = Math.Abs(material.beton.εcu2);
+                //    return (e * (3 * e - 4) + 2) / (2 * e * (3 * e - 2));
+                //}
                 if (this.x == geometry.h)
                 {
-                    e = Math.Abs(material.beton.εcu2);
-                    return (e * (3 * e - 4) + 2) / (2 * e * (3 * e - 2));
+                    var max_ka = 0.5;
+                    var ecu2 = Math.Abs(material.beton.εcu2);
+                    var min_ka = (ecu2 * (3 * ecu2 - 4) + 2) / (2 * ecu2 * (3 * ecu2 - 2));
+                    var ec2= Math.Abs(material.beton.εc2);
+                   
+                    return (((ecu2-e) *(max_ka-min_ka))/(ecu2-ec2))+min_ka;
                 }
+                //if (this.x == geometry.h)
+                //{
+                //    e = Math.Abs(material.beton.εcu2);
+                //    return (e * (3 * e - 4) + 2) / (2 * e * (3 * e - 2));
+                //}
                 if (e == 0 || e <= Math.Abs(material.beton.εc2))
                     return (8 - e) / (4 * (6 - e));
                 return (e * (3 * e - 4) + 2) / (2 * e * (3 * e - 2));
