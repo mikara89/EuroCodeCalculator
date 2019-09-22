@@ -2,7 +2,7 @@
 
 namespace CalcModels
 {
-    public class ElementGeometryWithReinfV2 : IElementGeometryWithReinfV2
+    public class ElementGeometryTShape :IElementGeometryT
     {
         public string GetUnits()
         {
@@ -24,8 +24,6 @@ namespace CalcModels
         public double d { get => h - d1; }
         public UnitDimesionType unit { get; set; } = UnitDimesionType.cm;
         public double d2 { get; set; }
-        public double As_1 { get; set; }
-        public double As_2 { get; set; }
         public double b_eff { get; set; }
         public double h_f { get; set; }
 
@@ -35,7 +33,7 @@ namespace CalcModels
             {
                 var Ac1 = (h - h_f) * b;
                 var Ac2 = h_f * b_eff;
-                var yc1 = (h-h_f) / 2;
+                var yc1 = (h - h_f) / 2;
                 var yc2 = h - (h_f / 2);
                 return (Ac1 * yc1 + Ac2 * yc2) / (Ac1 + Ac2);
             }

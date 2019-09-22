@@ -1,4 +1,5 @@
-﻿using CalculatorEC2Logic;
+﻿using CalcModels;
+using CalculatorEC2Logic;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using TabeleEC2.Model;
@@ -54,9 +55,11 @@ namespace VGGS_Calculator.Controllers
                     M_bottom = model.M_bottom,
                     M_top = model.M_top
                 };
+                var beton = new BetonModelEC(model.betonClass);
+                beton.ni=0.85;
                 var material = new Material()
                 {
-                    beton = new BetonModelEC(model.betonClass),
+                    beton = beton,
                     armatura = TabeleEC2.ReinforcementType
                         .GetArmatura()
                         .Single(a => a.name == model.armtype)

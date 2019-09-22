@@ -1,4 +1,5 @@
-﻿using CalculatorEC2Logic;
+﻿using CalcModels;
+using CalculatorEC2Logic;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

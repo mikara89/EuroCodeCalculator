@@ -37,7 +37,7 @@ namespace CreckingCalcENTest
                 {
                     beton = new BetonModelEC("C25/30"),
                     armatura = TabeleEC2.ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
-                }, new ElementGeometryWithReinfV2
+                }, new ElementGeometryWithReinf
                 {
                     b_eff=175,
                     h_f=15,
@@ -133,7 +133,7 @@ namespace CreckingCalcENTest
                {
                    beton = new BetonModelEC("C25/30"),
                    armatura = TabeleEC2.ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
-               }, new ElementGeometryWithReinfV2
+               }, new ElementGeometryWithReinf
                {
                    b_eff = 175,
                    h_f = 15,

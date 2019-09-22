@@ -1,4 +1,5 @@
-﻿using CalculatorEC2Logic;
+﻿using CalcModels;
+using CalculatorEC2Logic;
 using CalculatorEC2Logic.Transversal;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,8 @@ namespace VGGS_Calculator.Persistence
             TransverzalneSileEc2ResultModel Result;
 
 
-            var beton = new BetonModelEC(trans.betonClass);
+            var beton = new BetonModelEC(trans.betonClass,1);
+            beton.ni = 0.85;
             var arm = ReinforcementType.GetArmatura().Where(n => n.name == trans.armtype).SingleOrDefault();
             var armLong = new ReinforcementModelEC(trans.armLongitudinal.diametar, trans.armLongitudinal.kom);
             bool armCalc = false;
@@ -43,7 +45,7 @@ namespace VGGS_Calculator.Persistence
             };
             var m = new Material()
             {
-                beton = new BetonModelEC(trans.betonClass,1),
+                beton = beton,
                 armatura = ReinforcementType.GetArmatura().First(n => n.name == trans.armtype),
             };
 

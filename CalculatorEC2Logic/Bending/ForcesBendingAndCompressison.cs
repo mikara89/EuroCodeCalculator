@@ -17,7 +17,7 @@ namespace CalculatorEC2Logic
         public bool IsMsdNegativ { get => _Msd < 0?true:false; }
         public double Msds(double h, double d1)
         {
-            return Msd + Nsd * (h / 100 / 2 - d1 / 100);
+            return Msd - Nsd * (h / 100 / 2 - d1 / 100);
         }
     }
 }

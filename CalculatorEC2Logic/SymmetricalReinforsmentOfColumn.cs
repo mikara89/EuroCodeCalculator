@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CalcModels;
 using TabeleEC2;
 
 namespace CalculatorEC2Logic

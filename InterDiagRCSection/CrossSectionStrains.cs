@@ -103,10 +103,10 @@ namespace InterDiagRCSection
         private double Set_εs2()
         {
             if (this.x >= geometry.h)
-                return ((this.εc2 - material.beton.εc2) * (this.c - geometry.d1) / this.c) + material.beton.εc2;
+                return ((this.εc2 - material.beton.εc2) * (this.c - geometry.d2) / this.c) + material.beton.εc2;
             if (this.x == 0)
                 return this.εs1 * geometry.d2 / (geometry.h - geometry.d1);
-            return this.εc2 / this.x * (this.x - geometry.d1);
+            return this.εc2 / this.x * (this.x - geometry.d2);
             //      = IF([@x] >= h, (([@[εc(‰)]]-eps_c0)*(C_dot - d_1) / C_dot)+eps_c0
             //      ,IF([@x] <= 0,([@[εs1(‰)]]-[@[εc(‰)]])*d_2 / d +[@[εc(‰)]],
             //      [@[εc(‰)]]/[@x]*([@x]-d_1)))

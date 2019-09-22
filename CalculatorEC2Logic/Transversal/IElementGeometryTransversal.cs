@@ -1,4 +1,5 @@
-﻿using TabeleEC2.Model;
+﻿using CalcModels;
+using TabeleEC2.Model;
 
 namespace CalculatorEC2Logic
 {

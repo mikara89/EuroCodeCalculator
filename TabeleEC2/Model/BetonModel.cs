@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TabeleEC2.Model
+namespace TabeleEC2.Model 
 {
-    public interface IMaterial
+    public interface IBetonModelEC
     {
 
     }
@@ -21,9 +21,10 @@ namespace TabeleEC2.Model
         C45_55,
         C55_60
     }
-    public class BetonModelEC : IMaterial  
+    public class BetonModelEC : IBetonModelEC
     {
-        public double αcc=0.85;
+        public double αcc { get; set; } = 0.85;
+        public double ni { get; set; } = 0.85;
 
         public static IEnumerable<string> ListOfBetonClassesNames()
         {

@@ -1,5 +1,7 @@
-﻿using Extensions;
+﻿using CalcModels;
+using Extensions;
 using System;
+using TabeleEC2;
 using TabeleEC2.Model;
 
 namespace CalculatorEC2Logic
@@ -11,7 +13,7 @@ namespace CalculatorEC2Logic
     }
     public class BendingRectangularCrossSectionEC2 : IDisposable 
     {
-
+        private readonly ICoeffService coeffService;
         public double Mrd_limit { get; private set; }
 
         public IForcesBendingAndCompressison Forces { get; set; } 
@@ -28,11 +30,7 @@ namespace CalculatorEC2Logic
         /// ρ_max = 4%
         /// </summary>
         private double ρ_max => 0.04;
-        private CoeffForCalcRectCrossSectionModelEC Kof_lim
-        {
-            get { return TabeleEC2.CoeffForCalcRectCrossSectionEC
-                    .GetLimitCoeff(Material.beton); }
-        }
+        private CoeffForCalcRectCrossSectionModelEC Kof_lim { get; set; }
 
         public double X { get; private set; }
 
@@ -42,10 +40,16 @@ namespace CalculatorEC2Logic
             IMaterial material,
             CoeffForCalcRectCrossSectionModelEC kof = null)
         {
-            InitValidations(geometry,material); 
+            InitValidations(geometry, material);
             this.Forces = forces;
             this.Geometry = geometry;
             this.Material = material;
+
+            coeffService = new CoeffService(Material);
+
+            Kof_lim = coeffService.GetByξ_lim();
+
+
             if (kof != null)
             {
                 KofZaProracunPravougaonogPreseka = kof;
@@ -85,12 +89,23 @@ namespace CalculatorEC2Logic
 
         private void ReinforcementCalc() 
         {
+
             var Msds = Forces.Msds(Geometry.h, Geometry.d1);
 
             Mrd_limit = (Kof_lim.μRd * Geometry.b * Math.Pow(Geometry.d, 2) * Material.beton.fcd / 10) / 100;
-            As1_pot = Mrd_limit * 100 / (Kof_lim.ζ * Geometry.d * Material.armatura.fyd) - (Forces.Nsd / Material.armatura.fyd) + (Msds * 100 - Mrd_limit * 100) / ((Geometry.d - Geometry.d2) * Material.armatura.fyd);
-            As2_pot = (Msds * 100 - Mrd_limit * 100) / ((Geometry.d - Geometry.d2) * Material.armatura.fyd);
-            As2_pot = As2_pot < 0 ? 0 : As2_pot;
+
+            if(Msds<= Mrd_limit)
+            {
+                As1_pot = (KofZaProracunPravougaonogPreseka.ω * Geometry.b * Geometry.d * Material.beton.fcd/10 / Material.armatura.fyd) + (Forces.Nsd / Material.armatura.fyd);
+            }
+            else
+            {
+                As2_pot = (Msds * 100 - Mrd_limit * 100) / ((Geometry.d - Geometry.d2) * Material.armatura.fyd);
+                As1_pot = Mrd_limit * 100 / (Kof_lim.ζ * Geometry.d * Material.armatura.fyd) + (Forces.Nsd / Material.armatura.fyd) + As2_pot;
+
+                As2_pot = As2_pot < 0 ? 0 : As2_pot;
+            }
+           
             if ((As1_pot + As2_pot) / Geometry.b / Geometry.h > ρ_max)
                 throw new Exception("ρ_max prekoraceno! Povećajte poprecni presek");
             if (Forces.IsMsdNegativ)
@@ -119,9 +134,10 @@ namespace CalculatorEC2Logic
         h:          {Geometry.h}{Geometry.unit}
         d1:         {Geometry.d1}{Geometry.unit}
         d2:         {Geometry.d2}{Geometry.unit}
-        d:          {Geometry.d}{Geometry.unit}
+        d:          {Geometry.d:F2}{Geometry.unit}
     Result:
         εc/εs1:     {KofZaProracunPravougaonogPreseka.εc:F3}‰/{KofZaProracunPravougaonogPreseka.εs1:F3}‰
+        εs2:        {KofZaProracunPravougaonogPreseka.εs2(Geometry.d,Geometry.d2)}‰
         μRd:        {KofZaProracunPravougaonogPreseka.μRd:F3}
         x:          {X:F2} cm
         As1_pot:    {As1_pot:F2} cm2 
@@ -150,12 +166,12 @@ namespace CalculatorEC2Logic
 
 
         private void SetKof()
-        {
+        { 
             if (TypeDim == TypeDimensioning.Bound)
-                μSd = TabeleEC2.CoeffForCalcRectCrossSectionEC.GetμSd(Forces.Msds(Geometry.h, Geometry.d1), Geometry.b, Geometry.d, Material.beton.fcd / 10);
-            else μSd = new CoeffForCalcRectCrossSectionModelEC(-3.5, 20).μRd;
+                μSd = coeffService.GetByμ(Forces.Msds(Geometry.h, Geometry.d1), Geometry.b, Geometry.d).μRd;
+            else μSd = coeffService.GetNew(Material.beton.εcu2, Material.armatura.eps_ud).μRd;
 
-            KofZaProracunPravougaonogPreseka = TabeleEC2.CoeffForCalcRectCrossSectionEC.Get_Kof_From_μ(μSd);
+            KofZaProracunPravougaonogPreseka = coeffService.GetByμ(μSd);
         }
         public void Dispose()
         {

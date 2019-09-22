@@ -9,6 +9,7 @@ namespace TabeleEC2.Model
 
     public class CoeffForCalcRectCrossSectionModelEC : ICoeffForCalcRectCrossSectionModel
     {
+        private readonly double ni;
 
         public double εc { get; set; }
         public double εs1 { get; set; }
@@ -45,19 +46,23 @@ namespace TabeleEC2.Model
         public bool LomPoBetonu { get { return εs1 < 5.0 ? false : true; } }
         public bool LomPoArmaturi { get { return !LomPoBetonu; } }
 
-        public CoeffForCalcRectCrossSectionModelEC()
+        public CoeffForCalcRectCrossSectionModelEC(double ni=1)
         {
-
+            this.ni = ni;
         }
-        public CoeffForCalcRectCrossSectionModelEC(double εc, double εs1)
+        public CoeffForCalcRectCrossSectionModelEC(double εc, double εs1,double ni=1)
         {
+            this.ni = ni;
             SetByEcEs1(εc, εs1);
+            
         }
 
-        public CoeffForCalcRectCrossSectionModelEC(double μSd)
+        public CoeffForCalcRectCrossSectionModelEC(double μSd,double ni=1)
         {
-            var k = CoeffForCalcRectCrossSectionEC.Get_Kof_From_μ(μSd);
+            this.ni = ni;
+            var k = CoeffForCalcRectCrossSectionEC.Get_Kof_From_μ(μSd, ni );
             SetByEcEs1(k.εc, k.εs1);
+            
         }
         public void SetByEcEs1(double εc, double εs1)
         {
@@ -68,9 +73,16 @@ namespace TabeleEC2.Model
             var es1 = εs1;
             this.ξ = ec / (es1 + ec);
             this.ζ = 1 - (this.ξ * this.ka);
-            this.ω = 0.85 * this.αv * this.ξ;
-            this.μRd = 0.85 * this.αv * this.ξ * this.ζ;
+            this.ω = ni * this.αv * this.ξ;
+            this.μRd = ni * this.αv * this.ξ * this.ζ;
         }
+
+        public double εs2(double d, double d2)
+        {
+            var x =this.ξ * d;
+            return this.εc * (x - d2) / x;
+        }
+
         public void SetByξ(double ξ)
         {
             if (ξ < 0.149 && ξ > 0)

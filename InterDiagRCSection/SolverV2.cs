@@ -10,8 +10,8 @@ namespace InterDiagRCSection
             public List<string> Worrnings { get; set; }
 
             public IMaterial Material;
-            public IElementGeometryWithReinfV2 Geometry;
-            public SolverV2(IMaterial material, IElementGeometryWithReinfV2 geometry)
+            public IElementGeometryWithReinf Geometry;
+            public SolverV2(IMaterial material, IElementGeometryWithReinf geometry)
             {
                 Material = material;
                 Geometry = geometry;

@@ -2,6 +2,7 @@
 using TabeleEC2.Model;
 using VGGS_Calculator.Core;
 using VGGS_Calculator.Core.Models;
+using CalcModels;
 
 namespace VGGS_Calculator.Persistence
 {
@@ -10,16 +11,23 @@ namespace VGGS_Calculator.Persistence
         public SavijanjePravougaonogPresekaEC2Model Calculate(SavijanjePravougaonogPresekaEC2Model input)
         {
             SavijanjePravougaonogPresekaEC2Model result = input;
-
+            var beton = new BetonModelEC(input.betonClass);
+            if (beton != null)
+                throw new System.ArgumentNullException(nameof(beton), "cant be null");
+           
+            var armatura = TabeleEC2.ReinforcementType.GetArmatura().Single(a => a.name == input.armtype);
+            if (armatura != null)
+                throw new System.ArgumentNullException(nameof(armatura), "cant be null");
+            beton.ni = 0.85;
             using (CalculatorEC2Logic.BendingRectangularCrossSectionEC2 sav = new CalculatorEC2Logic.BendingRectangularCrossSectionEC2(
-
-                material: new CalculatorEC2Logic.Material()
+                
+                material: new Material()
                 {
-                    beton =new BetonModelEC(input.betonClass) /*TabeleEC2.BetonClasses.GetBetonClassListEC().Single(b => b.name == input.betonClass)*/,
-                    armatura = TabeleEC2.ReinforcementType.GetArmatura().Single(a => a.name == input.armtype)
+                    beton = beton,
+                    armatura = armatura
                 },
 
-                geometry: new CalculatorEC2Logic.ElementGeometry()
+                geometry: new ElementGeometry()
                 {
                     b = input.b,
                     h = input.h,
@@ -29,7 +37,7 @@ namespace VGGS_Calculator.Persistence
                 forces: input.Msd == 0 ?
                     new CalculatorEC2Logic.ForcesBendingAndCompressison(1.35 * input.Mg + 1.5 * input.Mq, 1.35 * input.Ng + 1.5 * input.Nq) :
                     new CalculatorEC2Logic.ForcesBendingAndCompressison(input.Msd, input.Nsd),
-                kof: input.h == 0 ? TabeleEC2.CoeffForCalcRectCrossSectionEC.Get_Kof_From_μ(input.mu) : null))
+                kof: input.h == 0 ? TabeleEC2.CoeffForCalcRectCrossSectionEC.Get_Kof_From_μ(input.mu,beton.ni) : null))
             {
                 ///Doo some thing
                 result.result = new SavijanjePravougaonogPresekaEC2Model.ResultModel()

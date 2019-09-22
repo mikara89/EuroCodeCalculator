@@ -14,6 +14,7 @@ namespace TabeleEC2.Model
         /// Max diletacion value
         /// </summary>
         double eps_ud { get;}
+        double lim_ξ { get;} 
     }
     public class ReinforcementTypeModelEC: IReinforcementTypeModel
     {
@@ -47,6 +48,8 @@ namespace TabeleEC2.Model
         }
 
         public double eps_ud { get; internal set; }
+
+        public double lim_ξ { get; set; } = 0.45;
 
         public override string ToString()
         {
@@ -87,6 +90,8 @@ namespace TabeleEC2.Model
             }
         }
 
-        public double eps_ud => throw new NotImplementedException();
+        public double eps_ud { get; internal set; }
+
+        public double lim_ξ { get; internal set; }
     }
 }

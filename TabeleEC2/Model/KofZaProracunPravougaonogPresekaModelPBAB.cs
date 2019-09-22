@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CalcModels;
+using System;
 
 namespace TabeleEC2.Model
 {

@@ -1,4 +1,6 @@
-﻿namespace CalculatorEC2Logic
+﻿using CalcModels;
+
+namespace CalculatorEC2Logic
 {
     public interface IElementGeometrySlenderness: IElementGeometry
     {

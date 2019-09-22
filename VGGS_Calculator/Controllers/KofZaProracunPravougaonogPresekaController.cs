@@ -12,7 +12,7 @@ namespace VGGS_Calculator.Controllers
             var kofList = new List<TabeleEC2.Model.CoeffForCalcRectCrossSectionModelEC>();
             await Task.Run(() =>
             {
-                kofList = TabeleEC2.CoeffForCalcRectCrossSectionEC.GetList();
+                kofList = TabeleEC2.CoeffForCalcRectCrossSectionEC.GetList(0.85);
             });
 
             return kofList;
