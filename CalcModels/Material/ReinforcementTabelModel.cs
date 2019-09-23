@@ -1,4 +1,4 @@
-﻿namespace TabeleEC2.Model
+﻿namespace CalcModels 
 {
     public class ReinforcementTabelModel 
     {

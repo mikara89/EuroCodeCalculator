@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TabeleEC2.Model;
 using CalcModels;
 
 namespace CalculatorEC2Logic
@@ -10,6 +9,7 @@ namespace CalculatorEC2Logic
     {
         private IMaterial _material;
         private IElementGeometry _geometry;
+        private readonly ICoeffService coeffService;
 
         /// <summary>
         /// 0.85 by defoult
@@ -24,15 +24,16 @@ namespace CalculatorEC2Logic
 
         public SymmetricalReinfByClassicMethod(IMaterial material, IElementGeometry geometry)
         {
-            _material = material;
-            _geometry = geometry;
+            _material = material ?? throw new ArgumentNullException(nameof(material));
+            _geometry = geometry ?? throw new ArgumentNullException(nameof(geometry));
+            coeffService=new CoeffService(material, geometry);
             SetMinimumOf_ω_and_Max();
         }
 
         private void SetMinimumOf_ω_and_Max()
         {
-            minOf_ω = new Generate_ω_LineForDiagram(_material, _geometry, 0.05);
-            maxOf_ω = new Generate_ω_LineForDiagram(_material, _geometry, 1);
+            minOf_ω = new Generate_ω_LineForDiagram(_material, _geometry, coeffService, 0.05);
+            maxOf_ω = new Generate_ω_LineForDiagram(_material, _geometry, coeffService, 1);
         }
 
         public double Get_ω2(double MRd, double NRd)
@@ -52,7 +53,7 @@ namespace CalculatorEC2Logic
             {
                 addTo_ω = addTo_ω / 2;
                 if (ω < 0.05) break;
-                searchingOf_ω = new Generate_ω_LineForDiagram(_material, _geometry, ω);
+                searchingOf_ω = new Generate_ω_LineForDiagram(_material, _geometry, coeffService, ω);
                 switch (CheckDiagram(searchingOf_ω, μRd, νRd))
                 {
                     case 0:
@@ -84,7 +85,7 @@ namespace CalculatorEC2Logic
         {
             for (double i = -3.5; i <= -0.1; i += 0.001)
             {
-                var item = new μSd_And_νSd(_geometry, _material).GetFromKof(new CoeffForCalcRectCrossSectionModelEC(i, 20));
+                var item = new μSd_And_νSd(_geometry, _material).GetFromKof(coeffService.GetNew(i, _material.armatura.eps_ud));
                 var As1 = (NRd - 0.85 * _material.beton.fcd * item.kof.αv * item.kof.ξ * _geometry.d * _geometry.b) / (item.σs2 - item.σs1);
                 var As2 = Math.Abs(MRd * 100 - 0.85 * _material.beton.fcd * item.kof.αv * item.kof.ξ * _geometry.d * _geometry.b * (_geometry.h / 2 - item.kof.ka * item.x)) / ((_geometry.h / 2 + _geometry.d1) * Math.Abs((item.σs2 + item.σs1)));
 
@@ -94,7 +95,7 @@ namespace CalculatorEC2Logic
             }
             for (double i = 19.9; i > -1.5; i -= 0.001)
             {
-                var item = new μSd_And_νSd(_geometry, _material).GetFromKof(new CoeffForCalcRectCrossSectionModelEC(-3.5, i));
+                var item = new μSd_And_νSd(_geometry, _material).GetFromKof(coeffService.GetNew(_material.beton.εcu2, i));
 
                 var As1 = (NRd - 0.85 * _material.beton.fcd * item.kof.αv * item.kof.ξ * _geometry.d * _geometry.b) / (item.σs2 - item.σs1);
                 var As2 = Math.Abs(MRd * 100 - 0.85 * _material.beton.fcd * item.kof.αv * item.kof.ξ * _geometry.d * _geometry.b * (_geometry.h / 2 - item.kof.ka * item.x)) / ((_geometry.h / 2 + _geometry.d1) * Math.Abs((item.σs2 + item.σs1)));
@@ -172,6 +173,8 @@ namespace CalculatorEC2Logic
         {
             private readonly IMaterial _material;
             private readonly IElementGeometry _geometry;
+            private readonly ICoeffService coeffService;
+
             public double ω { get; internal set; }
 
             public μSd_And_νSdCollection ListOfDotsInLineOfDiagram { get; set; }
@@ -180,19 +183,21 @@ namespace CalculatorEC2Logic
             /// </summary>
             public double αcc { get; set; }
 
-            public Generate_ω_LineForDiagram(IMaterial material, IElementGeometry geometry, double ω, double αcc = 0.85)
+            public Generate_ω_LineForDiagram(IMaterial material, IElementGeometry geometry,ICoeffService coeffService, double ω, double αcc = 0.85)
             {
-                _material = material;
-                _geometry = geometry;
+                _material = material ?? throw new ArgumentNullException(nameof(material));
+                _geometry = geometry ?? throw new ArgumentNullException(nameof(geometry));
+                this.coeffService = coeffService ?? throw new ArgumentNullException(nameof(coeffService));
                 this.ω = ω;
                 this.αcc = αcc;
-                ListOfDotsInLineOfDiagram = new μSd_And_νSdCollection(_geometry, _material, ω);
+                ListOfDotsInLineOfDiagram = new μSd_And_νSdCollection(_geometry, _material, coeffService, ω);
             }
         }
 
         public class μSd_And_νSdCollection : List<μSd_And_νSd>
         {
-            public μSd_And_νSdCollection(IElementGeometry geometry, IMaterial material, double ω)
+            private readonly ICoeffService coeffService;
+            public μSd_And_νSdCollection(IElementGeometry geometry, IMaterial material, ICoeffService coeffService, double ω)
             {
                 if (geometry == null)
                 {
@@ -204,19 +209,21 @@ namespace CalculatorEC2Logic
                     throw new ArgumentNullException(nameof(material));
                 }
 
+                this.coeffService = coeffService ?? throw new ArgumentNullException(nameof(coeffService));
 
-                for (double i = -3.5; i <= -0.1; i += 0.1)
+                for (double i = material.beton.εcu2; i <= -0.1; i += 0.1)
                 {
                     var item = new μSd_And_νSd(geometry, material);
-                    Add(item.GetFromKof(new CoeffForCalcRectCrossSectionModelEC(i, 20), ω));
+                    Add(item.GetFromKof(coeffService.GetNew(i, material.armatura.eps_ud), ω));
                 }
-                for (double i = 19.9; i > -1.5; i -= 0.1)
+                for (double i = material.armatura.eps_ud; i > -1.5; i -= 0.1)
                 {
                     var item = new μSd_And_νSd(geometry, material);
-                    Add(item.GetFromKof(new CoeffForCalcRectCrossSectionModelEC(-3.5, i), ω));
+                    Add(item.GetFromKof(coeffService.GetNew(material.beton.εcu2, i), ω));
                 }
 
                 var t = this;
+               
             }
             public μSd_And_νSdCollection()
             {
@@ -282,14 +289,14 @@ namespace CalculatorEC2Logic
         }
 
 
-        public List<μSd_And_νSdCollection> GetAllLines()
+        public List<μSd_And_νSdCollection> GetAllLines(ICoeffService coeffService)
         {
             var result = new List<μSd_And_νSdCollection>();
-            var r = new Generate_ω_LineForDiagram(_material, _geometry, 0.05);
+            var r = new Generate_ω_LineForDiagram(_material, _geometry, coeffService, 0.05);
             result.Add(r.ListOfDotsInLineOfDiagram);
             for (double i = 0.1; i <= 1; i += 0.1)
             {
-                r = new Generate_ω_LineForDiagram(_material, _geometry, i);
+                r = new Generate_ω_LineForDiagram(_material, _geometry, coeffService, i);
                 result.Add(r.ListOfDotsInLineOfDiagram);
             }
 

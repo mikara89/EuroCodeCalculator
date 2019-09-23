@@ -1,7 +1,5 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using TabeleEC2;
-using TabeleEC2.Model;
 using InterDiagRCSection;
 using CalcModels;
 using System.Threading.Tasks;
@@ -55,11 +53,11 @@ namespace VGGS_Calculator.Controllers
                     beton = new BetonModelEC(model.material.betonClass),
                     armatura = ReinforcementType.GetArmatura().First(n => n.name == model.material.armtype),
                 };
-                var geometry = new ElementGeometryWithReinfV2()
+                var geometry = new ElementGeometryWithReinf()
                 {
                     b_eff = 0,
                     h_f =0,
-                    b = model.geometry.b,
+                    b = model.geometry.b, 
                     d1 = model.geometry.d1,
                     d2 = model.geometry.d2,
                     h = model.geometry.h,
@@ -96,7 +94,7 @@ namespace VGGS_Calculator.Controllers
                     .First(n => n.name == model.material.armtype),
                 };
 
-                var geometry = new ElementGeometryWithReinfV2()
+                var geometry = new ElementGeometryWithReinf()
                 {
                     b_eff = 0,
                     h_f = 0,

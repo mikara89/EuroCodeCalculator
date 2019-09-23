@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CalcModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace VGGS_Calculator.Controllers
@@ -9,23 +10,23 @@ namespace VGGS_Calculator.Controllers
     public class ReinforcementTypeController : Controller
     {
         [HttpGet("/api/reinforcementtype")]
-        public async Task<List<TabeleEC2.Model.ReinforcementTypeModelEC>> GetReinforcementTypesAsync() 
+        public async Task<List<ReinforcementTypeModelEC>> GetReinforcementTypesAsync() 
         {
-            var reinforcementTypes = new List<TabeleEC2.Model.ReinforcementTypeModelEC>();
+            var reinforcementTypes = new List<ReinforcementTypeModelEC>();
             await Task.Run(() =>
             {
-                reinforcementTypes = TabeleEC2.ReinforcementType.GetArmatura();
+                reinforcementTypes = ReinforcementType.GetArmatura();
             });
 
             return reinforcementTypes;  
         }
         [HttpGet("/api/reinforcementList")]
-        public async Task<List<TabeleEC2.Model.ReinforcementTabelModel>> GetReinforcementListsAsync()
+        public async Task<List<ReinforcementTabelModel>> GetReinforcementListsAsync()
         {
-            var reinforcementList = new List<TabeleEC2.Model.ReinforcementTabelModel>();
+            var reinforcementList = new List<ReinforcementTabelModel>();
             await Task.Run(() =>
             {
-                reinforcementList = TabeleEC2.ReinforcementType.GetAramturaList();
+                reinforcementList = ReinforcementType.GetAramturaList();
             });
 
             return reinforcementList;

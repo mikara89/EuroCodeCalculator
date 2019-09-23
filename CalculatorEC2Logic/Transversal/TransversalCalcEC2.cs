@@ -1,9 +1,7 @@
 ﻿using CalculatorEC2Logic.Transversal;
-using Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TabeleEC2.Model;
 using CalcModels;
 
 namespace CalculatorEC2Logic

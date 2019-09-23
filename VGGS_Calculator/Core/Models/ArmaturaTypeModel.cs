@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
+using CalcModels;
 
 namespace VGGS_Calculator.Models
 {
-    public class ArmaturaTypeModel:TabeleEC2.Model.ReinforcementTypeModelEC
+    public class ArmaturaTypeModel:ReinforcementTypeModelEC
     {
     }
 }

@@ -1,22 +1,11 @@
-﻿using System;
+﻿using CalcModels;
+using System;
 using System.Collections.Generic;
 
-namespace TabeleEC2.Model
+namespace CalcModels
 {
-    public interface IReinforcementTypeModel
-    {
-        string name { get; set; }
-        int Es { get; set; }
-        string Symbol { get; set; }
-        List<ReinforcementTabelModel> ListOfArmatura{get;}
-        List<int> ListOfNum{get;}
-        /// <summary>
-        /// Max diletacion value
-        /// </summary>
-        double eps_ud { get;}
-        double lim_ξ { get;} 
-    }
-    public class ReinforcementTypeModelEC: IReinforcementTypeModel
+
+    public class ReinforcementTypeModelEC : IReinforcementTypeModel
     {
         public string name { get; set; }
         /// <summary>
@@ -29,11 +18,14 @@ namespace TabeleEC2.Model
         /// in GPa
         /// </summary>
         public int Es { get; set; }
-        public string Symbol { get;  set; }
-        public List<ReinforcementTabelModel> ListOfArmatura { get
+        public string Symbol { get; set; }
+        public List<ReinforcementTabelModel> ListOfArmatura
+        {
+            get
             {
                 return ReinforcementType.GetAramturaList();
-            } }
+            }
+        }
         public List<int> ListOfNum
         {
             get
@@ -53,11 +45,13 @@ namespace TabeleEC2.Model
 
         public override string ToString()
         {
-            return $"{name}; fyd: {Math.Round(fyd,2)}MPa; fyk: {Math.Round(fyk,2)}MPa; Es: {Es}GPa";
+            return $"{name}; fyd: {Math.Round(fyd, 2)}MPa; fyk: {Math.Round(fyk, 2)}MPa; Es: {Es}GPa";
         }
     }
     public class ReinforcementTypeModelPBAB : IReinforcementTypeModel
     {
+
+
         public string name { get; set; }
         /// <summary> 
         /// fyd=fyk/1,15 kN/cm2 =>fyd*10[Mpa]
@@ -92,6 +86,6 @@ namespace TabeleEC2.Model
 
         public double eps_ud { get; internal set; }
 
-        public double lim_ξ { get; internal set; }
+        public double lim_ξ { get; set; } = 0.259;
     }
 }

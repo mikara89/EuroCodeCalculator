@@ -21,7 +21,7 @@ namespace CreckingCalcENTest
                 new Material
                 {
                     beton = new BetonModelEC("C25/30"),
-                    armatura = TabeleEC2.ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
+                    armatura = ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
                 }, new ElementGeometryWithReinf
                 {
                     b = 30,
@@ -36,7 +36,7 @@ namespace CreckingCalcENTest
                 new Material
                 {
                     beton = new BetonModelEC("C25/30"),
-                    armatura = TabeleEC2.ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
+                    armatura = ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
                 }, new ElementGeometryWithReinf
                 {
                     b_eff=175,
@@ -94,7 +94,7 @@ namespace CreckingCalcENTest
                new Material
                {
                    beton = new BetonModelEC("C25/30"),
-                   armatura = TabeleEC2.ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
+                   armatura = ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
                }, new ElementGeometryWithReinf
                {
                    b = 30,
@@ -106,7 +106,7 @@ namespace CreckingCalcENTest
                }
            );
             var beton = new BetonModelEC("C25/30");
-            var armatura = TabeleEC2.ReinforcementType.GetArmatura().Single(r => r.name == "B500B");
+            var armatura = ReinforcementType.GetArmatura().Single(r => r.name == "B500B");
             await s.Calc(0.001);
 
             ///Min And Max 
@@ -132,7 +132,7 @@ namespace CreckingCalcENTest
                new Material
                {
                    beton = new BetonModelEC("C25/30"),
-                   armatura = TabeleEC2.ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
+                   armatura = ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
                }, new ElementGeometryWithReinf
                {
                    b_eff = 175,
@@ -146,7 +146,7 @@ namespace CreckingCalcENTest
                }
            );
             var beton = new BetonModelEC("C25/30");
-            var armatura = TabeleEC2.ReinforcementType.GetArmatura().Single(r => r.name == "B500B");
+            var armatura = ReinforcementType.GetArmatura().Single(r => r.name == "B500B");
             await s.Calc(0.001);
 
             ///Min And Max 

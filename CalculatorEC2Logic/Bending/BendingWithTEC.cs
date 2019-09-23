@@ -1,7 +1,5 @@
 ﻿using CalcModels;
 using System;
-using TabeleEC2;
-using TabeleEC2.Model;
 
 namespace CalculatorEC2Logic
 {
@@ -18,7 +16,7 @@ namespace CalculatorEC2Logic
             this.forces = forces ?? throw new ArgumentNullException(nameof(forces));
             this.geometry = geometry ?? throw new ArgumentNullException(nameof(geometry));
             this.material = material ?? throw new ArgumentNullException(nameof(material));
-            coeffService = new CoeffService(material);
+            coeffService = new CoeffService(material,geometry);
 
             Calc();
         }
@@ -42,9 +40,9 @@ namespace CalculatorEC2Logic
             double s;
             double δ = h_f / d;
 
-            BetonModelEC beton = material.beton;
+            IBetonModelEC beton = material.beton;
 
-            ReinforcementTypeModelEC arm = material.armatura;
+            IReinforcementTypeModel arm = material.armatura;
 
             var kof1 = coeffService.GetNew();
             var kof2 = coeffService.GetNew();
@@ -71,6 +69,7 @@ namespace CalculatorEC2Logic
                 var zb1 = d * (1 - kof1.ka * s);
 
                 var Ebd = ((s - δ) / s) * kof1.εc;
+
                 kof2.SetByEcEs1(Ebd, 20);
 
 
@@ -83,21 +82,14 @@ namespace CalculatorEC2Logic
                 if (i > 200)
                     break;
 
+                s_add = s_add / 2;
                 if (Math.Round(Mu, 3) < Math.Round(Msd, 3))
-                {
                     s += s_add;
-                    continue;
-                }
                 if (Math.Round(Mu, 3) > Math.Round(Msd, 3))
-                {
-                    s_add = s_add / 2;
                     s -= s_add;
-                    continue;
-                }
-
                 if (Math.Round(Mu, 3) == Math.Round(Msd, 3))
                     done = true;
-
+                
             } while (!done);
 
             if (i > 200 && done == false)

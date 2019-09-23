@@ -2,8 +2,6 @@
 using CalcModels;
 using CalculatorEC2Logic;
 using Microsoft.AspNetCore.Mvc;
-using TabeleEC2;
-using TabeleEC2.Model;
 
 namespace VGGS_Calculator.Controllers
 {
@@ -27,9 +25,11 @@ namespace VGGS_Calculator.Controllers
                 {
                     b = model.geometry.b,
                     d1 = model.geometry.d1,
-                    h = model.geometry.h,
+                    d2 = model.geometry.d1,
+                    h = model.geometry.h, 
                 };
-                return Ok(new SymmetricalReinfByClassicMethod(material, geometry).GetAllLines());
+                var cs = new CoeffService(material,geometry);
+                return Ok(new SymmetricalReinfByClassicMethod(material, geometry).GetAllLines(cs));
             }
             catch (System.Exception ex)
             {
@@ -80,6 +80,7 @@ namespace VGGS_Calculator.Controllers
             {
                 public double b { get; set; }
                 public double d1 { get; set; }
+                public double d2 { get; set; } 
                 public double h { get; set; }
             }
             public class Material 

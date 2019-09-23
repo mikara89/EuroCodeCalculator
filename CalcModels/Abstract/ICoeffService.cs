@@ -1,7 +1,6 @@
 ﻿using CalcModels;
-using TabeleEC2.Model;
 
-namespace TabeleEC2
+namespace CalcModels 
 {
     public interface ICoeffService
     {

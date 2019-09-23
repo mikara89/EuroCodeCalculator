@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CalcModels;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using TabeleEC2;
 
 namespace VGGS_Calculator.Core.Models
 {

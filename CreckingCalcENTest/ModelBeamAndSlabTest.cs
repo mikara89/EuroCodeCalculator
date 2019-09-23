@@ -47,7 +47,7 @@ namespace CreckingCalcENTest
                 new Material
                 {
                     beton = new BetonModelEC("C40/50"),
-                    armatura = TabeleEC2.ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
+                    armatura = ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
                 },
                 beam,
                 new Forces { M3 = 43.90 });

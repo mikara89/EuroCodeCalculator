@@ -1,6 +1,5 @@
 ﻿using CalcModels;
 using System;
-using TabeleEC2;
 
 namespace InterDiagRCSection
 {

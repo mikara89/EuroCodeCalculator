@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TabeleEC2;
-using TabeleEC2.Model;
 using VGGS_Calculator.Core;
 using VGGS_Calculator.Core.Models;
 

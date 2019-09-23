@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TabeleEC2.Model;
 
-namespace TabeleEC2
+namespace CalcModels 
 {
 
     public static class ReinforcementType

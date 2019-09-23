@@ -1,13 +1,11 @@
-﻿using System;
+﻿using CalcModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TabeleEC2.Model 
+namespace CalcModels
 {
-    public interface IBetonModelEC
-    {
 
-    }
    
     public enum BetonClassType
     {
@@ -48,21 +46,23 @@ namespace TabeleEC2.Model
         {
             return Enum.GetName(typeof(BetonClassType), betonClassType).Replace("_", "/");
         }
-        public BetonModelEC(BetonClassType betonClassType,double α=0.85)
+        public BetonModelEC(BetonClassType betonClassType, double α = 0.85)
         {
             this.name = GetStringFromType(betonClassType);
             this.αcc = α;
         }
-        public BetonModelEC(string betonClassName, double α = 0.85) 
+        public BetonModelEC(string betonClassName, double α = 0.85)
         {
             this.name = betonClassName;
             this.αcc = α;
         }
-        public string name { get;internal set; }
-        public int fck { get
+        public string name { get; internal set; }
+        public int fck
+        {
+            get
             {
                 int i;
-                int.TryParse(name.Substring(1, 2),out i);
+                int.TryParse(name.Substring(1, 2), out i);
                 if (i == 0) throw new System.ArgumentException("Invalid concrite name");
                 return i;
             }
@@ -95,7 +95,7 @@ namespace TabeleEC2.Model
         {
             get
             {
-                return 0.70* fctm;
+                return 0.70 * fctm;
             }
         }
         public double fctk095
@@ -160,7 +160,7 @@ namespace TabeleEC2.Model
         }
         public override string ToString()
         {
-            return $"{name}; fcd: {Math.Round(fcd, 2)}MPa; fck: {fck}Mpa; Ecm: {Math.Round(Ecm/1000,2)}GPa";
+            return $"{name}; fcd: {Math.Round(fcd, 2)}MPa; fck: {fck}Mpa; Ecm: {Math.Round(Ecm / 1000, 2)}GPa";
         }
     }
 }

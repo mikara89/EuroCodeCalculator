@@ -50,7 +50,26 @@ export class SavijanjePravougaonogPresekaEc2Component implements OnInit {
             });
         });
         this.Toggled(true);
-        this.kofServices.getList().subscribe(kof => {this.muList = kof; });
+        this.kofServices.getList({
+            b: this.izracunaj.b,
+            h: this.izracunaj.h,
+            d1: this.izracunaj.d1,
+            d2: this.izracunaj.d2,
+            armtype: this.izracunaj.armtype,
+            betonClass: this.izracunaj.betonClass,
+        }).subscribe(kof => { this.muList = kof; });
+    }
+    free() {
+        if (this.izracunaj.h == 0) {
+            this.kofServices.getList({
+                b: this.izracunaj.b,
+                h: this.izracunaj.h,
+                d1: this.izracunaj.d1,
+                d2: this.izracunaj.d2,
+                armtype: this.izracunaj.armtype,
+                betonClass: this.izracunaj.betonClass,
+            }).subscribe(kof => { this.muList = kof; });
+        }
     }
     Toggled(b: boolean) {
         this.IsMsd = b;

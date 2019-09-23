@@ -1,15 +1,12 @@
-﻿using System;
+﻿using CalcModels;
+using System;
 
-namespace TabeleEC2.Model
+namespace CalcModels
 {
-    public interface ICoeffForCalcRectCrossSectionModel
+    public class CoeffForCalcRectCrossSectionModelEC : ICoeffForCalcRectCrossSectionModelEC
     {
-
-    }
-
-    public class CoeffForCalcRectCrossSectionModelEC : ICoeffForCalcRectCrossSectionModel
-    {
-        private readonly double ni;
+        private readonly IMaterial material;
+        private readonly IElementGeometry geomerty;
 
         public double εc { get; set; }
         public double εs1 { get; set; }
@@ -43,27 +40,22 @@ namespace TabeleEC2.Model
             }
         }
 
-        public bool LomPoBetonu { get { return εs1 < 5.0 ? false : true; } }
-        public bool LomPoArmaturi { get { return !LomPoBetonu; } }
-
-        public CoeffForCalcRectCrossSectionModelEC(double ni=1)
+        public CoeffForCalcRectCrossSectionModelEC(IMaterial material, IElementGeometry geomerty)
         {
-            this.ni = ni;
+            this.material = material ??
+                throw new ArgumentNullException(nameof(material));
+            this.geomerty = geomerty ??
+                throw new ArgumentNullException(nameof(geomerty));
         }
-        public CoeffForCalcRectCrossSectionModelEC(double εc, double εs1,double ni=1)
+        public CoeffForCalcRectCrossSectionModelEC(double εc, double εs1, IMaterial material, IElementGeometry geomerty)
         {
-            this.ni = ni;
+            this.material = material ??
+                throw new ArgumentNullException(nameof(material));
+            this.geomerty = geomerty ??
+                throw new ArgumentNullException(nameof(geomerty));
             SetByEcEs1(εc, εs1);
-            
         }
 
-        public CoeffForCalcRectCrossSectionModelEC(double μSd,double ni=1)
-        {
-            this.ni = ni;
-            var k = CoeffForCalcRectCrossSectionEC.Get_Kof_From_μ(μSd, ni );
-            SetByEcEs1(k.εc, k.εs1);
-            
-        }
         public void SetByEcEs1(double εc, double εs1)
         {
 
@@ -73,33 +65,34 @@ namespace TabeleEC2.Model
             var es1 = εs1;
             this.ξ = ec / (es1 + ec);
             this.ζ = 1 - (this.ξ * this.ka);
-            this.ω = ni * this.αv * this.ξ;
-            this.μRd = ni * this.αv * this.ξ * this.ζ;
+            this.ω = material.beton.ni * this.αv * this.ξ;
+            this.μRd = material.beton.ni * this.αv * this.ξ * this.ζ;
         }
 
         public double εs2(double d, double d2)
         {
-            var x =this.ξ * d;
+            var x = this.ξ * d;
             return this.εc * (x - d2) / x;
         }
 
         public void SetByξ(double ξ)
         {
-            if (ξ < 0.149 && ξ > 0)
+            var test = new CoeffForCalcRectCrossSectionModelEC(material.beton.εcu2, material.armatura.eps_ud, material, geomerty);
+            if (ξ < test.ξ && ξ > 0)
             {
-                this.εs1 = 20;
+                this.εs1 = material.armatura.eps_ud;
                 this.εc = -((ξ / (1 - ξ)) * εs1);
                 SetByEcEs1(this.εc, this.εs1);
                 return;
             }
-            if (ξ > 0.149)
+            if (ξ > test.ξ)
             {
-                this.εc = -3.5;
+                this.εc = material.beton.εcu2;
                 this.εs1 = ((1 - ξ) / ξ) * Math.Abs(εc);
                 SetByEcEs1(this.εc, this.εs1);
                 return;
             }
-            SetByEcEs1(-3.5, 20);
+            SetByEcEs1(material.beton.εcu2, material.armatura.eps_ud);
         }
         public void SetByX(double X, double d)
         {
@@ -109,6 +102,5 @@ namespace TabeleEC2.Model
         {
             return $"εc/εs1={εc:F3}/{εs1:F3}";
         }
-
     }
 }

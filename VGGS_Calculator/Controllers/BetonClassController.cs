@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CalcModels;
 using Microsoft.AspNetCore.Mvc;
-using TabeleEC2.Model;
 using VGGS_Calculator.Models;
 
 namespace VGGS_Calculator.Controllers

@@ -1,8 +1,5 @@
 ﻿using CalcModels;
-using Extensions;
 using System;
-using TabeleEC2;
-using TabeleEC2.Model;
 
 namespace CalculatorEC2Logic
 {
@@ -45,7 +42,7 @@ namespace CalculatorEC2Logic
             this.Geometry = geometry;
             this.Material = material;
 
-            coeffService = new CoeffService(Material);
+            coeffService = new CoeffService(Material,Geometry);
 
             Kof_lim = coeffService.GetByξ_lim();
 

@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Extensions
+namespace CalcModels 
 {
     public static class MyExtensions
     {

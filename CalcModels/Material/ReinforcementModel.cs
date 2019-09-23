@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace TabeleEC2.Model
+namespace CalcModels
 {
     public interface IReinforcementModel
     {

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TabeleEC2.Model;
 
 namespace VGGS_Calculator.Core.Models
 {

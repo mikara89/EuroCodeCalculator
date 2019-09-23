@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CalcModels\CalcModels.csproj" />
-    <ProjectReference Include="..\TabeleEC2\TabeleEC2.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,8 +7,8 @@ export class KofZaProrPravPresekaService {
 
     constructor(private http: Http) { }
 
-    getList() {
-        return this.http.get('/api/kofzaproracunpravougaonogpreseka')
+    getList(obj:any) {
+        return this.http.post('/api/kofzaproracunpravougaonogpreseka', obj)
             .map(res => res.json());
     }
 }

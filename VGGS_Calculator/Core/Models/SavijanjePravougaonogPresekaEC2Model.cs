@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CalcModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace VGGS_Calculator.Core.Models
 {
@@ -34,7 +35,7 @@ namespace VGGS_Calculator.Core.Models
         public class ResultModel
         {
             public double Msds { get; set; } 
-            public TabeleEC2.Model.CoeffForCalcRectCrossSectionModelEC kof { get; set; }  
+            public CoeffForCalcRectCrossSectionModelEC kof { get; set; }  
             public double As1_pot { get; set; }
             public double As2_pot { get; set; }
             public double μSd { get; set; } 
@@ -43,5 +44,25 @@ namespace VGGS_Calculator.Core.Models
             public string Result { get; set; }
 
         }
+    }
+    public class MaterialModel 
+    {
+        [Required]
+        [GreaterThenZero]
+        public double b { get; set; }
+        [Required]
+        public double h { get; set; }
+        [Required]
+        [GreaterThenZero]
+        public double d1 { get; set; }
+        [Required]
+        [GreaterThenZero]
+        public double d2 { get; set; }
+        [Required]
+        [ReinforcementExist]
+        public string armtype { get; set; }
+        [Required]
+        [ConcreteExist]
+        public string betonClass { get; set; }
     }
 }
