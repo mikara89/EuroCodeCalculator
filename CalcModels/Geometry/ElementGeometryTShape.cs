@@ -2,8 +2,11 @@
 
 namespace CalcModels
 {
-    public class ElementGeometryTShape :IElementGeometryT
+    public class ElementGeometryTShape : IElementGeometryT
     {
+        private double _b_eff;
+        private double _h_f;
+
         public string GetUnits()
         {
             switch (unit)
@@ -24,9 +27,18 @@ namespace CalcModels
         public double d { get => h - d1; }
         public UnitDimesionType unit { get; set; } = UnitDimesionType.cm;
         public double d2 { get; set; }
+        //public double b_eff
+        //{
+        //    get
+        //    {
+        //        if (_b_eff == 0 && _h_f == 0) return b;
+        //        return b_eff;
+        //    }
+        //    set => _b_eff = value;
+        //}
+        //public double h_f { get => _h_f; set => _h_f = value; }
         public double b_eff { get; set; }
         public double h_f { get; set; }
-
         public double y1
         {
             get

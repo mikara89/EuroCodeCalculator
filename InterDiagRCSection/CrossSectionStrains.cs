@@ -3,21 +3,29 @@ using System;
 
 namespace InterDiagRCSection
 {
-    public class CrossSectionStrains : ICrossSectionStrains
+    public class CrossSectionStrains :ICrossSectionStrains
     {
         private readonly bool Invert;
         private readonly IMaterial material;
         private readonly IElementGeometryWithReinf geometry;
-       
 
-        public double Fc => 1 * x * geometry.b * sig_c / 10;
-        public double Fs2 
+
+        //public double Fc => 1 * x * geometry.b * sig_c / 10;
+        public double[] Fc { get
+            {
+
+                return new double[] {
+                    1 * x * geometry.b * sig_c / 10,
+                    (geometry.b_eff - geometry.b) <= 0 ? 0 : 1 * (x < geometry.h_f?x:geometry.h_f) * (geometry.b_eff - geometry.b)* sig_c / 10
+                };
+            } }
+        public double Fs2
         {
-            get 
+            get
             {
                 if (!Invert)
                     return geometry.As_2 * sig_s2 / 10;
-                else return geometry.As_2 * sig_s1 / 10; 
+                else return geometry.As_2 * sig_s1 / 10;
             }
         }
         public double Fs1
@@ -26,22 +34,44 @@ namespace InterDiagRCSection
             {
                 if (!Invert)
                     return geometry.As_1 * sig_s1 / 10;
-                else return geometry.As_1 * sig_s2 / 10; 
+                else return geometry.As_1 * sig_s2 / 10;
             }
         }
-       
-        public double N_Rd=> -(Fc - Fs2 - Fs1);
-        public double M_Rd 
+
+        //public double N_Rd => -(Fc - Fs2 - Fs1);
+        public double N_Rd { get
+            {
+                double sumN=0;
+                foreach (var item in Fc)
+                {
+                    sumN += item;
+                }
+                
+                return -(sumN - Fs2 - Fs1);
+            } }
+        public double M_Rd
         {
             get
             {
                 if (!Invert)
-                    return (Fc * (geometry.h / 2 - ka * x)
-                        - (Fs2 * (geometry.h / 2 - geometry.d2))
-                        + (Fs1 * (geometry.h / 2 - geometry.d1))) / 100;
-                else return -((1.0 * x * geometry.b * sig_c / 10 * (geometry.h / 2 - ka * x))
-                        + (Fs2 * (geometry.h / 2 - geometry.d2))
-                        - (Fs1 * (geometry.h / 2 - geometry.d1))) / 100;
+                {
+                    if (x > geometry.h_f)
+                        return (Fc[0] * (geometry.y1 - ka * x)
+                        + (Fc[1] * (geometry.y1 - ka * geometry.h_f))
+                        - (Fs2 * (geometry.y2 - geometry.d2))
+                        + (Fs1 * (geometry.y1 - geometry.d1))) / 100;
+                    else 
+                        return ((Fc[0]+ Fc[1]) * (geometry.y1 - ka * x)
+                        - (Fs2 * (geometry.y2 - geometry.d2))
+                        + (Fs1 * (geometry.y1 - geometry.d1))) / 100;
+                }
+                else
+                {
+                    return -(((Fc[0]+ Fc[1]) * (geometry.y2 - ka * x))
+                    + (Fs2 * (geometry.y2 - geometry.d2))
+                    - (Fs1 * (geometry.y1 - geometry.d1))) / 100;
+                }
+                   
             }
             //=((0.85*[@x]*[@σc]/10*b*(h/2-[@ka]*[@x]))-(As_2*[@σs2]/10*(h/2-d_2))+(As_1*[@σs1]/10*(h/2-d_1)))/100
             //=-((0.85*[@x]*[@σc]/10*b*(h/2-[@ka]*[@x]))+(As_2*[@σs1]/10*(h/2-d_2))-(As_1*[@σs2]/10*(h/2-d_1)))/100
@@ -59,7 +89,7 @@ namespace InterDiagRCSection
             get
             {
                 if (Math.Abs(this.εc2) == 0 || Math.Abs(this.εc2) <= Math.Abs(material.beton.εc2))
-                    return material.beton.fcd * Math.Abs(1 - (1 - Math.Pow(this.εc2 / material.beton.εc2, 2)));
+                    return material.beton.fcd * Math.Abs(1 - (1 - Math.Pow(this.εc2 / material.beton.εc2, material.beton.n)));
                 else return material.beton.fcd;
                 //        = IF(AND([@[εc
                 //(‰)]]<= 0,ABS([@[εc
@@ -168,13 +198,27 @@ namespace InterDiagRCSection
             get
             {
                 var e = Math.Abs(εc2);
-                if (εc2 == -2 && εs2 == -2)
-                    return 0.500;
+                //if (εc2 == -2 && εs2 == -2)
+                //    return 0.500;
+                //if (this.x == geometry.h)
+                //{
+                //    e = Math.Abs(material.beton.εcu2);
+                //    return (e * (3 * e - 4) + 2) / (2 * e * (3 * e - 2));
+                //}
                 if (this.x == geometry.h)
                 {
-                    e = Math.Abs(material.beton.εcu2);
-                    return (e * (3 * e - 4) + 2) / (2 * e * (3 * e - 2));
+                    var max_ka = 0.5;
+                    var ecu2 = Math.Abs(material.beton.εcu2);
+                    var min_ka = (ecu2 * (3 * ecu2 - 4) + 2) / (2 * ecu2 * (3 * ecu2 - 2));
+                    var ec2= Math.Abs(material.beton.εc2);
+                   
+                    return (((ecu2-e) *(max_ka-min_ka))/(ecu2-ec2))+min_ka;
                 }
+                //if (this.x == geometry.h)
+                //{
+                //    e = Math.Abs(material.beton.εcu2);
+                //    return (e * (3 * e - 4) + 2) / (2 * e * (3 * e - 2));
+                //}
                 if (e == 0 || e <= Math.Abs(material.beton.εc2))
                     return (8 - e) / (4 * (6 - e));
                 return (e * (3 * e - 4) + 2) / (2 * e * (3 * e - 2));
@@ -184,7 +228,7 @@ namespace InterDiagRCSection
             }
         }
 
-        public CrossSectionStrains(IMaterial material, IElementGeometryWithReinf geometry, bool Invert = false)
+        public CrossSectionStrains(IMaterial material, IElementGeometryWithReinf geometry, bool Invert = false) 
         {
             this.material = material;
             this.geometry = geometry;
@@ -209,6 +253,8 @@ namespace InterDiagRCSection
             this.μRd = this.αv * this.ξ * this.ζ;
             this.x = geometry.d * this.ξ >= geometry.h ? geometry.h : geometry.d * this.ξ; //IF([@ξ]*d>=h,h,ABS([@ξ])*d)
 
+            if (εc2 > 0 && εs1 == material.armatura.eps_ud)
+                this.x = 0;
             this.εc1 = Set_εc1();
             this.εs2 = Set_εs2();
         }

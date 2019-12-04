@@ -3,7 +3,7 @@ namespace CalcModels
 {
     public interface IMaterial
     {
-        IBetonModelEC beton { get; set; }
+        IBetonModel beton { get; set; }
         IReinforcementTypeModel armatura { get; set; } 
     }
     

@@ -19,7 +19,7 @@ namespace VGGS_Calculator.Core.Models
         public double sig_s2 { get; set; }
         public double x { get; set; }
 
-        private InfoDetailModelV2(CrossSectionStrainsV2 crossSection)
+        private InfoDetailModelV2(CrossSectionStrains crossSection)
         {
             foreach (var item in crossSection.Fc)
             {
@@ -38,9 +38,9 @@ namespace VGGS_Calculator.Core.Models
             sig_s2 = crossSection.sig_s2;
             x = crossSection.x;
         }
-        public static InfoDetailModelV2 Convert(CrossSectionStrainsV2 crossSection) =>
+        public static InfoDetailModelV2 Convert(CrossSectionStrains crossSection) =>
             new InfoDetailModelV2(crossSection);
-        public static InfoDetailModelV2[] Converts(CrossSectionStrainsV2[] crossSections)
+        public static InfoDetailModelV2[] Converts(CrossSectionStrains[] crossSections)
         {
             List<InfoDetailModelV2> result = new List<InfoDetailModelV2>();
             foreach (var item in crossSections)

@@ -10,9 +10,9 @@ namespace VGGS_Calculator.Controllers
     public class ReinforcementTypeController : Controller
     {
         [HttpGet("/api/reinforcementtype")]
-        public async Task<List<ReinforcementTypeModelEC>> GetReinforcementTypesAsync() 
+        public async Task<List<IReinforcementTypeModel>> GetReinforcementTypesAsync() 
         {
-            var reinforcementTypes = new List<ReinforcementTypeModelEC>();
+            var reinforcementTypes = new List<IReinforcementTypeModel>();
             await Task.Run(() =>
             {
                 reinforcementTypes = ReinforcementType.GetArmatura();

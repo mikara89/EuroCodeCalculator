@@ -12,7 +12,7 @@ namespace CreckingCalcENTest
     public class ModelCrossSectionStrainsTest
     {
         private static CrossSectionStrains Section;
-        private static CrossSectionStrainsV2 SectionV2;
+
 
         [ClassInitialize]
         public static void Init(TestContext tc)
@@ -32,7 +32,7 @@ namespace CreckingCalcENTest
                     As_2 = 6.8
                 }
             );
-            SectionV2 = new CrossSectionStrainsV2(
+            Section = new CrossSectionStrains(
                 new Material
                 {
                     beton = new BetonModelEC("C25/30"),
@@ -87,48 +87,11 @@ namespace CreckingCalcENTest
         //    Assert.IsTrue(System.Math.Round(Section.εc1, 3) == System.Math.Round(εc1,3));
         //}
 
-        [TestMethod]
-        public async Task CalcTest()
-        {
-            var s = new Solver(
-               new Material
-               {
-                   beton = new BetonModelEC("C25/30"),
-                   armatura = ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
-               }, new ElementGeometryWithReinf
-               {
-                   b = 30,
-                   h = 30,
-                   d1 = 6,
-                   d2 = 6,
-                   As_1 = 20,
-                   As_2 = 6.8
-               }
-           );
-            var beton = new BetonModelEC("C25/30");
-            var armatura = ReinforcementType.GetArmatura().Single(r => r.name == "B500B");
-            await s.Calc(0.001);
-
-            ///Min And Max 
-            var Mmin = s.List.Select(n => new { n, Mrd = n.M_Rd - 0}) 
-                              .OrderBy(p => p.Mrd) 
-                              .First().n;
-            var Mmax = s.List.Select(n => new { n, Mrd = n.M_Rd - 0 }) 
-                              .OrderByDescending(p => p.Mrd)
-                              .First().n;
-            var Nmin = s.List.Select(n => new { n, Nrd = n.N_Rd - 0 })
-                              .OrderBy(p => p.Nrd)
-                              .First().n;
-            var NNax = s.List.Select(n => new { n, Nrd = n.N_Rd - 0 })
-                              .OrderByDescending(p => p.Nrd)
-                              .First().n;
-
-            Assert.IsNotNull(s.List);
-        }
+ 
         [TestMethod]
         public async Task CalcTestV2()
         {
-            var s = new SolverV2(
+            var s = new Solver(
                new Material
                {
                    beton = new BetonModelEC("C25/30"),

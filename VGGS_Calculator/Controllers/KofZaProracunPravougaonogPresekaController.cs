@@ -9,7 +9,7 @@ namespace VGGS_Calculator.Controllers
 {
     public class KofZaProracunPravougaonogPresekaController : Controller
     {
-        [HttpGet("/api/KofZaProracunPravougaonogPreseka")]
+        [HttpPost("/api/KofZaProracunPravougaonogPreseka")]
         public async Task<List<CoeffForCalcRectCrossSectionModelEC>> GetKofZaProracunPravougaonogPresekaAsync([FromBody] MaterialModel model) 
         {
             var kofList = new List<CoeffForCalcRectCrossSectionModelEC>();

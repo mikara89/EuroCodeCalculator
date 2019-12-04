@@ -87,5 +87,10 @@ namespace CalcModels
         public double eps_ud { get; internal set; }
 
         public double lim_ξ { get; set; } = 0.259;
+
+        public override string ToString()
+        {
+            return $"{name}; fyd: {Math.Round(fyd, 2)}MPa; fyk: {Math.Round(fyk, 2)}MPa; Es: {Es}GPa";
+        }
     }
 }

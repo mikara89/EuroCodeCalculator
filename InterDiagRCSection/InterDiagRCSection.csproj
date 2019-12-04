@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="CrossSectionStrains_old.cs" />
+    <Compile Remove="Solver_old.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CalcModels\CalcModels.csproj" />
   </ItemGroup>
 

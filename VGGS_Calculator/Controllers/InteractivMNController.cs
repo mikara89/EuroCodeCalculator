@@ -55,16 +55,16 @@ namespace VGGS_Calculator.Controllers
                 };
                 var geometry = new ElementGeometryWithReinf()
                 {
-                    b_eff = 0,
-                    h_f =0,
-                    b = model.geometry.b, 
+                    b_eff = model.geometry.b_eff,
+                    h_f = model.geometry.h_f,
+                    b = model.geometry.b,
                     d1 = model.geometry.d1,
                     d2 = model.geometry.d2,
                     h = model.geometry.h,
                     As_1 = model.geometry.as1,
                     As_2 = model.geometry.as2,
                 };
-                var s = new SolverV2(material, geometry);
+                var s = new Solver(material, geometry);
                 await s.Calc();
                 Logger.LogInformation("API send interacion curves");
                 return Ok(s.List.Select(x => new { x = x.M_Rd, y = x.N_Rd }));
@@ -96,8 +96,8 @@ namespace VGGS_Calculator.Controllers
 
                 var geometry = new ElementGeometryWithReinf()
                 {
-                    b_eff = 0,
-                    h_f = 0,
+                    b_eff = model.geometry.b_eff,
+                    h_f = model.geometry.h_f,
                     b = model.geometry.b,
                     d1 = model.geometry.d1,
                     d2 = model.geometry.d2,
@@ -106,12 +106,12 @@ namespace VGGS_Calculator.Controllers
                     As_2 = model.geometry.as2,
                 };
 
-                var s = new SolverV2(material, geometry);
+                var s = new Solver(material, geometry);
                 await s.Calc();
                 s.GetWorrnings(model.m, model.n);
                 var r = s.List.IsMNValid(model.m, model.n);
 
-                var listMaxMin = new List<CrossSectionStrainsV2>();
+                var listMaxMin = new List<CrossSectionStrains>();
                 listMaxMin.AddRange(
                     s.List
                     .OrderBy(n => Math.Abs(n.M_Rd - model.m))
@@ -143,6 +143,8 @@ namespace VGGS_Calculator.Controllers
 
             public class Geometry
             {
+                public double b_eff { get; set; }
+                public double h_f { get; set; }
                 public double b { get; set; }
                 public double d1 { get; set; }
                 public double d2{ get; set; }

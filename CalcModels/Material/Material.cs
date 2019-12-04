@@ -2,7 +2,7 @@
 {
     public class Material : IMaterial
     {
-        public IBetonModelEC beton { get; set; }
+        public IBetonModel beton { get; set; }
         public IReinforcementTypeModel armatura { get; set; } 
     }
 }

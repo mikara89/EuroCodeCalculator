@@ -2,6 +2,13 @@
     Dijagram interakcije za AB preske
 </h1>
 <form class="col-xl-3 col-lg-4 col-md-12 col-sm-12 col-xs-12" #f="ngForm">
+    <!--<div class="checkbox">
+        <label>
+            <input (change)="isT = !isT"
+                   type="checkbox"
+                   [checked]="isT">T presek
+        </label>
+    </div>-->
     <div class="row">
         <div class="input-group">
             <span class="input-group-addon test-active"
@@ -18,6 +25,56 @@
                    id="b">
             <span class="input-group-addon test-active"
                   *ngIf="b.touched && !b.valid  || b.touched && b.value<=0"
+                  id="basic-addon2">
+                <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+            </span>
+            <span class="input-group-addon"
+                  id="basic-addon2">
+                [cm]
+            </span>
+        </div>
+    </div>
+    <div class="row" *ngIf="isT">
+        <div class="input-group">
+            <span class="input-group-addon test-active"
+                  id="basic-addon2">
+                b_eff=
+            </span>
+            <input type="number" (keyup)="updateChart()"
+                   [(ngModel)]="izracunaj.geometry.b_eff"
+                   class="form-control"
+                   placeholder="exp. 25"
+                   required
+                   name="b_eff"
+                   #b_eff="ngModel"
+                   id="b_eff">
+            <span class="input-group-addon test-active"
+                  *ngIf="b_eff.touched && !b_eff.valid"
+                  id="basic-addon2">
+                <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+            </span>
+            <span class="input-group-addon"
+                  id="basic-addon2">
+                [cm]
+            </span>
+        </div>
+    </div>
+    <div class="row" *ngIf="isT">
+        <div class="input-group">
+            <span class="input-group-addon test-active"
+                  id="basic-addon2">
+                h_f=
+            </span>
+            <input type="number" (keyup)="updateChart()"
+                   [(ngModel)]="izracunaj.geometry.h_f"
+                   class="form-control"
+                   placeholder="exp. 25"
+                   required
+                   name="h_f"
+                   #h_f="ngModel"
+                   id="h_f">
+            <span class="input-group-addon test-active"
+                  *ngIf="h_f.touched && !h_f.valid "
                   id="basic-addon2">
                 <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
             </span>
@@ -235,7 +292,7 @@
                             type="button">
                         x
                     </button>
-                   
+
                     <button type="button"
                             (click)="infoMN(point.data[0])"
                             class="btn btn-info"

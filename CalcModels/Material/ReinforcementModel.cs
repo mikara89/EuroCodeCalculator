@@ -16,7 +16,7 @@ namespace CalcModels
         /// <summary>
         /// Set as First B500B
         /// </summary>
-        public ReinforcementTypeModelEC Type { get; set; }
+        public IReinforcementTypeModel Type { get; set; }
         public double weight_total { get {return armatura.weight_per_meter * Number; } } 
         public double cm2_total { get { return armatura.cm2 * Number; } } 
         public ReinforcementTabelModel armatura { get; set; }
@@ -47,7 +47,7 @@ namespace CalcModels
         /// <summary>
         /// Set as First B500B
         /// </summary>
-        public ReinforcementTypeModelEC Type { get; set; }
+        public IReinforcementTypeModel Type { get; set; }
         public double weight_total { get { return armatura.weight_per_meter * Number; } }
         public double cm2_total { get { return armatura.cm2 * Number; } }
         public ReinforcementTabelModel armatura { get; set; }

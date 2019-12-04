@@ -80,9 +80,7 @@ namespace CalculatorEC2Logic
             {
                 minArmatura();
                 CalAdditionalTransverseReinforcement();
-            }
-
-            
+            }  
         }
 
         private void InitValidations(
@@ -96,7 +94,7 @@ namespace CalculatorEC2Logic
             if (geometry.d1 <= 0)
                 throw new Exception("d1 must be greater 0");
             if (2 * geometry.d1 >= geometry.h)
-                throw new Exception("2 x d1 must be smoller then h");
+                throw new Exception("2 x d1 must be smaller then h");
             if (material.beton == null)
                 throw new Exception("Beton not defined!");
             if (material.armatura == null)

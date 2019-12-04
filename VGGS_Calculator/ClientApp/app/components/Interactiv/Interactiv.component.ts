@@ -1,11 +1,9 @@
-﻿import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
-import { SymmReinfService } from '../../services/symm-reinf.service';
+﻿import { Component, OnInit } from '@angular/core';
 import * as Chart from 'chart.js';
 import { ChartDataSets, ChartPoint } from 'chart.js';
 import { BetonClassService } from '../../services/beton-class.service';
 import { ArmaturaTypeService } from '../../services/armatura-type.service';
 import { InteractivService } from '../../services/interactiv.service';
-import { DataSharedService } from '../../services/data-shared.service';
 
 @Component({
     selector: 'app-Interactiv',
@@ -57,6 +55,7 @@ export class InteractivComponent implements OnInit {
     
 
     isReady: boolean;
+    isT: boolean; 
     textResult: any;
     private color: any; 
   
@@ -64,9 +63,11 @@ export class InteractivComponent implements OnInit {
     armaturaTypeList: any;
 
     izracunaj: any = {
-        mi: 150,
+        mi: 57,
         ni: 0,
         geometry: {
+            b_eff: 0,
+            h_f: 0,
             b: 30,
             h: 30,
             d1: 6,
@@ -204,7 +205,6 @@ export class InteractivComponent implements OnInit {
                 this.RandomColor(true),
                 'M_Rd/N_Rd: ' + Math.round(this.izracunaj.mi * 100) / 100 + '/'
                 + Math.round(this.izracunaj.ni * 100) / 100,
-                //'M_Rd: ' + this.izracunaj.mi + 'kNm/N_Rd: ' + this.izracunaj.ni + 'kN',
                 [{ x: this.izracunaj.mi, y: this.izracunaj.ni }]
                 , 5
             )
@@ -224,34 +224,3 @@ interface Point {
     x: number;
     y: number;
 }
- //SearchForLine() {
-
-    //    this.intServices.getLinesFromInput(this.izracunaj)
-    //        .subscribe((line: searcedPoint) => {
-
-    //            this.addData(this.chart, this.createDataSet('#000000', '0 to μSd', [{ x: this.izracunaj.mi, y: 0 }, { x: this.izracunaj.mi, y: this.izracunaj.ni }]));
-    //            this.addData(this.chart, this.createDataSet('#000000', '0 to νSd', [{ x: 0, y: this.izracunaj.ni }, { x: this.izracunaj.mi, y: this.izracunaj.ni }]));
-    //            this.addData(this.chart, this.createDataSet('#000000', 'w= ' + Math.round(line.w * 100) / 100, [{ x: this.izracunaj.mi, y: this.izracunaj.ni }], 2));
-    //            this.textResult = line.textResulte;
-    //        },
-    //        async (error: Response) => {
-    //            var mess = (await error.json()).error;
-    //            alert(mess);
-    //            console.log(mess);
-    //        }, () => { }
-    //        );
-    //}
-
-    //sortDataFromSearch(list: any) {
-    //    {
-    //        let w = list.w;
-    //        let item: DataForChart = { w: 0, points: [{ x: 0,y: 0 }] };
-
-    //        list.list.forEach((y: SymmReinfModel) => {
-    //            item.points.push({ x: y.μSd, y: y.νSd });
-    //        });
-
-    //        item.points.splice(0, 1);
-    //        return item;
-    //    }
-    //}

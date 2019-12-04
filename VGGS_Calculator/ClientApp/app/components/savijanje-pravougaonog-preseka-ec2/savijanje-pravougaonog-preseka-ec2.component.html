@@ -44,7 +44,10 @@
             </div>
             <div class="row">
                 <div class="input-group">
-                    <span class="input-group-addon test-active"
+                    <span data-toggle="tooltip"
+                          data-placement="top"
+                          title="-N is compression"
+                          class="input-group-addon test-active"
                           id="basic-addon2">
                         Nsd=
                     </span>
@@ -66,6 +69,7 @@
                           id="basic-addon2">
                         [kNm]
                     </span>
+                    
                 </div>
             </div>
         </div>
@@ -125,7 +129,10 @@
 
             <div class="row">
                     <div class="input-group">
-                        <span class="input-group-addon test-active"
+                        <span data-toggle="tooltip"
+                              data-placement="top"
+                              title="-N is compression"
+                              class="input-group-addon test-active"
                               id="basic-addon2">
                             Ng=
                         </span>
@@ -150,30 +157,33 @@
                     </div>
                 </div>
             <div class="row">
-                    <div class="input-group">
-                        <span class="input-group-addon test-active"
-                              id="basic-addon2">
-                            Nq=
-                        </span>
-                        <input (keyup)="izracunaj.result=null"
-                               type="number"
-                               [(ngModel)]="izracunaj.nq"
-                               class="form-control"
-                               placeholder="exp. 25"
-                               required
-                               name="Nq"
-                               #Nq="ngModel"
-                               id="Nq">
-                        <span class="input-group-addon test-active"
-                              *ngIf="Nq.touched && !Nq.valid"
-                              id="basic-addon2">
-                            <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
-                        </span>
-                        <span class="input-group-addon"
-                              id="basic-addon2">
-                            [kN]
-                        </span>
-                    </div>
+                <div class="input-group">
+                    <span data-toggle="tooltip"
+                          data-placement="top"
+                          title="-N is compression"
+                          class="input-group-addon test-active"
+                          id="basic-addon2">
+                        Nq=
+                    </span>
+                    <input (keyup)="izracunaj.result=null"
+                           type="number"
+                           [(ngModel)]="izracunaj.nq"
+                           class="form-control"
+                           placeholder="exp. 25"
+                           required
+                           name="Nq"
+                           #Nq="ngModel"
+                           id="Nq">
+                    <span class="input-group-addon test-active"
+                          *ngIf="Nq.touched && !Nq.valid"
+                          id="basic-addon2">
+                        <i class="fa fa-times" aria-hidden="true" title="Not Valid!"></i>
+                    </span>
+                    <span class="input-group-addon"
+                          id="basic-addon2">
+                        [kN]
+                    </span>
+                </div>
                 </div>
         </div>
             <div class="row">

@@ -14,9 +14,9 @@ namespace CalcModels
         /// fyd i fyk u [kN/cm2]
         /// </summary>
         /// <returns></returns>
-        public static List<ReinforcementTypeModelEC> GetArmatura()
+        public static List<IReinforcementTypeModel> GetArmatura()
         {
-            return new List<ReinforcementTypeModelEC>
+            return new List<IReinforcementTypeModel>
             {
                 new ReinforcementTypeModelEC
                 {
@@ -62,6 +62,16 @@ namespace CalcModels
                     Es = 200,
                     Symbol = "B",
                     eps_ud=20,
+                },
+                new ReinforcementTypeModelPBAB
+                {
+                    name = "RA 400/500",
+                    fyk = 50,
+                    fyd =40,
+                    Es = 210,
+                    Symbol = "R",
+                    eps_ud=10,
+                    lim_ξ=0.538
                 }
             };
         }

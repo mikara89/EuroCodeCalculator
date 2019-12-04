@@ -29,7 +29,7 @@ namespace CalcModels
             var μ_lim = GetNew();
             μ_lim.SetByEcEs1(Material.beton.εcu2, Material.armatura.eps_ud);
             var kofResult = GetNew();
-
+            int i=0;
             if (μSd > μ_lim.μRd)
             {
                 var max_εs1 = Material.armatura.eps_ud;
@@ -41,7 +41,9 @@ namespace CalcModels
 
                 while (μSd.Round(percision) != kofResult.μRd.Round(percision))
                 {
-
+                    ++i;
+                    if (i > 200) 
+                        throw new Exception("Cant calculate");
                     adder_εs1 = adder_εs1 / 2;
 
                     kofResult = GetNew(Material.beton.εcu2, test_εs1);
@@ -59,6 +61,9 @@ namespace CalcModels
 
                 while (μSd.Round(percision) != kofResult.μRd.Round(percision))
                 {
+                    ++i;
+                    if (i > 200)
+                        throw new Exception("Cant calculate");
                     adder_εc = adder_εc / 2;
                     kofResult = GetNew(test_εc, Material.armatura.eps_ud);
                     if (kofResult.μRd > μSd) test_εc -= adder_εc;

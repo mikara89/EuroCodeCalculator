@@ -59,16 +59,16 @@ export class SavijanjePravougaonogPresekaEc2Component implements OnInit {
             betonClass: this.izracunaj.betonClass,
         }).subscribe(kof => { this.muList = kof; });
     }
-    free() {
+    async free() {
         if (this.izracunaj.h == 0) {
-            this.kofServices.getList({
+           await  this.kofServices.getList({
                 b: this.izracunaj.b,
                 h: this.izracunaj.h,
                 d1: this.izracunaj.d1,
                 d2: this.izracunaj.d2,
                 armtype: this.izracunaj.armtype,
                 betonClass: this.izracunaj.betonClass,
-            }).subscribe(kof => { this.muList = kof; });
+            }).subscribe(kof => { this.muList = kof; console.log(kof);  });
         }
     }
     Toggled(b: boolean) {

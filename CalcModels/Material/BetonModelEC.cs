@@ -1,25 +1,10 @@
-﻿using CalcModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace CalcModels
 {
-
-   
-    public enum BetonClassType
-    {
-         C12_16,
-         C16_20,
-         C20_25,
-         C25_30,
-        C30_37,
-        C35_45,
-        C40_50,
-        C45_55,
-        C55_60
-    }
-    public class BetonModelEC : IBetonModelEC
+    public class BetonModelEC : IBetonModel
     {
         public double αcc { get; set; } = 0.85;
         public double ni { get; set; } = 0.85;
@@ -27,7 +12,7 @@ namespace CalcModels
         public static IEnumerable<string> ListOfBetonClassesNames()
         {
             List<string> list = new List<string>();
-            Enum.GetNames(typeof(BetonClassType))
+            Enum.GetNames(typeof(BetonClassTypeEC))
                 .ToList()
                 .ForEach(x => list
                     .Add(x.Replace("_", "/")));
@@ -36,17 +21,17 @@ namespace CalcModels
         public static IEnumerable<BetonModelEC> ListOfBetonClasses()
         {
             List<BetonModelEC> list = new List<BetonModelEC>();
-            Enum.GetNames(typeof(BetonClassType))
+            Enum.GetNames(typeof(BetonClassTypeEC))
                 .ToList()
                 .ForEach(x => list
                     .Add(new BetonModelEC(x.Replace("_", "/"))));
             return list;
         }
-        private string GetStringFromType(BetonClassType betonClassType)
+        private string GetStringFromType(BetonClassTypeEC betonClassType)
         {
-            return Enum.GetName(typeof(BetonClassType), betonClassType).Replace("_", "/");
+            return Enum.GetName(typeof(BetonClassTypeEC), betonClassType).Replace("_", "/");
         }
-        public BetonModelEC(BetonClassType betonClassType, double α = 0.85)
+        public BetonModelEC(BetonClassTypeEC betonClassType, double α = 0.85)
         {
             this.name = GetStringFromType(betonClassType);
             this.αcc = α;
@@ -161,6 +146,13 @@ namespace CalcModels
         public override string ToString()
         {
             return $"{name}; fcd: {Math.Round(fcd, 2)}MPa; fck: {fck}Mpa; Ecm: {Math.Round(Ecm / 1000, 2)}GPa";
+        }
+
+        public double GetSigma_f(double eps_b)
+        {
+            if (Math.Abs(this.εc2) == 0 || Math.Abs(this.εc2) <= Math.Abs(εc2))
+                return fcd * Math.Abs(1 - (1 - Math.Pow(Math.Abs(eps_b) / Math.Abs(εc2), 2)));
+            else return fcd;
         }
     }
 }

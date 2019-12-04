@@ -1,6 +1,6 @@
 ﻿namespace CalcModels
 {
-    public interface IBetonModelEC
+    public interface IBetonModel
     {
         double Ecm { get; }
         double fcd { get; }
@@ -19,7 +19,7 @@
         double εcu2 { get; set; }
         double εcu3 { get; set; }
         double ρ { get; }
-
+        double GetSigma_f(double eps_b);
         string ToString();
     }
 }
