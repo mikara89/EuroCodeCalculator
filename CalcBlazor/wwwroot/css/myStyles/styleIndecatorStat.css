@@ -1,0 +1,8 @@
+/* Indecator Stat*/
+.indecator-stat{
+    display: flex; 
+    order: 3;
+  }
+  .indecator-stat progress{
+      flex: 1;
+  }

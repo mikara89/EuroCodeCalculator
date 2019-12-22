@@ -1,0 +1,95 @@
+html, body {
+    padding: 0;
+    height: 100%;
+    margin: 0;
+  }
+  input {
+    font-size: 14px;
+    font-family: Helvetica, sans-serif;
+  }
+  
+  body{
+    background-color: #BBB;
+    font-family: Helvetica, sans-serif;
+    display: flex;
+    flex-direction: row;
+  }
+
+app {
+    display: contents;
+}
+  h2, h3 {
+    margin: 0 0 .75em 0;
+  }
+
+
+.right-sidebar{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(72, 184, 156);
+}
+
+.navbar-top{
+    height: 50px;
+    background-color: rgb(222, 151, 151);
+    order: 1;
+}
+
+
+/* NAV SIDE BAR*/
+.left-sidebar{
+    display: flex;
+    flex-direction: column;
+    width: 60px;
+    background-color: rgb(212, 86, 86);
+}
+.navbar-left{
+    display: flex;
+    flex:1;
+    flex-direction: column;
+}
+.navbar-left .link-nav{
+   display: flex;
+    height: 60px;
+    border-bottom: blueviolet solid 1px ;
+}
+.navbar-left .link-nav-top{
+
+     height: 50px;
+     border-bottom: blueviolet solid 1px ;
+ }
+.navbar-left .link-nav .fa{
+   margin: auto;
+  font-size: x-large;
+}
+.navbar-left .link-nav.link-nav-settings{
+ margin-top: auto;
+ background-color: blueviolet;
+ }
+ .navbar-left .link-nav:hover{
+    background-color: blueviolet;
+ }
+
+.main-display {
+    order: 2;
+    flex: 1;
+    overflow-y:scroll;
+}
+
+legend {
+    width: auto;
+    font-size: initial;
+}
+
+fieldset {
+    margin: 0 1vh 0 1vh;
+    background-color: rgba(245, 245, 220, 0.658);
+    min-width: initial;
+    padding: 5px;
+    border: #808080 solid 1px;
+}
+
+
+
+ 

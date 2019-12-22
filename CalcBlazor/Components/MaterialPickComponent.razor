@@ -1,0 +1,48 @@
+﻿@inject CalcModels.BetonService  betonService
+@using CalcBlazor.Data.Models
+@using CalcModels
+
+<style>
+    .input-feild {
+        display: flex;
+        margin-bottom: 1vh;
+    }
+
+    select, InputSelect {
+        flex: 1;
+        width:initial;
+        height:22px;
+        padding:0 !important;
+
+    }
+    .input-feild label {
+        margin: 0 0.5vh 0 0.5vh;
+    }
+</style>
+
+<fieldset>
+    <legend>Material:</legend>
+    <form>
+        <div class="input-feild">
+            <label>Concrete class</label>
+            <select @onchange="PropertyChanged"
+                         value="@model.SelectedConcrete">
+                @foreach (var item in ListBeton)
+                {
+                    <option value="@item">@item</option>
+                }
+            </select>
+        </div>
+        <div class="input-feild">
+            <label>Reinforcement type</label>
+            <select @onchange="PropertyChanged"
+                    value="@model.SelectedReinf">
+                @foreach (var item in ListArmatura)
+                {
+                    <option value="@item">@item</option>
+                }
+            </select>
+        </div>
+    </form>
+</fieldset>
+

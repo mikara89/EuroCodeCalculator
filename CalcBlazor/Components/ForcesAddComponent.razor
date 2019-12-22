@@ -1,0 +1,69 @@
+﻿@using CalcBlazor.Data.Models
+<style>
+    .input-feild {
+        display: flex;
+        margin-bottom: 1vh;
+    }
+
+    input, InputNumber {
+        flex: 1;
+    }
+
+    .input-feild label {
+        margin: 0 1vh 0 1vh;
+    }
+
+    .input-feild button {
+        flex: 1;
+    }
+</style>
+<fieldset>
+    <legend>Add forces point:</legend>
+    <EditForm Model="@model" OnValidSubmit="@HandleValidSubmit">
+        <div class="input-feild">
+            <label>M_Ed:</label> <InputNumber @bind-Value="model.M" /><label>[kNm]</label>
+        </div>
+        <div class="input-feild">
+            <label>N_Ed:</label> <InputNumber @bind-Value="model.N" /><label>[kN]</label>
+        </div>
+        <div class="input-feild">
+            <button type="submit">Add</button>
+        </div>
+    </EditForm> 
+
+    <table>
+        <thead>
+            <tr>
+                <th>num.</th>
+                <th>M_Ed</th>
+                <th>N_Ed</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (TableData != null)
+            {
+                @foreach (var item in TableData.Select((value, i) => new { value, i }))
+                {
+                    <tr>
+                        <th>@item.i</th>
+                        <td>@item.value.M</td>
+                        <td>@item.value.N</td>
+                        <td>
+                            <button>?</button>
+                            <button @onclick="@(()=>TableData.Remove(item.value))">x</button>
+                        </td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+        <tfoot>
+
+        </tfoot>
+    </table>
+</fieldset>
+
+@code {
+   
+}

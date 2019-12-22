@@ -1,0 +1,61 @@
+﻿
+<style>
+    .input-feild {
+        display: flex;
+        margin-bottom: 1vh;
+    }
+
+    input,InputNumber {
+        flex: 1;
+    }
+
+    .input-feild label {
+        margin: 0 0.5vh 0 0.5vh;
+    }
+
+</style>
+<fieldset>
+    <legend>Section geometry:</legend>
+    <EditForm Model="@GeometryModel">
+        <DataAnnotationsValidator />
+        <ValidationSummary  />
+
+            <div class="input-feild">
+                <label>b=</label>
+                <InputNumber @bind-Value="GeometryModel.b"  
+                             @onfocusout="PropertyChanged"/>
+                <label>[cm]</label>
+            </div>
+            <div class="input-feild">
+                <label>h=</label> 
+                <InputNumber @bind-Value="GeometryModel.h"
+                             @onfocusout="PropertyChanged" />
+                <label>[cm]</label>
+            </div>
+            <div class="input-feild">
+                <label>d1=</label>
+                <InputNumber @bind-Value="GeometryModel.d1"
+                             @onfocusout="PropertyChanged" />
+                <label>[cm]</label>
+            </div>
+            <div class="input-feild">
+                <label>d2=</label> 
+                <InputNumber @bind-Value="GeometryModel.d2"
+                             @onfocusout="PropertyChanged" />
+                <label>[cm]</label>
+            </div>
+            <div class="input-feild">
+                <label>As1=</label>
+                <InputNumber @bind-Value="GeometryModel.As_1"
+                             @onfocusout="PropertyChanged" />
+                <label>[cm2]</label>
+            </div>
+            <div class="input-feild">
+                <label>As2=</label>
+                <InputNumber @bind-Value="GeometryModel.As_2"
+                             @onfocusout="@((e)=>PropertyChanged(e))" />
+                <label>[cm2]</label>
+            </div>
+    </EditForm>
+</fieldset>
+

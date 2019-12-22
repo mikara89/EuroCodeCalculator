@@ -1,0 +1,43 @@
+﻿@page "/interdiagram"
+@using CalcBlazor.Components
+
+<style>
+    .main-display{
+        display: flex;
+        flex-direction: row;
+        }
+        .main-display-side-left{
+        background-color: aquamarine;
+        display: flex;
+        flex-direction: column;
+        }
+        .main-display-side-right{
+        flex: 1;
+        background-color: rgb(168, 255, 127);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        }
+</style>
+
+@*<div class="container row">
+        <div class="col-6">
+            <GeometryFormComponent></GeometryFormComponent>
+            <MaterialPickComponent></MaterialPickComponent>
+        </div>
+    </div>*@
+
+<div class="main-display">
+    <div class="main-display-side-left">
+        <h3>Interation Diagram</h3>
+        <GeometryFormComponent></GeometryFormComponent>
+        <MaterialPickComponent></MaterialPickComponent>
+        <ForcesAddComponent></ForcesAddComponent>
+    </div>
+    <div class="main-display-side-right">
+      
+    </div>
+
+</div>
+
+@code {}
