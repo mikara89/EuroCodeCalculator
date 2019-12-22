@@ -9,15 +9,15 @@ using System;
 namespace CreckingCalcENTest
 {
     [TestClass]
-    public class ModelCrossSectionStrainsTest
+    public class SectionStrainsTest
     {
-        private static CrossSectionStrains Section;
-
+        private static SectionStrainsModel Section;
+         
 
         [ClassInitialize]
         public static void Init(TestContext tc)
         {
-            Section = new CrossSectionStrains(
+            Section = new SectionStrainsModel(
                 new Material
                 {
                     beton = new BetonModelEC("C25/30"),
@@ -30,23 +30,6 @@ namespace CreckingCalcENTest
                     d2 = 6,
                     As_1 = 6.8,
                     As_2 = 6.8
-                }
-            );
-            Section = new CrossSectionStrains(
-                new Material
-                {
-                    beton = new BetonModelEC("C25/30"),
-                    armatura = ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
-                }, new ElementGeometryWithReinf
-                {
-                    b_eff=175,
-                    h_f=15,
-                    b = 35,
-                    h = 150,
-                    d1 = 7,
-                    d2 = 7,
-                    As_1 = 106.18,
-                    As_2 = 0
                 }
             );
         }
@@ -65,62 +48,23 @@ namespace CreckingCalcENTest
         //    double εs2, double σc, double σs1,
         //    double σs2, double εc1, double N_Rd, 
         //    double M_Rd)
-        //{
-        //    if (εs1 == -10000000000)
-        //    {
-        //        Section.SetByEcEs1(εc);
-        //    }
-        //    else Section.SetByEcEs1(εc, εs1);
 
-        //    Assert.IsTrue(System.Math.Round(Section.N_Rd,7)== System.Math.Round(N_Rd, 7));
-        //    Assert.IsTrue(System.Math.Round(Section.M_Rd, 7) == System.Math.Round(M_Rd, 7));
-        //    Assert.IsTrue(System.Math.Round(Section.ξ, 7) == System.Math.Round(ξ, 7));
-        //    Assert.IsTrue(System.Math.Round(Section.ζ, 2) == System.Math.Round(ζ, 2));
-        //    Assert.IsTrue(System.Math.Round(Section.ω, 3) == System.Math.Round(ω, 3));
-        //    Assert.IsTrue(System.Math.Round(Section.ka, 3) == System.Math.Round(ka, 3));
-        //    Assert.IsTrue(System.Math.Round(Section.x, 3) == System.Math.Round(x, 3));
-        //    Assert.IsTrue(System.Math.Round(Section.εs2, 3) == System.Math.Round(εs2, 3));
-        //    Assert.IsTrue(System.Math.Round(Section.sig_c, 3) == System.Math.Round(σc, 3));
-        //    Assert.IsTrue(System.Math.Round(Section.sig_s1, 3) == System.Math.Round(σs1, 3));
-        //    Assert.IsTrue(System.Math.Round(Section.sig_s2, 3) == System.Math.Round(σs2, 3));
-        //    Assert.IsTrue(System.Math.Round(Section.αv, 3) == System.Math.Round(αv, 3));
-        //    Assert.IsTrue(System.Math.Round(Section.εc1, 3) == System.Math.Round(εc1,3));
-        //}
 
  
         [TestMethod]
-        public async Task CalcTestV2()
+        [DataRow(-3.5, 20)]
+        [DataRow(-3.5, 7.5)]
+        [DataRow(-3.5, 1)]
+        [DataRow(-3.3,1000000)]
+        public async Task CalcTest(double eps_c, double eps_s1)
         {
-            var s = new Solver(
-               new Material
-               {
-                   beton = new BetonModelEC("C25/30"),
-                   armatura = ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
-               }, new ElementGeometryWithReinf
-               {
-                   b_eff = 175,
-                   h_f = 15,
-                   b = 35, 
-                   h = 150,
-                   d1 = 7,
-                   d2 = 7,
-                   As_1 = 106.18,
-                   As_2 = 0
-               }
-           );
-            var beton = new BetonModelEC("C25/30");
-            var armatura = ReinforcementType.GetArmatura().Single(r => r.name == "B500B");
-            await s.Calc(0.001);
+            if (eps_s1 == 1000000)
+                Section.SetByEcEs1(eps_c);
+            else
+                Section.SetByEcEs1(eps_c, eps_s1);
+           var eps_ofZ=  Section.Get_eps(0);
 
-            ///Min And Max 
-            var Mmin = s.List
-                    .OrderBy(n => Math.Abs(n.M_Rd - 0))
-                    .Take(2);
-            var Nmin = s.List
-                    .OrderBy(n => Math.Abs(n.N_Rd - 0))
-                    .Take(2);
-
-            Assert.IsNotNull(s.List);
+            Assert.IsTrue(Section.eps_c1== eps_ofZ);
         }
         //
     }
