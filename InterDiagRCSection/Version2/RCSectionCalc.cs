@@ -18,7 +18,6 @@ namespace InterDiagRCSection
         {
             this.sectionStrains = sectionStrains;
             this.calcForces = calcForces;
-            this.calcForces.SetStrains(sectionStrains);
         }
 
         private void Calc()

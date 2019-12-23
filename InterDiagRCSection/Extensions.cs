@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CalcModels;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
@@ -49,6 +50,14 @@ namespace InterDiagRCSection
             });
             result = IsPointInPolygon4(poly.ToArray(), point);
             return result;
+        }
+
+        public static double Get_b(this IElementGeometryWithReinf element, double z)
+        {
+            if (element.h_f == 0)
+                return element.b;
+            else
+                return z > element.h - z ? element.b_eff : element.b;
         }
     }
 }

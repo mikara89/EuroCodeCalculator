@@ -2,10 +2,7 @@
 {
     public interface ICalcForces
     {
+        ISectionStrainsModel sectionStrains { get; }
         RCSectionForces Calc(CalcForcesType calcType);
-        void SetStrains(ISectionStrainsModel sectionStrains);
     }
-
-
-
 }
