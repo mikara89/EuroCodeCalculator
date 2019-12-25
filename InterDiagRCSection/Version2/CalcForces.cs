@@ -44,23 +44,36 @@ namespace InterDiagRCSection
             if (i == 1) 
             {
                 var z = sectionStrains.geometry.d1;
+                var e = sectionStrains.Get_eps(z);
                 var s = sectionStrains.GetSigmaForReinf(sectionStrains.Get_eps(z));
-                return new RCSectionForces
+                var r= new RCSectionForces
                 {
                     Sigma = s,
                     Z = sectionStrains.geometry.y1 - sectionStrains.geometry.d1,
                     F = sectionStrains.geometry.As_1 * s / 10
                 };
+                if (Double.IsNaN(r.F))
+                {
+                    _ = r.Sigma;
+                }
+
+                return r;
             }else
             {
                 var z = sectionStrains.geometry.h- sectionStrains.geometry.d2;
                 var s = sectionStrains.GetSigmaForReinf(sectionStrains.Get_eps(z));
-                return new RCSectionForces
+                var r = new RCSectionForces
                 {
                     Sigma = s,
                     Z = sectionStrains.geometry.y2 - sectionStrains.geometry.d2,
                     F = sectionStrains.geometry.As_2 * s / 10
                 };
+                if (Double.IsNaN(r.F))
+                {
+                    _ = r.Sigma;
+                }
+
+                return r;
             }
                
         }

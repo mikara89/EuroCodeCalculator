@@ -1,9 +1,9 @@
 ﻿namespace CalcModels
 {
-    public interface IElementGeometryWithReinf : IElementGeometry, IElementGeometryT
+    public interface IElementGeometryWithReinfold : IElementGeometry, IElementGeometryT
     {
         double As_1 { get; set; } 
-        double As_2 { get; set; }
+        double As_2 { get; set; } 
     }
     public interface IElementGeometryT:IElementGeometry
     {
@@ -15,6 +15,12 @@
 
        
     }
+    public interface IElementGeometryAddYc
+    {
 
+        double y1 { get; }
+        double y2 { get; }
+
+    }
 
 }

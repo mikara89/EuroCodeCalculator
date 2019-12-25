@@ -7,7 +7,7 @@ namespace InterDiagRCSection
     {
         private readonly bool Invert;
         private readonly IMaterial material;
-        private readonly IElementGeometryWithReinf geometry;
+        private readonly IElementGeometryWithReinfold geometry;
 
 
         //public double Fc => 1 * x * geometry.b * sig_c / 10;
@@ -228,7 +228,7 @@ namespace InterDiagRCSection
             }
         }
 
-        public CrossSectionStrains(IMaterial material, IElementGeometryWithReinf geometry, bool Invert = false) 
+        public CrossSectionStrains(IMaterial material, IElementGeometryWithReinfold geometry, bool Invert = false) 
         {
             this.material = material;
             this.geometry = geometry;

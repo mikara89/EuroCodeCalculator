@@ -1,5 +1,6 @@
 ﻿using InterDiagRCSection;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VGGS_Calculator.Core.Models
 {
@@ -21,7 +22,8 @@ namespace VGGS_Calculator.Core.Models
 
         private InfoDetailModel(CrossSectionStrains crossSection)
         {
-            Fc = crossSection.Fc;
+            crossSection.Fc.ToList()
+                .ForEach(x => Fc += x);
             Fs2 = crossSection.Fs2;
             Fs1 = crossSection.Fs1;
             N_Rd = crossSection.N_Rd;

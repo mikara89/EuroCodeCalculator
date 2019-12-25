@@ -53,7 +53,7 @@ namespace VGGS_Calculator.Controllers
                     beton = new BetonModelEC(model.material.betonClass),
                     armatura = ReinforcementType.GetArmatura().First(n => n.name == model.material.armtype),
                 };
-                var geometry = new ElementGeometryWithReinf()
+                var geometry = new ElementGeometryWithReinfT()
                 {
                     b_eff = model.geometry.b_eff,
                     h_f = model.geometry.h_f,
@@ -94,7 +94,7 @@ namespace VGGS_Calculator.Controllers
                     .First(n => n.name == model.material.armtype),
                 };
 
-                var geometry = new ElementGeometryWithReinf()
+                var geometry = new ElementGeometryWithReinfT()
                 {
                     b_eff = model.geometry.b_eff,
                     h_f = model.geometry.h_f,

@@ -1,8 +1,11 @@
-﻿namespace InterDiagRCSection
+﻿using System;
+
+namespace InterDiagRCSection
 {
     public class ConcreteForceCalc : IConcreteForceCalc
     {
-        public int n { get; set; } = 50000;
+        private double? Force= null;
+        public int n { get; set; } = 100;
         public ISectionStrainsModel sectionStrains { get;internal set; }
 
         public ConcreteForceCalc(ISectionStrainsModel sectionStrains)
@@ -11,8 +14,11 @@
         }
         public double GetForce()
         {
-            var x = sectionStrains.x;
+            if (sectionStrains.eps_c > 0)
+                return 0;
             var h = sectionStrains.geometry.h;
+            var x = h -sectionStrains.x;
+           
             double dx = (double)(h - x) / n;
 
             double result = 0;
@@ -23,37 +29,42 @@
                 double areaVal = funVal * dx;
                 result += areaVal;
             }
-
-            return result;
+            Force= -1 * result;
+            return -1 * result;
 
         }
         public double GetDistance()
         {
-            var x = sectionStrains.x;
             var h = sectionStrains.geometry.h;
-            var Fc = GetForce();
+            var x = h - sectionStrains.x;
+
+            double Fc = Force!=null? (double)Force: GetForce();
+
             double dx = (double)(h - x) / n;
 
             double result = 0;
             for (int i = 0; i < n; i++)
             {
                 double xi = x + i * dx;
-                double funVal = CaclDistanceValuePerDx(xi);
+                double funVal = CaclForceValuePerDx(xi)*xi;
                 double areaVal = funVal * dx;
                 result += areaVal;
             }
 
-            return result / Fc - h - sectionStrains.geometry.y1;
+            if (Fc == 0) 
+                return 0;
+
+            var a = result / Fc;
+            return Math.Abs(result / Fc - sectionStrains.geometry.y2 + sectionStrains.x);
 
         }
         private double CaclForceValuePerDx(double xi)
         {
-            return sectionStrains.Get_b(xi) * sectionStrains.Get_sig(xi) / 10;
+            var b = sectionStrains.Get_b(xi);
+            var s = sectionStrains.Get_sig(xi);
+            return b * s / 10;
         }
-        private double CaclDistanceValuePerDx(double xi)
-        {
-            return sectionStrains.Get_b(xi) * sectionStrains.Get_sig(xi) / 10 * xi;
-        }
+     
     }
 
 

@@ -111,9 +111,13 @@ namespace InterDiagRCSection
 
             else
             {
-                if (x > z)
+                if (geometry.h-x > z)
+                {
+                    if (z==geometry.d1 && eps_s1 == 0)
+                        return 0;
                     return eps_s1 * (geometry.h - x - z) / (geometry.h - x - geometry.d1);
-                else if (x < z)
+                }            
+                else if (geometry.h - x <= z)
                     return eps_c * (z - geometry.h + x) / x;
                 else
                     return 0;
@@ -137,7 +141,7 @@ namespace InterDiagRCSection
         public double Get_sig(double z)
         {
             var eps_c = Get_eps(z);
-            if (Math.Abs(eps_c) == 0 || Math.Abs(eps_c) <= Math.Abs(material.beton.εc2))
+            if (Math.Abs(eps_c) == 0 || Math.Abs(eps_c) < Math.Abs(material.beton.εc2))
                 return material.beton.fcd * Math.Abs(1 - (1 - Math.Pow(eps_c / material.beton.εc2, material.beton.n)));
             else return material.beton.fcd;
         }
