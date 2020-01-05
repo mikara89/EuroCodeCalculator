@@ -3,7 +3,7 @@ using System;
 
 namespace InterDiagRCSection
 {
-    public class CrossSectionStrains :ICrossSectionStrains
+    public class CrossSectionStrains :ICrossSectionStrains, IMNInteraction
     {
         private readonly bool Invert;
         private readonly IMaterial material;
@@ -228,6 +228,14 @@ namespace InterDiagRCSection
             }
         }
 
+        double ICrossSectionStrains.Fc => throw new NotImplementedException();
+
+        public double Zc => throw new NotImplementedException();
+
+        public double Zs1 => throw new NotImplementedException();
+
+        public double Zs2 => throw new NotImplementedException();
+
         public CrossSectionStrains(IMaterial material, IElementGeometryWithReinfold geometry, bool Invert = false) 
         {
             this.material = material;
@@ -285,7 +293,4 @@ namespace InterDiagRCSection
         }
 
     }
-
-
-
 }

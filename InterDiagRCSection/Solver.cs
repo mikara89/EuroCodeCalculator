@@ -1,4 +1,5 @@
 ﻿using CalcModels;
+using ConsoleTables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -135,17 +136,17 @@ namespace InterDiagRCSection
                     ///Bending with or without tension (scope 1 pure tension)
                     for (double i = Material.armatura.eps_ud; i > Material.beton.εcu2; i -= precision)
                     {
-                        ISectionStrainsModel s_a = new SectionStrainsModel(Material, Geometry);
+                        ISectionStrainsFactory s_a = new SectionStrainsFactory(Material, Geometry);
                         s_a.SetByEcEs1(i, Material.armatura.eps_ud);
                         var a = new RCSectionCalc(s_a, new CalcForces(new ConcreteForceCalc(s_a)));
-                        
+                        a.Calc();
                         List.Add(a);
                     }
 
-                    ISectionStrainsModel s_a1 = new SectionStrainsModel(Material, Geometry);
+                    ISectionStrainsFactory s_a1 = new SectionStrainsFactory(Material, Geometry);
                     s_a1.SetByEcEs1(Material.beton.εcu2, Material.armatura.eps_ud);
                     var a1 = new RCSectionCalc(s_a1, new CalcForces(new ConcreteForceCalc(s_a1)));
-                    
+                    a1.Calc();
                     List.Add(a1);
 
 
@@ -155,10 +156,10 @@ namespace InterDiagRCSection
                     var lim = Material.beton.εcu2 * Geometry.d1 / Geometry.h;
                     for (double i = Material.armatura.eps_ud; i > lim; i -= precision)
                     {
-                        ISectionStrainsModel s_b = new SectionStrainsModel(Material, Geometry);
+                        ISectionStrainsFactory s_b = new SectionStrainsFactory(Material, Geometry);
                         s_b.SetByEcEs1(Material.beton.εcu2, i);
                         var b = new RCSectionCalc(s_b, new CalcForces(new ConcreteForceCalc(s_b)));
-                        
+                        b.Calc();
                         List.Add(b);
 
                         if (s_b.eps_c1 == 0) break;
@@ -167,49 +168,132 @@ namespace InterDiagRCSection
                     ///Full compression
                     for (double i = Material.beton.εcu2; i < Material.beton.εc2; i += precision/10)
                     {
-                        ISectionStrainsModel s_c = new SectionStrainsModel(Material, Geometry);
+                        ISectionStrainsFactory s_c = new SectionStrainsFactory(Material, Geometry);
                         s_c.SetByEcEs1(i);
                         var c = new RCSectionCalc(s_c, new CalcForces(new ConcreteForceCalc(s_c)));
-                        
+                        c.Calc();
                         List.Add(c);
 
                     }
 
-                    ISectionStrainsModel s_c1 = new SectionStrainsModel(Material, Geometry);
+                    ISectionStrainsFactory s_c1 = new SectionStrainsFactory(Material, Geometry);
                     s_c1.SetByEcEs1(Material.beton.εc2);
                     var c1 = new RCSectionCalc(s_c1, new CalcForces(new ConcreteForceCalc(s_c1)));
-                    
+                    c1.Calc();
                     List.Add(c1);
 
                     if (!Invert)
                     {
-                        //RCSectionCalc[] InvList = new RCSectionCalc[List.Count];
-                        //List.CopyTo(InvList);
-                        //var M= InvList.ToList().Select(x => x.M_Rd).Reverse().ToList();
-                        //InvList.ToList().ForEach(x =>
-                        //{
-                        //    var i = InvList.ToList().IndexOf(x);
-                        //    x.M_Rd =- M[i];
-                        //});
                         List.Reverse();
-                        //List.AddRange(InvList);
                     }
                         
                 } while (j < 2);
             });
         }
+
+        public async Task CalcAsync(double precision = 0.01) 
+        {
+            List = new List<RCSectionCalc>();
+            await Task.Run(() =>
+            {
+                var j = 0;
+                do
+                {
+                    j++;
+                    bool Invert = j == 1 ? false : true;
+                    if (Invert)
+                        Geometry.Invert();
+                    ///Rotates about point A (scope 1 and 2)
+                    ///Bending with or without tension (scope 1 pure tension)
+                    for (double i = Material.armatura.eps_ud; i > Material.beton.εcu2; i -= precision)
+                    {
+
+                        ISectionStrainsFactory s_a = new SectionStrainsFactory(Material, Geometry);
+                        s_a.SetByEcEs1(i, Material.armatura.eps_ud);
+                        var a = new RCSectionCalc(s_a, new CalcForces(new ConcreteForceCalc(s_a)));
+                        a.Calc();
+                        List.Add(a);
+
+                        //if (a.Forces["Fc"].F == 0) break;
+                    }
+
+                    ISectionStrainsFactory s_a1 = new SectionStrainsFactory(Material, Geometry);
+                    s_a1.SetByEcEs1(Material.beton.εcu2, Material.armatura.eps_ud);
+                    var a1 = new RCSectionCalc(s_a1, new CalcForces(new ConcreteForceCalc(s_a1)));
+                    a1.Calc();
+                    List.Add(a1);
+
+
+                    ///Rotates about point B
+                    ///Bending with or without compression or tensio (scope 3)
+                    ///excentric compression (scope 4)
+                    var lim = Material.beton.εcu2 * Geometry.d1 / Geometry.h;
+                    for (double i = Material.armatura.eps_ud; i > lim; i -= precision)
+                    {
+                        ISectionStrainsFactory s_b = new SectionStrainsFactory(Material, Geometry);
+                        s_b.SetByEcEs1(Material.beton.εcu2, i);
+                        var b = new RCSectionCalc(s_b, new CalcForces(new ConcreteForceCalc(s_b)));
+                        b.Calc();
+                        List.Add(b);
+
+                        if (s_b.eps_c1 == 0) break;
+                    }
+                    ///Rotates about point C
+                    ///Full compression
+                    for (double i = Material.beton.εcu2; i < Material.beton.εc2; i += precision / 10)
+                    {
+                        ISectionStrainsFactory s_c = new SectionStrainsFactory(Material, Geometry);
+                        s_c.SetByEcEs1(i);
+                        var c = new RCSectionCalc(s_c, new CalcForces(new ConcreteForceCalc(s_c)));
+                        c.Calc();
+                        List.Add(c);
+
+                    }
+
+                    ISectionStrainsFactory s_c1 = new SectionStrainsFactory(Material, Geometry);
+                    s_c1.SetByEcEs1(Material.beton.εc2);
+                    var c1 = new RCSectionCalc(s_c1, new CalcForces(new ConcreteForceCalc(s_c1)));
+                    c1.Calc();
+                    List.Add(c1);
+
+                    if (!Invert)
+                    {
+                        List.Reverse();
+                    }
+
+                } while (j < 2);
+            });
+
+             
+        }
         public override string ToString()
         {
+            var table = new ConsoleTable("R.Br", "M_Rd", "N_Rd","x","Fc","zc","Fs1","zs1","Fs2", "zs2");
 
-            var r = $"| R.Br    |   M_Rd    |    N_Rd   |    x  |    Fc |    Fs1    |    Fs2    |";
-                r += $"{Environment.NewLine}---------------------------------------------------------------------------";
-            ;
+            List<object[]> rows =new List<object[]>();
+
             List.ForEach(x =>
             {
-                r += $"{Environment.NewLine}|   {List.IndexOf(x)}   |   {x.M_Rd.Round(2)}    |    {x.N_Rd.Round(2)}   |    {x.sectionStrains.x.Round(2)}   |    {x.Forces["Fc"].F.Round(2)}   |    {x.Forces["Fs1"].F.Round(2)}  |   {x.Forces["Fs2"].F.Round(2)}   |";
-                r += $"{Environment.NewLine}---------------------------------------------------------------------------";
+                //rows.Add(new { RBr=List.IndexOf(x), M_Rd=x.M_Rd.Round(2), N_Rd=x.N_Rd.Round(2), x=x.sectionStrains.x.Round(2), Fc=x.Forces["Fc"].F.Round(2), Fs1=x.Forces["Fs1"].F.Round(2), Fs2=x.Forces["Fs2"].F.Round(2) });
+                table.Rows.Add(new object[] { List.IndexOf(x), x.M_Rd.Round(2), x.N_Rd.Round(2),  x.sectionStrains.x.Round(2), x.Forces["Fc"].F.Round(2), x.Forces["Fc"].Z.Round(2),  x.Forces["Fs1"].F.Round(2), x.Forces["Fs1"].Z.Round(2), x.Forces["Fs2"].F.Round(2), x.Forces["Fs2"].Z.Round(2) });
             });
-            return r;
+
+           var s= table
+                .Configure(o => o.NumberAlignment = Alignment.Right)
+                .ToMarkDownString();
+
+            
+
+
+            //var r = $"| R.Br    |   M_Rd    |    N_Rd   |    x  |    Fc |    Fs1    |    Fs2    |";
+            //    r += $"{Environment.NewLine}---------------------------------------------------------------------------";
+            //;
+            //List.ForEach(x =>
+            //{
+            //    r += $"{Environment.NewLine}|   {List.IndexOf(x)}   |   {x.M_Rd.Round(2)}    |    {x.N_Rd.Round(2)}   |    {x.sectionStrains.x.Round(2)}   |    {x.Forces["Fc"].F.Round(2)}   |    {x.Forces["Fs1"].F.Round(2)}  |   {x.Forces["Fs2"].F.Round(2)}   |";
+            //    r += $"{Environment.NewLine}---------------------------------------------------------------------------";
+            //});
+            return s;
         }
     }
 }

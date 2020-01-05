@@ -2,7 +2,7 @@
 
 namespace InterDiagRCSection
 {
-    public interface ISectionStrainsModel
+    public interface ISectionStrainsFactory
     {
         IMaterial material { get; }
         IElementGeometryWithReinf geometry { get; }

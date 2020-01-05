@@ -1,8 +1,10 @@
-﻿namespace InterDiagRCSection
+﻿using System.Threading.Tasks;
+
+namespace InterDiagRCSection
 {
     public interface ICalcForces
     {
-        ISectionStrainsModel sectionStrains { get; }
+        ISectionStrainsFactory sectionStrains { get; }
         RCSectionForces Calc(CalcForcesType calcType);
     }
 }

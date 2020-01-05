@@ -29,34 +29,15 @@ namespace VGGS_Calculator.Controllers
             }
             try
             {
-                //var material = new Material()
-                //{
-                //    beton = new BetonModelEC(model.material.betonClass),
-                //    armatura = ReinforcementType.GetArmatura().First(n => n.name == model.material.armtype),
-                //};
-                //var geometry = new ElementGeometryWithReinf()
-                //{
-                //    b = model.geometry.b,
-                //    d1 = model.geometry.d1,
-                //    d2 = model.geometry.d2,
-                //    h = model.geometry.h,
-                //    As_1 = model.geometry.as1,
-                //    As_2 = model.geometry.as2,
-                //};
-                //var s = new Solver(material, geometry);
-                //await s.Calc();
-                //Logger.LogInformation("API send interacion curves");
-                //return Ok(s.List.Select(x=>new { x=x.M_Rd, y=x.N_Rd }));   
-
                 var material = new Material()
                 {
                     beton = new BetonModelEC(model.material.betonClass),
                     armatura = ReinforcementType.GetArmatura().First(n => n.name == model.material.armtype),
                 };
-                var geometry = new ElementGeometryWithReinfT()
+                var geometry = new ElementGeometryWithReinfI()
                 {
-                    b_eff = model.geometry.b_eff,
-                    h_f = model.geometry.h_f,
+                    b_eff_top = model.geometry.b_eff,
+                    h_f_top = model.geometry.h_f,
                     b = model.geometry.b,
                     d1 = model.geometry.d1,
                     d2 = model.geometry.d2,
@@ -64,8 +45,8 @@ namespace VGGS_Calculator.Controllers
                     As_1 = model.geometry.as1,
                     As_2 = model.geometry.as2,
                 };
-                var s = new Solver(material, geometry);
-                await s.Calc();
+                var s = new SolverV2(material, geometry);
+                await s.CalcAsync(0.5);
                 Logger.LogInformation("API send interacion curves");
                 return Ok(s.List.Select(x => new { x = x.M_Rd, y = x.N_Rd }));
             }
@@ -94,10 +75,10 @@ namespace VGGS_Calculator.Controllers
                     .First(n => n.name == model.material.armtype),
                 };
 
-                var geometry = new ElementGeometryWithReinfT()
+                var geometry = new ElementGeometryWithReinfI()
                 {
-                    b_eff = model.geometry.b_eff,
-                    h_f = model.geometry.h_f,
+                    b_eff_top = model.geometry.b_eff,
+                    h_f_top = model.geometry.h_f,
                     b = model.geometry.b,
                     d1 = model.geometry.d1,
                     d2 = model.geometry.d2,
@@ -106,12 +87,12 @@ namespace VGGS_Calculator.Controllers
                     As_2 = model.geometry.as2,
                 };
 
-                var s = new Solver(material, geometry);
+                var s = new SolverV2(material, geometry);
                 await s.Calc();
-                s.GetWorrnings(model.m, model.n);
-                var r = s.List.IsMNValid(model.m, model.n);
+                //s.GetWorrnings(model.m, model.n);
+                var isValid = s.List.IsMNValid(model.m, model.n);
 
-                var listMaxMin = new List<CrossSectionStrains>();
+                var listMaxMin = new List<RCSectionCalc>();
                 listMaxMin.AddRange(
                     s.List
                     .OrderBy(n => Math.Abs(n.M_Rd - model.m))
@@ -123,8 +104,8 @@ namespace VGGS_Calculator.Controllers
                 return Ok(
                     new
                     {
-                        extrims = InfoDetailModelV2.Converts(listMaxMin.ToArray()),
-                        isValid = s.List.IsMNValid(model.m, model.n),
+                        //extrims = InfoDetailModelV2.Converts(listMaxMin.ToArray()),
+                        isValid = isValid,
                         worrnings = s.Worrnings,
                     });
             }

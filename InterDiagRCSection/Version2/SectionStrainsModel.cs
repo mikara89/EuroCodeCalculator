@@ -6,7 +6,7 @@ namespace InterDiagRCSection
     /// <summary>
     /// 
     /// </summary>
-    public class SectionStrainsModel : ISectionStrainsModel
+    public class SectionStrainsFactory : ISectionStrainsFactory
     {
         /// <summary>
         /// Material of given section
@@ -43,7 +43,7 @@ namespace InterDiagRCSection
         /// </summary>
         public double c => (1 - material.beton.εc2 / material.beton.εcu2) * geometry.h;
 
-        public SectionStrainsModel(IMaterial material, IElementGeometryWithReinf geometry)
+        public SectionStrainsFactory(IMaterial material, IElementGeometryWithReinf geometry)
         {
             this.material = material;
             this.geometry = geometry;
@@ -141,8 +141,8 @@ namespace InterDiagRCSection
         public double Get_sig(double z)
         {
             var eps_c = Get_eps(z);
-            if (Math.Abs(eps_c) == 0 || Math.Abs(eps_c) < Math.Abs(material.beton.εc2))
-                return material.beton.fcd * Math.Abs(1 - (1 - Math.Pow(eps_c / material.beton.εc2, material.beton.n)));
+            if (Math.Abs(eps_c) >= 0 && Math.Abs(eps_c) <= Math.Abs(material.beton.εc2))
+                return material.beton.fcd * Math.Abs(1 - Math.Pow((1 - eps_c / material.beton.εc2), material.beton.n));
             else return material.beton.fcd;
         }
         /// <summary>

@@ -1,8 +1,10 @@
-﻿namespace InterDiagRCSection
+﻿using System.Threading.Tasks;
+
+namespace InterDiagRCSection
 {
     public interface IConcreteForceCalc
     {
-        ISectionStrainsModel sectionStrains
+        ISectionStrainsFactory sectionStrains
         {
             get;
         }

@@ -11,13 +11,13 @@ namespace CreckingCalcENTest
     [TestClass]
     public class SectionStrainsTest
     {
-        private static SectionStrainsModel Section;
+        private static SectionStrainsFactory Section;
          
 
         [ClassInitialize]
         public static void Init(TestContext tc)
         {
-            Section = new SectionStrainsModel(
+            Section = new SectionStrainsFactory(
                 new Material
                 {
                     beton = new BetonModelEC("C25/30"),

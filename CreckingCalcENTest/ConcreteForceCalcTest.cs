@@ -6,19 +6,20 @@ using InterDiagRCSection;
 using System.Threading.Tasks;
 using System;
 using CalcModels;
+using System.Diagnostics;
 
 namespace CreckingCalcENTest
 { 
     [TestClass]
     public class ConcreteForceCalcTest
     {
-        private static SectionStrainsModel Section;
+        private static SectionStrainsFactory Section;
 
 
         [ClassInitialize]
         public static void Init(TestContext tc)
         {
-            Section = new SectionStrainsModel(
+            Section = new SectionStrainsFactory(
                 new Material
                 {
                     beton = new BetonModelEC("C25/30"),
@@ -38,7 +39,7 @@ namespace CreckingCalcENTest
         [TestMethod]
         public async Task CalcRectTest()
         {
-            Section = new SectionStrainsModel(
+            Section = new SectionStrainsFactory(
                new Material
                {
                    beton = new BetonModelEC("C25/30"),
@@ -67,7 +68,7 @@ namespace CreckingCalcENTest
         [TestMethod]
         public async Task CalcTSectionTest()
         {
-            Section = new SectionStrainsModel(
+            Section = new SectionStrainsFactory(
                new Material
                {
                    beton = new BetonModelEC("C25/30"),
@@ -84,6 +85,7 @@ namespace CreckingCalcENTest
                    As_2 = 6.8
                }
            );
+            Stopwatch sw = new Stopwatch();
 
             var Calc = new CalcForces(new ConcreteForceCalc(Section));
             Section.SetByEcEs1(-2);
@@ -95,10 +97,11 @@ namespace CreckingCalcENTest
             Assert.IsTrue(Fs1.F.Round(2) == -272.0 && Fs1.Z.Round(2) == 9.0);
             Assert.IsTrue(Fs2.F.Round(2) == -272.0 && Fs2.Z.Round(2) == 9.0);
         }
+   
         [TestMethod]
         public async Task CalcTSectionTestV2()
         {
-            Section = new SectionStrainsModel( 
+            Section = new SectionStrainsFactory( 
                new Material
                {
                    beton = new BetonModelEC("C25/30"),
@@ -133,8 +136,8 @@ namespace CreckingCalcENTest
               }
           );
 
-            Section.SetByEcEs1(-3.5, 10);
-            Section2.SetByEcEs1(-3.5, 10);
+            Section.SetByEcEs1(-3.5, 8.5);
+            Section2.SetByEcEs1(-3.5, 8.5);
 
             var Calc = new RCSectionCalc(Section, new CalcForces(new ConcreteForceCalc(Section)));
 

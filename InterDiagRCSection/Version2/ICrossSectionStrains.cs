@@ -2,6 +2,12 @@
 {
     public interface ICrossSectionStrains
     {
+        double Fc { get; }
+        double Fs1 { get; }
+        double Fs2 { get; }
+        double Zc { get; }
+        double Zs1 { get; } 
+        double Zs2 { get; }
         double c { get; }
         double ka { get; }
         double kd { get; }

@@ -1,5 +1,6 @@
 ﻿using CalcModels;
 using System;
+using System.Threading.Tasks;
 
 namespace InterDiagRCSection
 {
@@ -7,7 +8,7 @@ namespace InterDiagRCSection
     {
         private readonly IConcreteForceCalc concreteForce;
 
-        public ISectionStrainsModel sectionStrains { get; internal set; }
+        public ISectionStrainsFactory sectionStrains { get; internal set; }
 
         public CalcForces(IConcreteForceCalc concreteForce) 
         {

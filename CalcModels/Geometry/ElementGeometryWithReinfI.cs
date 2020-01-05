@@ -35,9 +35,9 @@ namespace CalcModels
             {
                 if (z > h - h_f_top)
                     return b_eff_top;
-                else if (z < h_f_bottom)
-                    return b_eff_bottom;
-                else return b;
+                else if (z > h_f_bottom && z < h - h_f_top)
+                    return b;
+                else return b_eff_bottom;
             }
         }
 
