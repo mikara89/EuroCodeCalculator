@@ -1,18 +1,27 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy } from '@angular/core';
 import * as Chart from 'chart.js';
 import { ChartDataSets, ChartPoint } from 'chart.js';
 import { BetonClassService } from '../../services/beton-class.service';
 import { ArmaturaTypeService } from '../../services/armatura-type.service';
 import { InteractivService } from '../../services/interactiv.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-Interactiv',
     templateUrl: './Interactiv.component.html',
     styleUrls: ['./Interactiv.component.css']
 })
-export class InteractivComponent implements OnInit {
+export class InteractivComponent implements OnInit, OnDestroy {
+    ngOnDestroy(): void {
+        if (this.subs)
+            this.subs.unsubscribe();
+        if (this.subsExt)
+            this.subsExt.unsubscribe();
+    }
 
-    chart:any=[];
+    chart: any = [];
+    subs: Subscription;
+    subsExt: Subscription;
     public lineChartData: ChartDataSets[] = [];
     public lineChartOptions: Chart.ChartOptions =
         {
@@ -101,14 +110,14 @@ export class InteractivComponent implements OnInit {
         delete this.infoData;
         this.izracunaj.m = point.x;
         this.izracunaj.n = point.y;
-        this.intServices
+        this.subsExt = this.intServices
             .getExtremis(this.izracunaj)
             .subscribe((x: any) => {
                 this.infoData = x as InteractivModelDetails;
             });
     }
     creatNewChart() {
-        this.intServices.getListOfAllLines(this.izracunaj).subscribe(list => {
+        this.subs= this.intServices.getListOfAllLines(this.izracunaj).subscribe(list => {
             this.isReady = false;
             this.lineChartData = [
                 {
@@ -130,7 +139,14 @@ export class InteractivComponent implements OnInit {
         });
         
     }
-    
+    OnIsT() {
+        this.isT = !this.isT;
+        if (!this.isT) {
+            this.izracunaj.b_eff = 0;
+            this.izracunaj.h_f = 0;
+        }
+        this.updateChart();
+    }
     
     RandomColor(clean: boolean = false) {
         if (clean || this.color==null)
@@ -175,6 +191,7 @@ export class InteractivComponent implements OnInit {
 
    
     updateChart() {
+        
         this.intServices.getListOfAllLines(this.izracunaj)
             .subscribe(
                 list => {

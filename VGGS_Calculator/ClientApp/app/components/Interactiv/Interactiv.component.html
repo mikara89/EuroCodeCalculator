@@ -2,20 +2,20 @@
     Dijagram interakcije za AB preske
 </h1>
 <form class="col-xl-3 col-lg-4 col-md-12 col-sm-12 col-xs-12" #f="ngForm">
-    <!--<div class="checkbox">
+    <div class="checkbox">
         <label>
-            <input (change)="isT = !isT"
+            <input (change)="OnIsT()"
                    type="checkbox"
                    [checked]="isT">T presek
         </label>
-    </div>-->
+    </div>
     <div class="row">
         <div class="input-group">
             <span class="input-group-addon test-active"
                   id="basic-addon2">
                 b=
             </span>
-            <input type="number" (keyup)="updateChart()"
+            <input type="number" (focusout)="updateChart()"
                    [(ngModel)]="izracunaj.geometry.b"
                    class="form-control"
                    placeholder="exp. 25"
@@ -40,7 +40,7 @@
                   id="basic-addon2">
                 b_eff=
             </span>
-            <input type="number" (keyup)="updateChart()"
+            <input type="number" (focusout)="updateChart()"
                    [(ngModel)]="izracunaj.geometry.b_eff"
                    class="form-control"
                    placeholder="exp. 25"
@@ -65,7 +65,7 @@
                   id="basic-addon2">
                 h_f=
             </span>
-            <input type="number" (keyup)="updateChart()"
+            <input type="number" (focusout)="updateChart()"
                    [(ngModel)]="izracunaj.geometry.h_f"
                    class="form-control"
                    placeholder="exp. 25"
@@ -90,7 +90,7 @@
                   id="basic-addon2">
                 h=
             </span>
-            <input type="text" (keyup)="updateChart()"
+            <input type="text" (focusout)="updateChart()"
                    [(ngModel)]="izracunaj.geometry.h"
                    class="form-control"
                    placeholder="exp. 40"
@@ -116,7 +116,7 @@
                   id="basic-addon2">
                 d1=
             </span>
-            <input (keyup)="updateChart()"
+            <input (focusout)="updateChart()"
                    type="number"
                    [(ngModel)]="izracunaj.geometry.d1"
                    class="form-control"
@@ -134,7 +134,7 @@
                   id="basic-addon2">
                 d2=
             </span>
-            <input (keyup)="updateChart()"
+            <input (focusout)="updateChart()"
                    type="number"
                    [(ngModel)]="izracunaj.geometry.d2"
                    class="form-control"
@@ -161,7 +161,7 @@
                   id="basic-addon2">
                 As1=
             </span>
-            <input (keyup)="updateChart()"
+            <input (focusout)="updateChart()"
                    type="number"
                    [(ngModel)]="izracunaj.geometry.as1"
                    class="form-control"
@@ -179,7 +179,7 @@
                   id="basic-addon2">
                 As2=
             </span>
-            <input (keyup)="updateChart()"
+            <input (focusout)="updateChart()"
                    type="number"
                    [(ngModel)]="izracunaj.geometry.as2"
                    class="form-control"

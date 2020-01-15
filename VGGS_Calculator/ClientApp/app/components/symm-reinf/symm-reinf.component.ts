@@ -1,21 +1,27 @@
-﻿import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+﻿import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { SymmReinfService } from '../../services/symm-reinf.service';
 import * as Chart from 'chart.js';
 import { ChartDataSets, ChartPoint } from 'chart.js';
 import { BetonClassService } from '../../services/beton-class.service';
 import { ArmaturaTypeService } from '../../services/armatura-type.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-symm-reinf',
   templateUrl: './symm-reinf.component.html',
   styleUrls: ['./symm-reinf.component.css']
 })
-export class SymmReinfComponent implements OnInit {
+export class SymmReinfComponent implements OnInit, OnDestroy {
+    ngOnDestroy(): void {
+        if (this.subs)
+            this.subs.unsubscribe();
+    }
     isReady: boolean = true;
     public lineChartDataSets: Chart.ChartDataSets[]=[];
     List: Array<Array<SymmReinfModel>> = [];
     textResult: any;
-    private color:any;
+    private color: any;
+    subs: Subscription;
     l: any = [];
     chart: any=[];
     x: any = [];
@@ -80,7 +86,7 @@ export class SymmReinfComponent implements OnInit {
         this.creatNewChart();
     }
     creatNewChart() {
-        this.symServices.getListOfAllLines(this.izracunaj).subscribe(list => {
+        this.subs = this.symServices.getListOfAllLines(this.izracunaj).subscribe(list => {
             delete this.List;
             this.List = list;
             this.sortData(this.List);
@@ -219,8 +225,9 @@ export class SymmReinfComponent implements OnInit {
                 }
             });
             //console.log('created');
-            
+
         });
+        
     }
 
     upateChart() {
