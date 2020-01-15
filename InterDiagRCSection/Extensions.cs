@@ -32,7 +32,7 @@ namespace InterDiagRCSection
         }
     
         public static bool IsMNValid<T>(this List<T> list, double M, double N) 
-            where T : IMNInteraction
+            where T : SectionStrainsModel
         {
             bool result = false;
             List<PointF> poly= new List<PointF>();

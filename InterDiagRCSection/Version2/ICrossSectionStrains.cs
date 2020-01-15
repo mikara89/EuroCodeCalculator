@@ -2,33 +2,22 @@
 {
     public interface ICrossSectionStrains
     {
-        double Fc { get; }
-        double Fs1 { get; }
-        double Fs2 { get; }
-        double Zc { get; }
-        double Zs1 { get; } 
-        double Zs2 { get; }
+        double F_c { get; } 
+        double F_s1 { get; }
+        double F_s2 { get; }
+        double z_c { get; }
+        double z_s1 { get; } 
+        double z_s2 { get; }
         double c { get; }
-        double ka { get; }
-        double kd { get; }
         double M_Rd { get; }
         double N_Rd { get; }
         double sig_c { get; }
         double sig_s1 { get; }
         double sig_s2 { get; }
         double x { get; }
-        double αv { get; }
-        double εc1 { get; }
-        double εc2 { get; }
-        double εs1 { get; }
-        double εs2 { get; }
-        double ζ { get; }
-        double μRd { get; }
-        double ξ { get; }
-        double ω { get; }
-
-        void SetByEcEs1(double εc2);
-        void SetByEcEs1(double εc2, double εs1);
-        string ToString();
+        double eps_c1 { get; }
+        double eps_c { get; }
+        double eps_s1 { get; }
+        double eps_s2 { get; }
     }
 }

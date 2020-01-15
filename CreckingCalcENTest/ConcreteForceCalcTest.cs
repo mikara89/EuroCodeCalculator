@@ -97,53 +97,5 @@ namespace CreckingCalcENTest
             Assert.IsTrue(Fs1.F.Round(2) == -272.0 && Fs1.Z.Round(2) == 9.0);
             Assert.IsTrue(Fs2.F.Round(2) == -272.0 && Fs2.Z.Round(2) == 9.0);
         }
-   
-        [TestMethod]
-        public async Task CalcTSectionTestV2()
-        {
-            Section = new SectionStrainsFactory( 
-               new Material
-               {
-                   beton = new BetonModelEC("C25/30"),
-                   armatura = ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
-               }, new ElementGeometryWithReinfI
-               {
-                   //b_eff_top = 50,
-                   //h_f_top = 8,
-                   b = 30,
-                   h = 30,
-                   d1 = 6,
-                   d2 = 6,
-                   As_1 = 6.8,
-                   As_2 = 6.8
-               }
-           );
-            var Section2 = new CrossSectionStrains(
-              new Material
-              {
-                  beton = new BetonModelEC("C25/30"),
-                  armatura = ReinforcementType.GetArmatura().Single(r => r.name == "B500B")
-              }, new ElementGeometryWithReinfold
-              {
-                   //b_eff_top = 50,
-                   //h_f_top = 8,
-                   b = 30,
-                  h = 30,
-                  d1 = 6,
-                  d2 = 6,
-                  As_1 = 6.8,
-                  As_2 = 6.8
-              }
-          );
-
-            Section.SetByEcEs1(-3.5, 8.5);
-            Section2.SetByEcEs1(-3.5, 8.5);
-
-            var Calc = new RCSectionCalc(Section, new CalcForces(new ConcreteForceCalc(Section)));
-
-
-            Assert.IsTrue(false);
-        
-        }
     }
 }

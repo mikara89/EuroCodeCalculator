@@ -30,7 +30,6 @@ export class EpsDisplayInfoComponent implements OnInit  {
 
             let offset = 5 * 1 / scale;
             this.font = 2.5 * 1 / scale;
-            console.log(1 / scale);
             this.transform = 'translate(25, 12.5)scale(' + scale + ' ' + scale+')';
             this.sectionPath = 'M0 0 h' + this.model.geometry.b / 2 + ' v' + this.model.geometry.h + ' h-' + this.model.geometry.b + ' v-' + this.model.geometry.h + ' Z';
             this.diletationPath = 'M0 0 h' + Math.round(Math.abs(this.forces.eps_c2) * 10) / 10 + ' l-' + Math.round(Math.abs(this.forces.eps_c2)*10 + Math.round(this.forces.eps_s1)*10)/10 + ' ' + this.model.geometry.h + ' h' + Math.round(this.forces.eps_s1*10)/10+'  Z';

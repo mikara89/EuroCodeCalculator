@@ -10,15 +10,19 @@
                 N_Rd = rCSectionCalc.N_Rd,
                 c = rCSectionCalc.sectionStrains.c,
                 sig_c=rCSectionCalc.Forces["Fc"].Sigma,
-                Fc = rCSectionCalc.Forces["Fc"].F,
-                Zc = rCSectionCalc.Forces["Fc"].Z,
+                F_c = rCSectionCalc.Forces["Fc"].F,
+                z_c = rCSectionCalc.Forces["Fc"].Z,
                 sig_s1 = rCSectionCalc.Forces["Fs1"].Sigma,
-                Fs1 = rCSectionCalc.Forces["Fs1"].F,
-                Zs1 = rCSectionCalc.Forces["Fs1"].Z,
-                sig_s2 = rCSectionCalc.Forces["Fs1"].Sigma,
-                Fs2 = rCSectionCalc.Forces["Fs1"].F,
-                Zs2 = rCSectionCalc.Forces["Fs1"].Z,
+                F_s1 = rCSectionCalc.Forces["Fs1"].F,
+                z_s1 = rCSectionCalc.Forces["Fs1"].Z,
+                sig_s2 = rCSectionCalc.Forces["Fs2"].Sigma,
+                F_s2 = rCSectionCalc.Forces["Fs2"].F,
+                z_s2 = rCSectionCalc.Forces["Fs2"].Z,
                 x=rCSectionCalc.sectionStrains.x,
+                eps_c=rCSectionCalc.sectionStrains.eps_c,
+                eps_c1=rCSectionCalc.sectionStrains.eps_c1,
+                eps_s1= rCSectionCalc.sectionStrains.eps_s1,
+                eps_s2= rCSectionCalc.sectionStrains.eps_s2
             };
         }
     }

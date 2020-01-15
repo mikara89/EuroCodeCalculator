@@ -316,31 +316,33 @@
 </div>
 
 
-<div class="modal fade" 
-     
+<div class="modal fade"
      id="myModal"
      role="dialog">
-    <div class="modal-dialog" 
+    <loader-rotating-dots *ngIf="!infoData">
+    </loader-rotating-dots>
+    <div class="modal-dialog" *ngIf="infoData"
          style="width:800px">
 
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button"
+                <button type="button" 
                         class="close"
                         data-dismiss="modal">
                     &times;
                 </button>
                 <h4 class="modal-title">
-                    Detail info     
+                    Detail info
                     <i class="fa fa-check-circle-o" aria-hidden="true" *ngIf="infoData!=null && infoData.isValid" title="Valid!"></i>
                     <i class="fa fa-times-circle-o" aria-hidden="true" *ngIf="infoData!=null && !infoData.isValid" title="Not Valid!"></i>
                 </h4>
             </div>
-            <div class="modal-body" 
-                 *ngIf="infoData">
-                <info-model [infoData]="infoData" 
-                            [model]="izracunaj">
 
+            <div class="modal-body">
+
+                <info-model 
+                            [infoData]="infoData"
+                            [model]="izracunaj">
                 </info-model>
             </div>
             <div class="modal-footer">

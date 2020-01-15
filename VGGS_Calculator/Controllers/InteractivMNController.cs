@@ -45,7 +45,7 @@ namespace VGGS_Calculator.Controllers
                     As_1 = model.geometry.as1,
                     As_2 = model.geometry.as2,
                 };
-                var s = new SolverV2(material, geometry);
+                var s = new Solver(material, geometry);
                 await s.CalcAsync(0.5);
                 Logger.LogInformation("API send interacion curves");
                 return Ok(s.List.Select(x => new { x = x.M_Rd, y = x.N_Rd }));
@@ -87,12 +87,12 @@ namespace VGGS_Calculator.Controllers
                     As_2 = model.geometry.as2,
                 };
 
-                var s = new SolverV2(material, geometry);
-                await s.Calc();
+                var s = new Solver(material, geometry);
+                await s.CalcAsync();
                 //s.GetWorrnings(model.m, model.n);
                 var isValid = s.List.IsMNValid(model.m, model.n);
 
-                var listMaxMin = new List<RCSectionCalc>();
+                var listMaxMin = new List<SectionStrainsModel>();
                 listMaxMin.AddRange(
                     s.List
                     .OrderBy(n => Math.Abs(n.M_Rd - model.m))
@@ -104,7 +104,7 @@ namespace VGGS_Calculator.Controllers
                 return Ok(
                     new
                     {
-                        //extrims = InfoDetailModelV2.Converts(listMaxMin.ToArray()),
+                        extrims = InfoDetailModel.Converts(listMaxMin.ToArray()),
                         isValid = isValid,
                         worrnings = s.Worrnings,
                     });
