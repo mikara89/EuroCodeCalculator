@@ -1,0 +1,27 @@
+﻿@inherits ModelDialogChildBase
+@using CalcBlazor.Data.Settings
+<h3>SettingsComponent</h3>
+@text
+<EditForm Model="@model" OnValidSubmit="HandelSubmite">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="input-feild">
+        <label>alfa_cc=</label>
+        <InputNumber @bind-Value="model.alfa_cc" />
+    </div>
+    <div class="input-feild">
+        <label>alfa_ct=</label>
+        <InputNumber @bind-Value="model.alfa_ct" />
+    </div>
+    <div class="input-feild">
+        <label>gama_c=</label>
+        <InputNumber @bind-Value="model.gama_c" />
+    </div>
+    <div class="input-feild">
+        <label>gama_s=</label>
+        <InputNumber @bind-Value="model.gama_s" />
+    </div>
+</EditForm>
+@code {
+}

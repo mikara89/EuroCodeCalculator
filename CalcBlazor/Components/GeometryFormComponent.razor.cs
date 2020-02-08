@@ -11,24 +11,38 @@ namespace CalcBlazor.Components
     public partial class GeometryFormComponent
     {
         [Parameter]
-        public GeometryModel GeometryModel { get; set; } = new GeometryModel
-        { 
-            b=30,
-            h=30,
-            d1=6,
-            d2=6,
-            As_1=6.8,
-            As_2=6.8
-        };
+        public GeometryModel GeometryModel { get; set; }
 
         [Parameter]
-        public EventCallback OnPropertyChanged { get; set; }
-        async Task PropertyChanged(FocusEventArgs e)
+        public EventCallback<GeometryModel> GeometryModelChanged { get; set; }
+        async Task PropertyChanged()
         {
-            await Task.Delay(1000);
-            await OnPropertyChanged.InvokeAsync(null);
+            await GeometryModelChanged.InvokeAsync(GeometryModel);
         }
-    
-}
-   
+
+        public void OnSectionChange(object item)
+        {
+            GeometryModel.SectionType = (SectionType)item;
+
+            //Reseting after section type change
+            switch (GeometryModel.SectionType)
+            {
+                case SectionType.Rectangle:
+                    GeometryModel.h_f_bottom = 0;
+                    GeometryModel.b_eff_bottom = 0;
+                    GeometryModel.h_f_top = 0;
+                    GeometryModel.b_eff_top = 0;
+                    break;
+                case SectionType.Simetrical_T:
+                    GeometryModel.h_f_bottom = 0;
+                    GeometryModel.b_eff_bottom = 0;
+                    break;
+                case SectionType.Simetrical_I:
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+ 
 }

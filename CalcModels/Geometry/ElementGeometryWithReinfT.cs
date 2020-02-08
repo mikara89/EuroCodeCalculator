@@ -28,7 +28,7 @@
                 return z > h - h_f ? b_eff : b;
         }
 
-        public override void Invert()
+        public override void Invert(bool isInvert=true)
         {
             throw new System.NotImplementedException();
      

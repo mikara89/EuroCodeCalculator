@@ -1,23 +1,69 @@
 ﻿@inherits LayoutComponentBase
+@using CalcBlazor.Data.Settings
+@using CalcBlazor.Components
+<style>
+    .link-nav-top img{
+        display: flex;
+        margin: auto auto;
+        height: 80%;
+    }
+     .link-nav-top{
+        display: flex;
+    }
+       a{
+        color:black;
+    }
+    .link-nav.active{
+        background-color:#8a2be2;
+    }
+    .navbar-top span {
+        display: flex;
+        margin: auto 0 auto 20px;
+        font-size: larger;
+    }
+       .navbar-top{
+    display: flex;
+    }
+           .main-display {
+        display: flex;
+        flex-direction: row;
+    }
+           .show{
+               display:block;
+           }
+</style>
 
-<div class="left-sidebar">
-    <div class="navbar-left">
-        <div class="link-nav-top">Icon</div>
-        <a class="link-nav"><i class="fa fa-server"></i></a>
-        <a class="link-nav"><i class="fa fa-server"></i></a>
-        <a class="link-nav"><i class="fa fa-server"></i></a>
-        <a class="link-nav"><i class="fa fa-server"></i></a>
-        <a class="link-nav link-nav-settings"><i class="fa fa-cog link-nav-settings"></i></a>
+<div class="left-sidebar" style="background-color:@(ColorsPalette.FirstColor)">
+    <div class="navbar-left nav-item">
+        <div class="link-nav-top"><img src="/favicon-32x32.png" /></div>
+        <NavLink class="link-nav" href="" Match="NavLinkMatch.All">
+            <i class="fas fa-home"></i>
+        </NavLink>
+        <NavLink class="link-nav" href="interdiagram" Match="NavLinkMatch.All">
+            <i class="fas fa-arrows-alt"></i>
+        </NavLink>
+
+        <a class="link-nav link-nav-settings" 
+           @onclick="@(()=>Modal.Open())">
+        <i class="fa fa-cog "></i>
+        </a>
     </div>
     
 </div>
 <div class="right-sidebar">
     <div class="main-display">
-        @*@Body*@
-        <CalcBlazor.Pages.InterDiagram></CalcBlazor.Pages.InterDiagram>
+        @Body
     </div>
-    <div class="navbar-top">aa</div>
+    <div class="navbar-top"><span>Section Calculator app</span></div> 
     <div class="indecator-stat">
         <progress id="file" max="100" value="33"> 70% </progress>
     </div>
 </div>
+
+<ModelDialogComponent @ref="Modal" >
+    <SettingsComponent></SettingsComponent>
+</ModelDialogComponent> 
+
+@code{
+      private ModelDialogComponent Modal { get; set; } 
+}

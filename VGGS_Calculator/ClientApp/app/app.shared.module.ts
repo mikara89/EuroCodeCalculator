@@ -25,10 +25,12 @@ import { InfoModelComponent } from './components/info-model/info-model.component
 import { DataSharedService } from './services/data-shared.service';
 import { EpsDisplayInfoComponent } from './components/info-model/eps-display-info/eps-display-info.component';
 import { PathComponent } from './components/info-model/path/path.component';
+import { DonateComponent } from './components/donate/donate.component';
 
 @NgModule({
     declarations: [
         AppComponent,
+        DonateComponent,
         NavMenuComponent, 
         HomeComponent,
         TransverzalneSileECComponent,
@@ -53,6 +55,7 @@ import { PathComponent } from './components/info-model/path/path.component';
             { path: 'vitkostec', component: VitkostEc2Component },
             { path: 'symmReinf', component: SymmReinfComponent },
             { path: 'interactivMN', component: InteractivComponent },
+            { path: 'donate', component: DonateComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ],

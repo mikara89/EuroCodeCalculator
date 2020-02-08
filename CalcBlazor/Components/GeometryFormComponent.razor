@@ -5,57 +5,98 @@
         margin-bottom: 1vh;
     }
 
-    input,InputNumber {
+    input, InputNumber {
         flex: 1;
     }
 
     .input-feild label {
         margin: 0 0.5vh 0 0.5vh;
     }
-
 </style>
 <fieldset>
     <legend>Section geometry:</legend>
     <EditForm Model="@GeometryModel">
         <DataAnnotationsValidator />
-        <ValidationSummary  />
+        <ValidationSummary />
 
+        <div class="input-feild">
+            <label>b=</label>
+            <InputNumber @bind-Value="GeometryModel.b"
+                         @onchange="@PropertyChanged" />
+            <label>[cm]</label>
+        </div>
+        <div class="input-feild">
+            <label>h=</label>
+            <InputNumber @bind-Value="GeometryModel.h"
+                         @onchange="@PropertyChanged" />
+            <label>[cm]</label>
+        </div>
+        @if (GeometryModel.SectionType == Data.Models.SectionType.Simetrical_T ||
+           GeometryModel.SectionType == Data.Models.SectionType.Simetrical_I)
+        {
             <div class="input-feild">
-                <label>b=</label>
-                <InputNumber @bind-Value="GeometryModel.b"  
-                             @onfocusout="PropertyChanged"/>
+                <label>b_eff_top=</label>
+                <InputNumber @bind-Value="GeometryModel.b_eff_top"
+                             @onchange="@PropertyChanged" />
                 <label>[cm]</label>
             </div>
             <div class="input-feild">
-                <label>h=</label> 
-                <InputNumber @bind-Value="GeometryModel.h"
-                             @onfocusout="PropertyChanged" />
+                <label>h_f_top=</label>
+                <InputNumber @bind-Value="GeometryModel.h_f_top"
+                             @onchange="@PropertyChanged" />
                 <label>[cm]</label>
             </div>
-            <div class="input-feild">
-                <label>d1=</label>
-                <InputNumber @bind-Value="GeometryModel.d1"
-                             @onfocusout="PropertyChanged" />
-                <label>[cm]</label>
-            </div>
-            <div class="input-feild">
-                <label>d2=</label> 
-                <InputNumber @bind-Value="GeometryModel.d2"
-                             @onfocusout="PropertyChanged" />
-                <label>[cm]</label>
-            </div>
-            <div class="input-feild">
-                <label>As1=</label>
-                <InputNumber @bind-Value="GeometryModel.As_1"
-                             @onfocusout="PropertyChanged" />
-                <label>[cm2]</label>
-            </div>
-            <div class="input-feild">
-                <label>As2=</label>
-                <InputNumber @bind-Value="GeometryModel.As_2"
-                             @onfocusout="@((e)=>PropertyChanged(e))" />
-                <label>[cm2]</label>
-            </div>
+            @if (GeometryModel.SectionType == Data.Models.SectionType.Simetrical_I)
+            {
+                <div class="input-feild">
+                    <label>b_eff_bottom=</label>
+                    <InputNumber @bind-Value="GeometryModel.b_eff_bottom"
+                                 @onchange="@PropertyChanged" />
+                    <label>[cm]</label>
+                </div>
+                <div class="input-feild">
+                    <label>h_f_bottom=</label>
+                    <InputNumber @bind-Value="GeometryModel.h_f_bottom"
+                                 @onchange="@PropertyChanged" />
+                    <label>[cm]</label>
+                </div>
+            }
+        }
+
+        <div class="input-feild">
+            <label>d1=</label>
+            <InputNumber @bind-Value="GeometryModel.d1"
+                         @onchange="@PropertyChanged" />
+            <label>[cm]</label>
+        </div>
+        <div class="input-feild">
+            <label>d2=</label>
+            <InputNumber @bind-Value="GeometryModel.d2"
+                         @onchange="@PropertyChanged" />
+            <label>[cm]</label>
+        </div>
+        <div class="input-feild">
+            <label>As1=</label>
+            <InputNumber @bind-Value="GeometryModel.As_1"
+                         @onchange="@PropertyChanged" />
+            <label>[cm2]</label>
+        </div>
+        <div class="input-feild">
+            <label>As2=</label>
+            <InputNumber @bind-Value="GeometryModel.As_2"
+                         @onchange="@PropertyChanged" />
+            <label>[cm2]</label>
+        </div>
+        @foreach (var item in Enum.GetValues(typeof(CalcBlazor.Data.Models.SectionType)))
+        {
+            <input type="radio"
+                   name="sectionType"
+                   value="item"
+                   @onchange="@(()=>OnSectionChange(item))"
+                   checked="@((int)item==(int)GeometryModel.SectionType)">
+            @(Enum.GetName(typeof(CalcBlazor.Data.Models.SectionType), item))<br>
+        }
+
     </EditForm>
 </fieldset>
 

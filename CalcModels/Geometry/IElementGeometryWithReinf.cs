@@ -6,6 +6,6 @@
         double As_2 { get; set; }
         double Get_b(double z);
         bool IsInverted { get; }
-        void Invert();
+        void Invert(bool isInverted = true);
     }
 }

@@ -31,37 +31,7 @@
         </div>
     </EditForm> 
 
-    <table>
-        <thead>
-            <tr>
-                <th>num.</th>
-                <th>M_Ed</th>
-                <th>N_Ed</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (TableData != null)
-            {
-                @foreach (var item in TableData.Select((value, i) => new { value, i }))
-                {
-                    <tr>
-                        <th>@item.i</th>
-                        <td>@item.value.M</td>
-                        <td>@item.value.N</td>
-                        <td>
-                            <button>?</button>
-                            <button @onclick="@(()=>TableData.Remove(item.value))">x</button>
-                        </td>
-                    </tr>
-                }
-            }
-
-        </tbody>
-        <tfoot>
-
-        </tfoot>
-    </table>
+  
 </fieldset>
 
 @code {

@@ -1,43 +1,96 @@
 ﻿@page "/interdiagram"
+@using System.Collections.ObjectModel
 @using CalcBlazor.Components
-
+@using CalcBlazor.Data.Models
+@using ChartJs.Blazor.ChartJS.Common
+@inject CalcBlazor.Data.Services.IInterCalcService intCalcService
 <style>
-    .main-display{
-        display: flex;
-        flex-direction: row;
-        }
-        .main-display-side-left{
+
+
+    .main-display-side-left {
         background-color: aquamarine;
         display: flex;
         flex-direction: column;
-        }
-        .main-display-side-right{
+    }
+
+    .main-display-side-right {
         flex: 1;
-        background-color: rgb(168, 255, 127);
+        /*background-color: rgb(168, 255, 127);*/
         display: flex;
         flex-direction: column;
         align-items: center;
-        }
+    }
+    .add-update-btn{
+            margin: 5px 10px;
+            
+    }
 </style>
 
-@*<div class="container row">
-        <div class="col-6">
-            <GeometryFormComponent></GeometryFormComponent>
-            <MaterialPickComponent></MaterialPickComponent>
-        </div>
-    </div>*@
-
-<div class="main-display">
+@*<div class="main-display">*@
     <div class="main-display-side-left">
         <h3>Interation Diagram</h3>
-        <GeometryFormComponent></GeometryFormComponent>
-        <MaterialPickComponent></MaterialPickComponent>
-        <ForcesAddComponent></ForcesAddComponent>
+        <GeometryFormComponent @bind-GeometryModel="@GeometryModel"></GeometryFormComponent>
+        <MaterialPickComponent @bind-MaterialModel="@MaterialModel"></MaterialPickComponent>
+        <button class="add-update-btn" @onclick="@CalcHendler">@(IsUpdatingItem?"Update section":"Add section")</button>
+        <ForcesAddComponent OnForcesAdded="@((x)=>HendleAddForces(x))"></ForcesAddComponent>
     </div>
     <div class="main-display-side-right">
-      
+        <ChartInterComponent></ChartInterComponent>
     </div>
 
-</div>
+@*</div>*@
 
-@code {}
+@code {
+    public GeometryModel GeometryModel { get; set; }
+    public MaterialModel MaterialModel { get; set; }
+    public List<Point> ForcesPoints { get; set; }
+
+    private bool IsUpdatingItem;
+
+    protected override void OnInitialized()
+    {
+
+        GeometryModel = new GeometryModel {
+            b=30,
+            h=30,
+            d1=6,
+            d2=6,
+            As_1=6.8,
+            As_2=6.8
+        };
+        MaterialModel = new MaterialModel { };
+        MaterialModel.SelectedReinf = "B500B";
+        MaterialModel.SelectedConcrete = "C25/30";
+        ForcesPoints = new List<Point>();
+
+        intCalcService.OnUpdatingItem += (updateItem) =>
+        {
+            if (updateItem != null)
+            {
+                if(updateItem is InterDiagRCSection.SectionStrainsModel )
+                {
+                    IsUpdatingItem = true;
+                    var item = updateItem as InterDiagRCSection.SectionStrainsModel;
+                    GeometryModel.GeometryModelFromSectionStrainsModel(item);
+                    MaterialModel.MaterialModelFromSectionStrainsModel(item);
+                }
+            }
+            else
+            {
+                IsUpdatingItem = false;
+            }
+            InvokeAsync(StateHasChanged);
+        };
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void HendleAddForces(object list)
+    {
+        intCalcService.AddForcePoint(list as Point);
+    }
+    private void CalcHendler()
+    {
+        intCalcService.AddDiagramLines(MaterialModel, GeometryModel, IsUpdatingItem);
+    }
+}
+

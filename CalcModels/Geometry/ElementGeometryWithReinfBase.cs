@@ -25,7 +25,7 @@ namespace CalcModels
 
         public abstract double Get_b(double z);
 
-        public abstract void Invert();
+        public abstract void Invert(bool isInverted=true);
 
         public double b { get; set; }
         public double h { get; set; }

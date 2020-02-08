@@ -1,5 +1,128 @@
-﻿<h3>ChartInterComponent</h3>
+﻿@using ChartJs.Blazor.Charts
+@using ChartJs.Blazor.ChartJS.LineChart
+@using ChartJs.Blazor.ChartJS.Common.Properties
+@using ChartJs.Blazor.ChartJS.Common
+@using ChartJs.Blazor.Util
+@using ChartJs.Blazor.ChartJS.Common.Axes
+@using ChartJs.Blazor.ChartJS.Common.Axes.Ticks
+@using ChartJs.Blazor.ChartJS.Common.Enums
+@inject CalcBlazor.Data.Services.IInterCalcService intCalcService
+<style>
+    .chart-container, .chart-commands{
+                display: flex;
+        flex-direction: row;
+    }
+    .chart-commands{
+        justify-content: space-evenly;
+    }
+    .chart{
+           display: flex;
+        flex-direction: column;
+        flex:0;
+        
+    }
+    .chart-table{
+        margin-left:20px;
+        flex:1;
+    }
+    .tab-row{
+        cursor:pointer;
+    }
+    .active.tab-row {
+        background-color: rgba(198, 187, 187, 0.21);
+    }
 
-@code {
+    .force-table-chart {
+        margin-right: 20px;
+        flex: 1;
+    }
+</style>
+<h3>ChartInterComponent</h3>
+<div class="chart-container">
+    <table class="force-table-chart">
+            <thead>
+                <tr>
+                    <th>num.</th>
+                    <th>M_Ed</th>
+                    <th>N_Ed</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ForcesDatas != null)
+                {
+                    @foreach (var item in ForcesDatas.Select((value, i) => new { value, i }))
+                    {
+                        <tr>
+                            <th>@(item.i+1)</th>
+                            <td>@item.value.X</td>
+                            <td>@item.value.Y</td>
+                            <td>
+                                <button>?</button>
+                                <button @onclick="@(()=>ForcesDatas.Remove(item.value))">x</button>
+                            </td>
+                        </tr>
+                    }
+                }
 
-}
+            </tbody>
+            <tfoot>
+
+            </tfoot>
+        </table>
+    <div class="chart">
+        <div class="chart-commands">
+            <button disabled="@(heightChart>=1000)" @onclick="() => { heightChart += 50; widthChart += 50;_lineChartJs.Update();StateHasChanged(); }">+</button>
+            <span>Zoom</span>
+            <button disabled="@(heightChart<=300)" @onclick="() => { heightChart -= 50; widthChart -= 50;_lineChartJs.Update(); StateHasChanged(); }">-</button>
+        </div>
+        <ChartJsLineChart @ref="_lineChartJs" 
+                          Config="@_config" 
+                          Height="@heightChart" 
+                          Width="@widthChart" />
+    </div>
+   
+    <table class="chart-table">
+        <thead>
+            <tr>Forces Table</tr>
+            <tr>
+                <th>num.</th>
+                <th>label</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (DiagramDatas != null)
+            {
+                @foreach (var item in DiagramDatas.Select((value, i) => new { value, i }))
+                {
+                    <tr class="@(Selecteditem==item.i?"active":"") tab-row"
+                        @onclick="@(()=>OnChangedSecetion(item.i))">
+                        <th>@(item.i + 1)</th>
+                        <td>@("Sec " + (item.i + 1))</td>
+                        <td>
+                            <button data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="Delete chart line"
+                                    @onclick:stopPropagation="true"
+                                    @onclick="@(()=>OnDeleteItem(item.i))">
+                                x
+                            </button>
+                            <button data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="Reset color"
+                                    @onclick:stopPropagation="true"
+                                    @onclick="@(()=>ResetColor(item.i))">
+                                cr
+                            </button>
+                        </td>
+                    </tr>
+
+                }
+            }
+
+        </tbody>
+        <tfoot>
+        </tfoot>
+    </table>
+</div>

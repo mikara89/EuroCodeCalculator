@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CalcModels;
+using System;
 
 namespace InterDiagRCSection
 {
@@ -35,5 +36,8 @@ namespace InterDiagRCSection
         public double eps_s1{get;set;} 
 
         public double eps_s2{get;set;}  
+
+        public IMaterial material { get; set; }
+        public IElementGeometryWithReinf geometry { get; set; }
     }
 }

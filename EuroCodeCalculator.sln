@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreckingCalcENTest", "Creck
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InterDiagRCSection", "InterDiagRCSection\InterDiagRCSection.csproj", "{A042D258-79A9-4A06-BCDB-CA3F71F92BFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalcBlazor", "CalcBlazor\CalcBlazor.csproj", "{0CEBC1FC-5646-40C3-88A8-BF00EE0063E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalcBlazor", "CalcBlazor\CalcBlazor.csproj", "{0CEBC1FC-5646-40C3-88A8-BF00EE0063E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

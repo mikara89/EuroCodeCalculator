@@ -22,7 +22,9 @@
                 eps_c=rCSectionCalc.sectionStrains.eps_c,
                 eps_c1=rCSectionCalc.sectionStrains.eps_c1,
                 eps_s1= rCSectionCalc.sectionStrains.eps_s1,
-                eps_s2= rCSectionCalc.sectionStrains.eps_s2
+                eps_s2= rCSectionCalc.sectionStrains.eps_s2,
+                material=rCSectionCalc.sectionStrains.material,
+                geometry=rCSectionCalc.sectionStrains.geometry
             };
         }
     }

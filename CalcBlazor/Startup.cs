@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CalcBlazor.Data;
 using ElectronNET.API;
+using CalcBlazor.Data.Services;
 
 namespace CalcBlazor
 {
@@ -30,7 +31,8 @@ namespace CalcBlazor
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
-            services.AddScoped<CalcModels.BetonService>();
+            services.AddScoped<CalcModels.IBetonService, CalcModels.BetonService>();
+            services.AddScoped<IInterCalcService, InterCalcService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

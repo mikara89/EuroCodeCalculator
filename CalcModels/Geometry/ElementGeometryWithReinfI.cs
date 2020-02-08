@@ -41,16 +41,17 @@ namespace CalcModels
             }
         }
 
-        public override void Invert()
+        public override void Invert(bool isInverted=true)
         {
-            IsInverted = true;
+            if (IsInverted == isInverted)
+                return;
+            IsInverted = isInverted;
             var newAs1 = As_2;
             var newAs2 = As_1;
             var new_d1 = d2;
             var new_d2 = d1;
             var newB_eff_t = b_eff_bottom;
             var newB_eff_b = b_eff_top;
-            var newB = b;
             var newh_t = h_f_bottom;
             var newh_b = h_f_top;
 

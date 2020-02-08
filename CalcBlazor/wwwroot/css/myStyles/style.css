@@ -23,11 +23,11 @@ app {
   }
 
 
-.right-sidebar{
+.right-sidebar {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background-color: rgb(72, 184, 156);
+    background-color: rgb(243, 242, 242)
 }
 
 .navbar-top{
@@ -59,16 +59,16 @@ app {
      height: 50px;
      border-bottom: blueviolet solid 1px ;
  }
-.navbar-left .link-nav .fa{
-   margin: auto;
-  font-size: x-large;
-}
+    .navbar-left .link-nav .fa, .fas {
+        margin: auto;
+        font-size: x-large;
+    }
 .navbar-left .link-nav.link-nav-settings{
  margin-top: auto;
- background-color: blueviolet;
  }
  .navbar-left .link-nav:hover{
     background-color: blueviolet;
+    cursor:pointer;
  }
 
 .main-display {

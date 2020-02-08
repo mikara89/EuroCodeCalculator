@@ -13,25 +13,31 @@ namespace CalcBlazor.Components
         private List<string> ListBeton;
         private List<string> ListArmatura;
         [Parameter]
-        public MaterialModel model { get; set; }
+        public MaterialModel MaterialModel { get; set; }
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized() 
         {
-            model = new MaterialModel();
+            MaterialModel = new MaterialModel();
 
             ListBeton = new List<string>(betonService.GetNameList());
             ListArmatura = new List<string>(ReinforcementType.GetArmatura().Select(x => x.name));
 
-            model.SelectedReinf = ListArmatura.FirstOrDefault(x => x == "B500B");
-            model.SelectedConcrete = ListBeton.FirstOrDefault(x => x == "C25/30");
+            MaterialModel.SelectedReinf = ListArmatura.FirstOrDefault(x => x == "B500B");
+            MaterialModel.SelectedConcrete = ListBeton.FirstOrDefault(x => x == "C25/30");
         }
 
         [Parameter]
-        public EventCallback OnPropertyChanged { get; set; }
-        async Task PropertyChanged()
+        public EventCallback<MaterialModel> MaterialModelChanged { get; set; } 
+    
+        async Task PropertyConcreteChanged(ChangeEventArgs e)
         {
-            await Task.Delay(1000);
-            await OnPropertyChanged.InvokeAsync(null);
+            MaterialModel.SelectedConcrete = e.Value as string;
+            await MaterialModelChanged.InvokeAsync(MaterialModel);
+        }
+        async Task PropertyReinfChanged(ChangeEventArgs e) 
+        {
+            MaterialModel.SelectedReinf = e.Value as string;
+            await MaterialModelChanged.InvokeAsync(MaterialModel);
         }
     }
 }

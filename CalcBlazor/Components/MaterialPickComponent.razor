@@ -1,4 +1,4 @@
-﻿@inject CalcModels.BetonService  betonService
+﻿@inject CalcModels.IBetonService  betonService
 @using CalcBlazor.Data.Models
 @using CalcModels
 
@@ -25,8 +25,8 @@
     <form>
         <div class="input-feild">
             <label>Concrete class</label>
-            <select @onchange="PropertyChanged"
-                         value="@model.SelectedConcrete">
+            <select @onchange="PropertyConcreteChanged"
+                         value="@MaterialModel.SelectedConcrete">
                 @foreach (var item in ListBeton)
                 {
                     <option value="@item">@item</option>
@@ -35,8 +35,8 @@
         </div>
         <div class="input-feild">
             <label>Reinforcement type</label>
-            <select @onchange="PropertyChanged"
-                    value="@model.SelectedReinf">
+            <select @onchange="PropertyReinfChanged"
+                    value="@MaterialModel.SelectedReinf">
                 @foreach (var item in ListArmatura)
                 {
                     <option value="@item">@item</option>
