@@ -21,7 +21,9 @@ namespace CalculatorEC2Logic
         public double sp { get; set; }
         public double sp_max { get; private set; }
         public double sp_min { get; private set; }
-        private double Θ = 45 * Math.PI / 180;
+
+        public double Θ = 45 * Math.PI / 180;
+        public double alfa = 90 * Math.PI / 180;
 
         public double As1 { get=>Geometry.As1.cm2_total; }
         public ReinforcementModelEC Asw_Model { get; set; }
@@ -47,7 +49,7 @@ namespace CalculatorEC2Logic
         /// <summary>
         /// Max trans. sila koju presek moze da prihvati
         /// </summary>
-        public double Vrd_max { get; private set; }
+        public double Vrd_c_max { get; private set; }
         /// <summary>
         /// Da li maga gresaka u proracunu
         /// </summary>
@@ -132,13 +134,13 @@ namespace CalculatorEC2Logic
                 Errors.Add("Conditions for the maximum cross-section of concrete is not satisfied, Vrd_c < ((ν_min + k1* σcp) * b*10 * d*10/1000)=" + Vrd_c.Round() + "<" + lim_conc.Round());
 
             var ν = 0.6 * (1.0 - (Material.beton.fck / 250.0));///fck u MPa
-            Vrd_max = 0.5 * ν * Material.beton.fcd / 10 * Geometry.b * Geometry.d;
+            Vrd_c_max = 0.5 * ν * Material.beton.fcd / 10 * Geometry.b * Geometry.d;
             ///ako je false mora da povecamo presek ili klasu betona
-            if (Forces.Ved > Vrd_max)
+            if (Forces.Ved > Vrd_c_max)
                 Errors.Add("Conditions for the maximum Ved is not satisfied. \nMake cross-section bigger or change class of concrete");
         }
 
-        public void CalculateArmature(int m, double s, ReinforcementModelEC Asw_Model)
+        public void CalculateArmature(int m, double s, ReinforcementModelEC Asw_Model,double? teta=45,double alfa=90 )
         {
             if (s == 0) this.s = s_max;
             else this.s = s;
@@ -155,18 +157,28 @@ namespace CalculatorEC2Logic
             }
             if (Forces.Ved > Vrd_c)
             {
-                Armatura(m, s, Asw_Model);
+                Armatura(m, s, Asw_Model, teta, alfa);
                 CalAdditionalTransverseReinforcement();
                 return;
             }
 
         }
-        private void Armatura(int m, double s, ReinforcementModelEC Asw_Model)
+        private void Armatura(int m, double s, ReinforcementModelEC Asw_Model, double? teta, double alfa )
         {
             var a_min = 22.0;
             var a_max = 45.0;
             var z = 0.9 * Geometry.d;
-            Θ = 0.5* Math.Asin(Forces.Ved * 1000 / (0.20 * (1.0 -Material.beton.fck / 250.0) * Material.beton.fck *Geometry.b * 10 * z * 10));
+            this.alfa = alfa.Radians();
+
+            if (teta == null)
+            {
+                Θ = 0.5 * Math.Asin(Forces.Ved * 1000 / (0.20 * (1.0 - Material.beton.fck / 250.0) * Material.beton.fck * Geometry.b * 10 * z * 10));
+
+            }else
+            {
+                Θ = ((double)teta).Radians();
+            }
+
 
             if (Θ.Angle() < 22.0)
                 Θ = a_min.Radians();
@@ -176,33 +188,45 @@ namespace CalculatorEC2Logic
             this.Asw_Model = Asw_Model;
             this.m = m;
             this.s = s;
-            var cot = (1 / Math.Tan(Θ));
+            var cotΘ = (1 / Math.Tan(Θ));
+            var cotAlfa = (1 / Math.Tan(this.alfa));
+            var sinAlfa = Math.Sin(this.alfa); 
 
-            Vrd_s = (Asw / s) * z * Material.armatura.fyd * m * (1 / Math.Tan(Θ));
+            Vrd_s = (Asw / s) * z * Material.armatura.fyd * m * (cotΘ+ cotAlfa)/ sinAlfa;
+
+            //Vrd_s = (Asw / s) * z * Material.armatura.fyd * m * (1 / Math.Tan(Θ));
 
             var ν = 0.6 * (1.0 - (Material.beton.fck / 250.0));///fck u MPa
             var v1 = ν;
             var αcw = 1;
-            Vrd_max2 = (αcw * Geometry.b * z * v1 * Material.beton.fcd / 10) / (Math.Tan(Θ) + (1 / Math.Tan(Θ)));
+            //Vrd_max2 = (αcw * Geometry.b * z * v1 * Material.beton.fcd / 10) / (Math.Tan(Θ) + (1 / Math.Tan(Θ)));
+            Vrd_max2 = (αcw * Geometry.b * z * v1 * Material.beton.fcd / 10) * (cotΘ+cotAlfa)/(1+ Math.Pow(cotΘ,2));
             Vrd = (new List<double>() { Vrd_s, Vrd_max2 }).Min();
+
             IskoriscenostArmature =Math.Round(Forces.Ved / Vrd_s*100,2);
             IskoriscenostBetona = Math.Round(Forces.Ved / Vrd_max2*100,2);
+
+            if (IskoriscenostBetona > 100)
+                Errors.Add("Concrete limit exceeded, change concrete class or section dimensions.");
+            if (IskoriscenostArmature > 100)
+                Errors.Add("Reinforcement limit exceeded, change Ø or s or m.");
         }
 
         private void CalAdditionalTransverseReinforcement()
         {
-            var alfa = 90 * Math.PI / 180;
-            As_add = (0.5 * Forces.Ved * ((1 / Math.Tan(Θ)) - (1 / Math.Tan(alfa)))) / Material.armatura.fyd;
+            var cotΘ = (1 / Math.Tan(Θ));
+            var cotAlfa = (1 / Math.Tan(alfa));
+            As_add = 0.5 * Forces.Ved * (cotΘ - cotAlfa) / Material.armatura.fyd;
         }
 
         private double GetS()
         {
             double result = 30;
-            if (Forces.Ved <= 0.2 * Vrd_max)
+            if (Forces.Ved <= 0.2 * Vrd_c_max)
                 result = (new List<double>() { 0.8 * Geometry.d, 30 }).Min();
-            if (0.2 * Vrd_max <= Forces.Ved && Forces.Ved <= 0.67 * Vrd_max)
+            if (0.2 * Vrd_c_max <= Forces.Ved && Forces.Ved <= 0.67 * Vrd_c_max)
                 result = (new List<double>() { 0.6 * Geometry.d, 30 }).Min();
-            if (Forces.Ved >= 0.67 * Vrd_max)
+            if (Forces.Ved >= 0.67 * Vrd_c_max)
                 result = (new List<double>() { 0.3 * Geometry.d, 20 }).Min();
             s_max = result - (result % 2.5);
             s_min = 5;
@@ -220,11 +244,11 @@ namespace CalculatorEC2Logic
         private double GetSp()
         {
             double result = 30;
-            if (Forces.Ved <= 0.2 * Vrd_max)
+            if (Forces.Ved <= 0.2 * Vrd_c_max)
                 result = (new List<double>() { 1.0 * Geometry.d, 80 }).Min();
-            if (0.2 * Vrd_max <= Forces.Ved && Forces.Ved <= 0.67 * Vrd_max)
+            if (0.2 * Vrd_c_max <= Forces.Ved && Forces.Ved <= 0.67 * Vrd_c_max)
                 result = (new List<double>() { 0.6 * Geometry.d, 30 }).Min();
-            if (Forces.Ved >= 0.67 * Vrd_max)
+            if (Forces.Ved >= 0.67 * Vrd_c_max)
                 result = (new List<double>() { 0.3 * Geometry.d, 20 }).Min();
 
             sp_max = result;
@@ -252,34 +276,65 @@ namespace CalculatorEC2Logic
         }
 
 
-        public string Result()
+        public string Resultv2()
         {
             var error = "Errors: ";
             Errors.ForEach(x => error += x+Environment.NewLine);
             return $@"//////Result///////
     Forces:
-        VEd:        {Forces.Ved:F2}kN
+        {"VEd:",30}        {Forces.Ved:F2}kN
         VRd:        {Vrd:F2}kNm
         VRd,c:      {Vrd_c:F2}kNm
-        VRd,max:    {Vrd_max:F2}kNm
+        VRd,max:    {Vrd_c_max:F2}kNm
         Θ:          {Θ.Angle():F2}
     Material:
-        Armatrua:   {Material.armatura.ToString()}
-        Beton:      {Material.beton.ToString()}
+        Armatrua:   {Material.armatura}
+        Beton:      {Material.beton}
     Geometry:
         b:          {Geometry.b}{Geometry.unit}
         h:          {Geometry.h}{Geometry.unit}
         d1:         {Geometry.d1}{Geometry.unit}
-        d2:         {Geometry.d2}{Geometry.unit}
         d:          {Geometry.d}{Geometry.unit}
     Result:
-        Iskor. arm: {IskoriscenostArmature:F2}%({Vrd_s:F2}kN)
-        Iskor. bet: {IskoriscenostBetona:F2}%({Vrd_max2:F2}kN)
+        Util. rein: {IskoriscenostArmature:F2}%({Vrd_s:F2}kN)
+        Util. conr: {IskoriscenostBetona:F2}%({Vrd_max2:F2}kN)
         As1:        {As1:F2}
         Asw/s:      {Asw/s*100:F2} cm2/m 
+        α:          {alfa.Angle():F2}
         Asw_min:    {Asw_min:F2} cm2 
         As_add:     {As_add:F2} cm2
         "+ error;
+
+        }
+        public string Result()
+        {
+            var error = "Errors: ";
+
+            Errors.ForEach(x => error += x + Environment.NewLine);
+            return $@"//////Result///////
+     Forces:
+        {"VEd:",-12}{Forces.Ved,13:F2}{"kN",-5}
+        {"VRd:",-12}{Vrd,13:F2}{"kN",-5}
+        {"VRd,c:",-12}{Vrd_c,13:F2}{"kN",-5}
+        {"VRd,max:",-12}{Vrd_c_max,13:F2}{"kN",-5}
+        {"Θ:",-12}{Θ.Angle(),13:F2}
+     Material:
+        Reinforcement:  {Material.armatura}
+        Concrete:       {Material.beton}
+     Geometry:
+        {"b:",-12}{Geometry.b,13:F2}{Geometry.unit,-5}
+        {"h:",-12}{Geometry.h,13:F2}{Geometry.unit,-5}
+        {"d1:",-12}{Geometry.d1,13:F2}{Geometry.unit,-5}
+        {"d:",-12}{Geometry.d,13:F2}{Geometry.unit,-5}
+     Result:
+        {"Util. rein:",-12}{IskoriscenostArmature+ "%",13:F2}({Vrd_s,-5:F2}kN)
+        {"Util. conr:",-12}{IskoriscenostBetona + "%",13:F2}({Vrd_max2,-5:F2}kN)
+        {"As1:",-12}{As1,13:F2}{"cm2",-5}
+        {"Asw/s:",-12}{Asw / s * 100,13:F2}{"cm2/m",-5}
+        {"α:",-12}{alfa.Angle(),13:F2}
+        {"Asw_min:",-12}{Asw_min,13:F2}{"cm2",-5}
+        {"As_add:",-12}{As_add,13:F2}{"cm2",-5}
+        " + error;
 
         }
         public override string ToString()

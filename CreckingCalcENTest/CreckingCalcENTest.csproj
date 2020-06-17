@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\CreckingENCalc\CreckingENCalc\CreckingENCalc.csproj" />
     <ProjectReference Include="..\InterDiagRCSection\InterDiagRCSection.csproj" />
+    <ProjectReference Include="..\SectionDesign\SectionDesign.csproj" />
   </ItemGroup>
 
 </Project>

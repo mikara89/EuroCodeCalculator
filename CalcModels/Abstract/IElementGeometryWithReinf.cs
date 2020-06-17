@@ -20,7 +20,10 @@
 
         double y1 { get; }
         double y2 { get; }
-
+    }
+    public interface IElementGeometryAddMomOfInertia 
+    {
+        double I { get; } 
     }
 
 }

@@ -63,6 +63,7 @@ namespace CalcBlazor.Components
                             ScaleLabel = new ScaleLabel { Display = true, LabelString = "NRd" },
                             Ticks= new LinearCartesianTicks
                             {
+                                 Reverse=true,
                                 BeginAtZero=false, 
                             }
                         }
@@ -99,7 +100,7 @@ namespace CalcBlazor.Components
         }
         private void SetDiagramDatasActions()
         {
-            DiagramDatas.CollectionChanged += (s, e) =>
+           DiagramDatas.CollectionChanged += async(s, e) =>
             {
                 if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
                 {
@@ -116,6 +117,7 @@ namespace CalcBlazor.Components
                             BorderColor = color,
                             PointHitRadius = 5,
                             PointHoverRadius = 5,
+                            
                         };
                         _config.Data.Datasets.Add(lineSet);
 
@@ -149,9 +151,9 @@ namespace CalcBlazor.Components
                     }
                     OnChangedSecetion(-1);
                 }
-                InvokeAsync(this.StateHasChanged);
+                await InvokeAsync(this.StateHasChanged);
             };
-
+            
         }
         private void SetForcesDatasActions()
         {

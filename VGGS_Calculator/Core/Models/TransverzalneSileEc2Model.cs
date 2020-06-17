@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using static VGGS_Calculator.Core.Models.SavijanjePravougaonogPresekaEC2Model;
 
 namespace VGGS_Calculator.Core.Models
 {
@@ -28,10 +29,13 @@ namespace VGGS_Calculator.Core.Models
         [Required]
         [ConcreteExist]
         public string betonClass { get; set; }
-        public double s { get; set; }
+        public double s { get; set; } 
+        public double? teta { get; set; } 
+        public double? alfa { get; set; }
         public int m { get; set; }
         public int u_diametar { get; set; }
         public ArmHolder addArm { get; set; }
+        public SettingsParamiters settings { get; set; } 
     }
     public class TransverzalneSileEc2ResultModel
     {
@@ -41,6 +45,8 @@ namespace VGGS_Calculator.Core.Models
         public double minArm_pot { get; set; }
         public double minArm_usv { get; set; }
         public double s { get; set; }
+        public double teta { get; set; }
+        public double alfa { get; set; }
         public List<double> ListS { get; set; }  
         public int m { get; set; }
         public List<int> ListM { get; set; }

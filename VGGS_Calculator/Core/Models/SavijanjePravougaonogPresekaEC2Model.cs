@@ -30,19 +30,36 @@ namespace VGGS_Calculator.Core.Models
         public double Nsd { get; set; }
         public double mu { get; set; }
         public ResultModel result { get; set; }
-        
+        public SettingsParamiters settings { get; set; }
+
+
 
         public class ResultModel
         {
             public double Msds { get; set; } 
-            public CoeffForCalcRectCrossSectionModelEC kof { get; set; }  
-            public double As1_pot { get; set; }
-            public double As2_pot { get; set; }
+            public CoeffForCalcRectCrossSectionModelEC coef { get; set; }  
+            public double As1_req { get; set; }
+            public double As2_req { get; set; }
             public double μSd { get; set; } 
             public double Msd { get; internal set; }
             public double Nsd { get; internal set; }
             public string Result { get; set; }
 
+        }
+        public class SettingsParamiters
+        {
+            [GreaterThenZero]
+            [Required]
+            public double alfa_cc { get; set; }
+            [GreaterThenZero]
+            [Required]
+            public double alfa_ct { get; set; }
+            [GreaterThenZero]
+            [Required]
+            public double y_c { get; set; }
+            [GreaterThenZero]
+            [Required]
+            public double y_s { get; set; }
         }
     }
     public class MaterialModel 

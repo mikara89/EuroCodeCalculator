@@ -45,8 +45,13 @@ namespace CalcModels
 
         public override string ToString()
         {
-            return $"{name}; fyd: {Math.Round(fyd, 2)}MPa; fyk: {Math.Round(fyk, 2)}MPa; Es: {Es}GPa";
+            //return $"{name}; fyd: {Math.Round(fyd, 2)}MPa; fyk: {Math.Round(fyk, 2)}MPa; Es: {Es}GPa";
+            return $@"{name};
+                    {"fyk:",-4} {fyk,5:F2}{"MPa",-5}
+                    {"fyd:",-4} {fyd,5:F2}{"MPa",-5}
+                    {"Es:",-4} {Es,5:F2}{"GPa",-5}";
         }
+    }
     }
     public class ReinforcementTypeModelPBAB : IReinforcementTypeModel
     {
@@ -86,11 +91,12 @@ namespace CalcModels
 
         public double eps_ud { get; internal set; }
 
-        public double lim_ξ { get; set; } = 0.259;
-
         public override string ToString()
         {
-            return $"{name}; fyd: {Math.Round(fyd, 2)}MPa; fyk: {Math.Round(fyk, 2)}MPa; Es: {Es}GPa";
+            return $@"{name};
+                    {"fyk:",-4} {fyk,5:F2}{"MPa",-5}
+                    {"fyd:",-4} {fyd,5:F2}{"MPa",-5}
+                    {"Es:",-4} {Es,5:F2}{"GPa",-5}";
         }
     }
-}
+

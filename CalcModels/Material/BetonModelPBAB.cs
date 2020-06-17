@@ -93,6 +93,9 @@ namespace CalcModels
                 return 1.3 * fctm;
             }
         }
+
+        public double ξ_lim => 0.45;
+
         private double GetFcd(int fck)
         {
             if (fck >= 10 && fck < 15) 
@@ -133,7 +136,12 @@ namespace CalcModels
         }
         public override string ToString()
         {
-            return $"{name}; fb: {Math.Round(fcd, 2)}MPa; fbk: {fck}Mpa; Eb: {Math.Round(Ecm / 1000, 2)}GPa";
-        }
+            //return $"{name}; fb: {Math.Round(fcd, 2)}MPa; fbk: {fck}Mpa; Eb: {Math.Round(Ecm / 1000, 2)}GPa";
+            return $@"{name};
+                    {"fb:",-4} {fcd,6:F2}{"MPa",-5}
+                    {"fbk:",-4} {fck,6:F2}{"MPa",-5}
+                    {"Eb:",-4} {Ecm / 1000,6:F2}{"GPa",-5}";
+        
+    }
     }
 }

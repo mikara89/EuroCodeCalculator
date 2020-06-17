@@ -6,6 +6,11 @@
         public double h_f { get; set; }
         public override bool IsInverted { get ; internal set ; }
 
+        public override double calc_I()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override double calc_y1()
         {
             var Ac1 = (h - h_f) * b;

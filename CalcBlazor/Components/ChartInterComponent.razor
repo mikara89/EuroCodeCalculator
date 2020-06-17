@@ -8,26 +8,30 @@
 @using ChartJs.Blazor.ChartJS.Common.Enums
 @inject CalcBlazor.Data.Services.IInterCalcService intCalcService
 <style>
-    .chart-container, .chart-commands{
-                display: flex;
+    .chart-container, .chart-commands {
+        display: flex;
         flex-direction: row;
     }
-    .chart-commands{
+
+    .chart-commands {
         justify-content: space-evenly;
     }
-    .chart{
-           display: flex;
+
+    .chart {
+        display: flex;
         flex-direction: column;
-        flex:0;
-        
+        flex: 0;
     }
-    .chart-table{
-        margin-left:20px;
-        flex:1;
+
+    .chart-table {
+        margin-left: 20px;
+        flex: 1;
     }
-    .tab-row{
-        cursor:pointer;
+
+    .tab-row {
+        cursor: pointer;
     }
+
     .active.tab-row {
         background-color: rgba(198, 187, 187, 0.21);
     }
@@ -40,48 +44,48 @@
 <h3>ChartInterComponent</h3>
 <div class="chart-container">
     <table class="force-table-chart">
-            <thead>
-                <tr>
-                    <th>num.</th>
-                    <th>M_Ed</th>
-                    <th>N_Ed</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (ForcesDatas != null)
+        <thead>
+            <tr>
+                <th>num.</th>
+                <th>M_Ed</th>
+                <th>N_Ed</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ForcesDatas != null)
+            {
+                @foreach (var item in ForcesDatas.Select((value, i) => new { value, i }))
                 {
-                    @foreach (var item in ForcesDatas.Select((value, i) => new { value, i }))
-                    {
-                        <tr>
-                            <th>@(item.i+1)</th>
-                            <td>@item.value.X</td>
-                            <td>@item.value.Y</td>
-                            <td>
-                                <button>?</button>
-                                <button @onclick="@(()=>ForcesDatas.Remove(item.value))">x</button>
-                            </td>
-                        </tr>
-                    }
+                    <tr>
+                        <th>@(item.i + 1)</th>
+                        <td>@item.value.X</td>
+                        <td>@item.value.Y</td>
+                        <td>
+                            <button>?</button>
+                            <button @onclick="@(()=>ForcesDatas.Remove(item.value))">x</button>
+                        </td>
+                    </tr>
                 }
+            }
 
-            </tbody>
-            <tfoot>
+        </tbody>
+        <tfoot>
 
-            </tfoot>
-        </table>
+        </tfoot>
+    </table>
     <div class="chart">
-        <div class="chart-commands">
+        @*<div class="chart-commands">
             <button disabled="@(heightChart>=1000)" @onclick="() => { heightChart += 50; widthChart += 50;_lineChartJs.Update();StateHasChanged(); }">+</button>
             <span>Zoom</span>
             <button disabled="@(heightChart<=300)" @onclick="() => { heightChart -= 50; widthChart -= 50;_lineChartJs.Update(); StateHasChanged(); }">-</button>
-        </div>
-        <ChartJsLineChart @ref="_lineChartJs" 
-                          Config="@_config" 
-                          Height="@heightChart" 
+        </div>*@
+        <ChartJsLineChart @ref="_lineChartJs"
+                          Config="@_config"
+                          Height="@heightChart"
                           Width="@widthChart" />
     </div>
-   
+
     <table class="chart-table">
         <thead>
             <tr>Forces Table</tr>

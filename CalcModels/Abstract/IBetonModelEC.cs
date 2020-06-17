@@ -18,6 +18,7 @@
         double εc3 { get; set; }
         double εcu2 { get; set; }
         double εcu3 { get; set; }
+        double ξ_lim { get; }
         double ρ { get; }
         double GetSigma_f(double eps_b);
         string ToString();

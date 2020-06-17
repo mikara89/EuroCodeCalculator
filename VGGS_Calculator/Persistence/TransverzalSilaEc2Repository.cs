@@ -15,11 +15,17 @@ namespace VGGS_Calculator.Persistence
         public TransverzalneSileEc2ResultModel CalculateInit(TransverzalneSileEc2Model trans)
         {
             TransverzalneSileEc2ResultModel Result;
-
-
-            var beton = new BetonModelEC(trans.betonClass,1);
-            beton.ni = 0.85;
+            var beton = new BetonModelEC(trans.betonClass, 1);
             var arm = ReinforcementType.GetArmatura().Where(n => n.name == trans.armtype).SingleOrDefault();
+            if (trans.settings != null)
+            {
+                beton = new BetonModelEC(trans.betonClass, trans.settings.alfa_cc, trans.settings.alfa_ct, trans.settings.y_c);
+                arm = ReinforcementType.GetArmatura(trans.settings.y_s).Where(n => n.name == trans.armtype).SingleOrDefault();
+            }
+                
+
+            beton.ni = 0.85;
+            
             var armLong = new ReinforcementModelEC(trans.armLongitudinal.diametar, trans.armLongitudinal.kom);
             bool armCalc = false;
             if (trans.u_diametar != 0 && trans.m != 0 && trans.s != 0) armCalc = true;
@@ -44,13 +50,18 @@ namespace VGGS_Calculator.Persistence
             var m = new Material()
             {
                 beton = beton,
-                armatura = ReinforcementType.GetArmatura().First(n => n.name == trans.armtype),
+                armatura = arm,
             };
 
             using (var t = new TransversalCalcEC2(g,f,m))
                 {
                     if (armCalc)
-                        t.CalculateArmature(trans.m, trans.s, new ReinforcementModelEC(trans.u_diametar, 1));
+                    {
+                        if (trans.alfa == null)
+                            t.CalculateArmature(trans.m, trans.s, new ReinforcementModelEC(trans.u_diametar, 1));
+                        else
+                        t.CalculateArmature(trans.m, trans.s, new ReinforcementModelEC(trans.u_diametar, 1), trans.teta,(double)trans.alfa);
+                    }
                     Result = new TransverzalneSileEc2ResultModel()
                     {
                         Result = t.ToString(),
@@ -58,6 +69,8 @@ namespace VGGS_Calculator.Persistence
                         ListS = t.List_s,
                         ListM = t.List_m,
                         m = t.Asw_min == 0 ? trans.m : t.m,
+                        teta=t.Θ,
+                        alfa=t.alfa,
                         u_diametar = trans.u_diametar,
                         addArm_pot = t.As_add,
                         TransArm_pot = t.Asw,

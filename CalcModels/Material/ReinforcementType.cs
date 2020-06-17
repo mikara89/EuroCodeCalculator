@@ -14,7 +14,7 @@ namespace CalcModels
         /// fyd i fyk u [kN/cm2]
         /// </summary>
         /// <returns></returns>
-        public static List<IReinforcementTypeModel> GetArmatura()
+        public static List<IReinforcementTypeModel> GetArmatura(double y_s=1.15) 
         {
             return new List<IReinforcementTypeModel>
             {
@@ -22,7 +22,7 @@ namespace CalcModels
                 {
                     name="B500B",
                     fyk=50,
-                    fyd=50/1.15,
+                    fyd=50/y_s,
                     Es=200,
                     Symbol="B",
                     eps_ud=20,
@@ -31,7 +31,7 @@ namespace CalcModels
                 {
                     name="B460B",
                     fyk=46,
-                    fyd=46/1.15,
+                    fyd=46/y_s,
                     Es=200,
                     Symbol="B",
                     eps_ud=20,
@@ -40,7 +40,7 @@ namespace CalcModels
                 {
                     name="B420B",
                     fyk=42,
-                    fyd=42/1.15,
+                    fyd=42/y_s,
                     Es=200,
                     Symbol="B",
                     eps_ud=20,
@@ -49,7 +49,7 @@ namespace CalcModels
                 {
                     name = "B250B",
                     fyk = 25,
-                    fyd = 25 / 1.15,
+                    fyd = 25 /y_s,
                     Es = 200,
                     Symbol = "B",
                     eps_ud=20,
@@ -58,7 +58,7 @@ namespace CalcModels
                 {
                     name = "B220B",
                     fyk = 22,
-                    fyd = 22 / 1.15,
+                    fyd = 22 /y_s,
                     Es = 200,
                     Symbol = "B",
                     eps_ud=20,
@@ -70,8 +70,7 @@ namespace CalcModels
                     fyd =40,
                     Es = 210,
                     Symbol = "R",
-                    eps_ud=10,
-                    lim_ξ=0.538
+                    eps_ud=10
                 }
             };
         }

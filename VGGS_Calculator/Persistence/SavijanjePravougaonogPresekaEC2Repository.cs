@@ -9,14 +9,29 @@ namespace VGGS_Calculator.Persistence
     {
         public SavijanjePravougaonogPresekaEC2Model Calculate(SavijanjePravougaonogPresekaEC2Model input)
         {
+            IBetonModel beton;
+            IReinforcementTypeModel armatura ; 
             SavijanjePravougaonogPresekaEC2Model result = input;
-            var beton = new BetonModelEC(input.betonClass);
+
+            if (input.settings != null)
+            {
+                beton = new BetonModelEC(input.betonClass, input.settings.alfa_cc, input.settings.alfa_ct, input.settings.y_c);
+                armatura = ReinforcementType.GetArmatura(input.settings.y_s).Single(a => a.name == input.armtype);
+            }
+
+            else
+            {
+                beton = new BetonModelEC(input.betonClass);
+                armatura = ReinforcementType.GetArmatura().Single(a => a.name == input.armtype);
+            }
+                
+
             if (beton == null)
                 throw new System.ArgumentNullException(nameof(beton), "cant be null");
-           
-            var armatura = ReinforcementType.GetArmatura().Single(a => a.name == input.armtype);
+
             if (armatura == null)
                 throw new System.ArgumentNullException(nameof(armatura), "cant be null");
+
             var geometry= new ElementGeometry()
             {
                 b = input.b,
@@ -42,13 +57,13 @@ namespace VGGS_Calculator.Persistence
                 ///Doo some thing
                 result.result = new SavijanjePravougaonogPresekaEC2Model.ResultModel()
                 {
-                    kof = sav.KofZaProracunPravougaonogPreseka,
-                    As1_pot = sav.As1_pot,
-                    As2_pot = sav.As2_pot,
+                    coef = sav.KofZaProracunPravougaonogPreseka,
+                    As1_req = sav.As1_pot,
+                    As2_req = sav.As2_pot,
                     Msd = sav.Forces.Msd,
                     Msds = sav.Forces.Msds(sav.Geometry.h, sav.Geometry.d1),
                     Nsd = sav.Forces.Nsd,
-                    μSd = sav.μSd,
+                    μSd = sav.KofZaProracunPravougaonogPreseka.μRd,
                     Result = sav.ToString(),
                 };
                 result.h = input.h == 0 ? sav.Geometry.h : result.h;

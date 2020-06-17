@@ -44,7 +44,7 @@ namespace CalculatorEC2Logic
 
             coeffService = new CoeffService(Material,Geometry);
 
-            Kof_lim = coeffService.GetByξ_lim();
+            Kof_lim = coeffService.GetByξ(material.beton.ξ_lim);
 
 
             if (kof != null)
@@ -104,42 +104,45 @@ namespace CalculatorEC2Logic
             }
            
             if ((As1_pot + As2_pot) / Geometry.b / Geometry.h > ρ_max)
-                throw new Exception("ρ_max prekoraceno! Povećajte poprecni presek");
+                throw new Exception("ρ_max exceeded! Make section bigger");
+
+            if (As2_pot != 0)
+            {
+                KofZaProracunPravougaonogPreseka = Kof_lim;
+            }
+            X = KofZaProracunPravougaonogPreseka.ξ * Geometry.d;
+
             if (Forces.IsMsdNegativ)
             {
                 As2_pot = As1_pot;
                 As1_pot = (Msds * 100 - Mrd_limit * 100) / ((Geometry.d - Geometry.d2) * Material.armatura.fyd);
             }
-            if (As2_pot != 0)
-            {
-                KofZaProracunPravougaonogPreseka = Kof_lim;
-            }
-            X = KofZaProracunPravougaonogPreseka.ξ*Geometry.d;
+        
         }
         public override string ToString()
         {
             return $@"//////Result///////
     Forces:
-        Msd:        {Forces.Msd:F2}kN
-        Nsd:        {Forces.Nsd:F2}kNm
-        Msds:       {Forces.Msds(Geometry.h, Geometry.d1):F2}kNm
+        {"Msd:",-12}{Forces.Msd,13:F2}{"kNm",-5}
+        {"Nsd:",-12}{Forces.Nsd,13:F2}{"kN",-5}
+        {"Msds:",-12}{Forces.Msds(Geometry.h, Geometry.d1),13:F2}{"kNm",-5} 
     Material:
-        Armatrua:   {Material.armatura.ToString()}
-        Beton:      {Material.beton.ToString()}
+        Reinforcement:  {Material.armatura}
+        Concrete:       {Material.beton}
     Geometry:
-        b:          {Geometry.b}{Geometry.unit}
-        h:          {Geometry.h}{Geometry.unit}
-        d1:         {Geometry.d1}{Geometry.unit}
-        d2:         {Geometry.d2}{Geometry.unit}
-        d:          {Geometry.d:F2}{Geometry.unit}
+        {"b:",-12}{Geometry.b,13:F2}{Geometry.unit,-5}
+        {"h:",-12}{Geometry.h,13:F2}{Geometry.unit,-5}
+        {"d1:",-12}{Geometry.d1,13:F2}{Geometry.unit,-5}
+        {"d2:",-12}{Geometry.d2,13:F2}{Geometry.unit,-5}
+        {"d:",-12}{Geometry.d,13:F2}{Geometry.unit,-5}
     Result:
-        εc/εs1:     {KofZaProracunPravougaonogPreseka.εc:F3}‰/{KofZaProracunPravougaonogPreseka.εs1:F3}‰
-        εs2:        {KofZaProracunPravougaonogPreseka.εs2(Geometry.d,Geometry.d2)}‰
-        μRd:        {KofZaProracunPravougaonogPreseka.μRd:F3}
-        x:          {X:F2} cm
-        As1_pot:    {As1_pot:F2} cm2 
-        As2_pot:    {As2_pot:F2} cm2
-        μRd_lim:    {Kof_lim.μRd:F3}";
+        {"εc/εs1:",-12}{KofZaProracunPravougaonogPreseka.εc,13:F3}{"/",1}{KofZaProracunPravougaonogPreseka.εs1,-5:F3}{"‰",1}
+        {"εs2:",-12}{KofZaProracunPravougaonogPreseka.εs2(Geometry.d, Geometry.d2),13:F3}{"‰",-5}
+        {"μSd:",-12}{KofZaProracunPravougaonogPreseka.μRd,13:F3}{"",-5}
+        {"x:",-12}{X,13:F2}{"",-5}
+        {"As1_req:",-12}{As1_pot,13:F2}{"cm2",-5}
+        {"As2_req:",-12}{As2_pot,13:F2}{"cm2",-5}
+        {"μSd_lim:",-12}{Kof_lim.μRd,13:F3}";
         }
 
         private void InitValidations(IElementGeometry geometry, IMaterial material)
@@ -155,9 +158,9 @@ namespace CalculatorEC2Logic
             if (2 * geometry.d1 >= geometry.h && geometry.h != 0)
                 throw new Exception("2 x d1 must be smaller then h");
             if (material.beton == null)
-                throw new Exception("Beton not defined!");
+                throw new Exception("Concrete not defined!");
             if (material.armatura == null)
-                throw new Exception("Armatura not defined!");
+                throw new Exception("Reinforcement not defined!");
 
         }
 

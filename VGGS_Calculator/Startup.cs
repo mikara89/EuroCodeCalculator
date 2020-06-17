@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VGGS_Calculator.Persistence;
 
 namespace VGGS_Calculator
 {
@@ -44,7 +45,13 @@ namespace VGGS_Calculator
             }
 
             app.UseStaticFiles();
-
+            app.UseCors(opt =>
+            {
+                opt.AllowAnyOrigin()
+                //.WithOrigins("http://rc-structure.com", "http://localhost:4200", "http://localhost:4300")
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

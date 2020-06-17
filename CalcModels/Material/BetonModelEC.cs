@@ -6,7 +6,11 @@ namespace CalcModels
 {
     public class BetonModelEC : IBetonModel
     {
+        
+        private double y_c = 1.5;
+
         public double αcc { get; set; } = 0.85;
+        public double αct { get; set; } = 1.0;
         public double ni { get; set; } = 0.85;
 
         public static IEnumerable<string> ListOfBetonClassesNames()
@@ -31,15 +35,19 @@ namespace CalcModels
         {
             return Enum.GetName(typeof(BetonClassTypeEC), betonClassType).Replace("_", "/");
         }
-        public BetonModelEC(BetonClassTypeEC betonClassType, double α = 0.85)
+        public BetonModelEC(BetonClassTypeEC betonClassType, double αcc = 0.85, double αct = 1.00, double y_c = 1.5)
         {
-            this.name = GetStringFromType(betonClassType);
-            this.αcc = α;
+            this.name = GetStringFromType(betonClassType); 
+            this.y_c = y_c;
+            this.αcc = αcc;
+            this.αct = αct;
         }
-        public BetonModelEC(string betonClassName, double α = 0.85)
+        public BetonModelEC(string betonClassName, double αcc = 0.85, double αct = 1.00, double y_c=1.5)
         {
             this.name = betonClassName;
-            this.αcc = α;
+            this.y_c = y_c;
+            this.αcc = αcc;
+            this.αct = αct;
         }
         public string name { get; internal set; }
         public int fck
@@ -140,12 +148,27 @@ namespace CalcModels
         {
             get
             {
-                return αcc * fck / 1.5;
+                return αcc * fck / y_c;
             }
         }
+
+        public double ξ_lim { get {
+                if (fck <= 50)
+                    return 0.45;
+                    
+                else
+                    return 0.35;
+                    }
+        }
+
         public override string ToString()
         {
-            return $"{name}; fcd: {Math.Round(fcd, 2)}MPa; fck: {fck}Mpa; Ecm: {Math.Round(Ecm / 1000, 2)}GPa";
+            //return $"{name}; fcd: {Math.Round(fcd, 2)}MPa; fck: {fck}Mpa; Ecm: {Math.Round(Ecm / 1000, 2)}GPa";
+
+            return $@"{name};
+                    {"fck:",-4} {fck,5:F2}{"MPa",-5}
+                    {"fcd:",-4} {fcd,5:F2}{"MPa",-5}
+                    {"Ecm:",-4} {Ecm / 1000,5:F2}{"GPa",-5}";
         }
 
         public double GetSigma_f(double eps_b)

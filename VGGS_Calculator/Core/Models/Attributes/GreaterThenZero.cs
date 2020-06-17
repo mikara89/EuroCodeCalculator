@@ -10,6 +10,8 @@ namespace VGGS_Calculator.Core.Models
             : base("Value have to be number and greate then 0") { }
         public override bool IsValid(object value)
         {
+            if(value==null)
+                return true;
             if (value is double && (double)value > 0)
                 return true;
             return false;

@@ -8,7 +8,6 @@ namespace CalcModels
         int Es { get; set; }
         double fyd { get; set; }
         double fyk { get; set; }
-        double lim_ξ { get; set; }
         List<ReinforcementTabelModel> ListOfArmatura { get; }
         List<int> ListOfNum { get; }
         string name { get; set; }

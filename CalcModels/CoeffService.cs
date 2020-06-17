@@ -33,7 +33,7 @@ namespace CalcModels
             if (μSd > μ_lim.μRd)
             {
                 var max_εs1 = Material.armatura.eps_ud;
-                var min_εs1 =Material.beton.εcu2* Geometry.d1/Geometry.h;
+                var min_εs1 =Material.beton.εcu2* Geometry.d1/(Geometry.h==0?40: Geometry.h);
 
                 var test_εs1 = (max_εs1 + Math.Abs(min_εs1)) / 2;
                 var adder_εs1 = test_εs1;
@@ -96,7 +96,7 @@ namespace CalcModels
 
         public CoeffForCalcRectCrossSectionModelEC GetByξ_lim()
         {
-            return GetByξ(Material.armatura.lim_ξ);
+            return GetByξ(Material.beton.ξ_lim);
         }
 
         public List<CoeffForCalcRectCrossSectionModelEC> GetList()
